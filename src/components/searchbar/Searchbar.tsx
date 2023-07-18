@@ -1,6 +1,5 @@
 import React from "react";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,7 +25,7 @@ export const Searchbar: React.FC<SearchbarProps> = ({}) => {
         <div className="hidden h-6 mr-3 border-l border-gray-300 sm:block place-self-center"></div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="w-16">For Sale</button>
+            <button className="w-16 font-bold">For Sale</button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
