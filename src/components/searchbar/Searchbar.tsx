@@ -14,13 +14,12 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { DropdownMenuIcon } from "@radix-ui/react-icons";
 
 interface SearchbarProps {}
 
 export const Searchbar: React.FC<SearchbarProps> = ({}) => {
   return (
-    <Input type="text" placeholder="Search" className="h-10 rounded-full w-min">
+    <Input type="text" placeholder="Search" className="h-10 rounded-full w-max">
       <div className="flex gap-2">
         <div className="hidden h-6 mr-3 border-l border-gray-300 sm:block place-self-center"></div>
         <DropdownMenu>
