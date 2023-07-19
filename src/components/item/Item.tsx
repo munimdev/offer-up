@@ -31,11 +31,13 @@ export const Item = ({
         quality={100}
       />
       <span className="text-lg font-bold text-ellipsis">{title}</span>
-      <div className="flex flex-row justify-between">
-        <span className="text-base font-normal">{`$${price}`}</span>
-        <span className="text-base font-normal">{additionalInfo}</span>
+      <div className="flex flex-col justify-end h-full">
+        <div className="flex flex-row justify-between">
+          <span className="text-base font-normal">{`$${price}`}</span>
+          <span className="text-base font-normal">{additionalInfo}</span>
+        </div>
+        <span className="text-sm font-normal">{location}</span>
       </div>
-      <span className="text-sm font-normal">{location}</span>
     </div>
   );
 };
