@@ -10,7 +10,7 @@ export default function Home() {
         <h1 className="text-2xl font-bold">
           The simpler way to buy and sell locally!
         </h1>
-        <Button className="px-5 font-bold sm:py-8 text-white border border-white rounded-full bg-[#1BC3FF] text-md hover:bg-[#0c769c]">
+        <Button className="px-5 font-bold text-white border border-white rounded-full bg-[#1BC3FF] text-md hover:bg-[#0c769c]">
           Get the app
         </Button>
       </div>
