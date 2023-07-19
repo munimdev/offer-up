@@ -1,0 +1,230 @@
+[
+  {
+    "name": "Authentic Louis Vuit",
+    "price": 1500,
+    "location": "Wichita, KS",
+    "imageUrl": "https://placehold.co/500x500",
+    "navigateTo": "/#"
+  },
+  {
+    "name": "2021 Tesla Model 3",
+    "price": 36495,
+    "location": "Great NCK PLZ, NY",
+    "imageUrl": "https://placehold.co/500x500",
+    "navigateTo": "/#",
+    "additionalInfo": "20k miles"
+  },
+  {
+    "name": "Petelon Bike+",
+    "price": 1200,
+    "location": "Wichita, KS",
+    "imageUrl": "https://placehold.co/500x500",
+    "navigateTo": "/#"
+  },
+  {
+    "name": "Recycling Accent Chair",
+    "price": 170,
+    "location": "Wichita, KS",
+    "imageUrl": "https://placehold.co/500x500",
+    "navigateTo": "/#"
+  },
+  {
+    "name": "Rx8 Hyperchip",
+    "price": 200,
+    "location": "Wichita, KS",
+    "imageUrl": "https://placehold.co/500x500",
+    "navigateTo": "/#"
+  },
+  {
+    "name": "Rocking Chair",
+    "price": 20,
+    "location": "Wichita, KS",
+    "imageUrl": "https://placehold.co/500x500",
+    "navigateTo": "/#"
+  },
+  {
+    "name": "Xbox Elite 20",
+    "price": 150,
+    "location": "Wichita, KS",
+    "imageUrl": "https://placehold.co/500x500",
+    "navigateTo": "/#"
+  },
+  {
+    "name": "Jordan Fire Red 4's 2012",
+    "price": 170,
+    "location": "Wichita, KS",
+    "imageUrl": "https://placehold.co/500x500",
+    "navigateTo": "/#"
+  },
+  {
+    "name": "Authentic Louis Vuit",
+    "price": 1500,
+    "location": "Wichita, KS",
+    "imageUrl": "https://placehold.co/500x500",
+    "navigateTo": "/#"
+  },
+  {
+    "name": "2021 Tesla Model 3",
+    "price": 36495,
+    "location": "Great NCK PLZ, NY",
+    "imageUrl": "https://placehold.co/500x500",
+    "navigateTo": "/#",
+    "additionalInfo": "20k miles"
+  },
+  {
+    "name": "Petelon Bike+",
+    "price": 1200,
+    "location": "Wichita, KS",
+    "imageUrl": "https://placehold.co/500x500",
+    "navigateTo": "/#"
+  },
+  {
+    "name": "Recycling Accent Chair",
+    "price": 170,
+    "location": "Wichita, KS",
+    "imageUrl": "https://placehold.co/500x500",
+    "navigateTo": "/#"
+  },
+  {
+    "name": "Rx8 Hyperchip",
+    "price": 200,
+    "location": "Wichita, KS",
+    "imageUrl": "https://placehold.co/500x500",
+    "navigateTo": "/#"
+  },
+  {
+    "name": "Rocking Chair",
+    "price": 20,
+    "location": "Wichita, KS",
+    "imageUrl": "https://placehold.co/500x500",
+    "navigateTo": "/#"
+  },
+  {
+    "name": "Xbox Elite 20",
+    "price": 150,
+    "location": "Wichita, KS",
+    "imageUrl": "https://placehold.co/500x500",
+    "navigateTo": "/#"
+  },
+  {
+    "name": "Jordan Fire Red 4's 2012",
+    "price": 170,
+    "location": "Wichita, KS",
+    "imageUrl": "https://placehold.co/500x500",
+    "navigateTo": "/#"
+  },
+  {
+    "name": "Authentic Louis Vuit",
+    "price": 1500,
+    "location": "Wichita, KS",
+    "imageUrl": "https://placehold.co/500x500",
+    "navigateTo": "/#"
+  },
+  {
+    "name": "2021 Tesla Model 3",
+    "price": 36495,
+    "location": "Great NCK PLZ, NY",
+    "imageUrl": "https://placehold.co/500x500",
+    "navigateTo": "/#",
+    "additionalInfo": "20k miles"
+  },
+  {
+    "name": "Petelon Bike+",
+    "price": 1200,
+    "location": "Wichita, KS",
+    "imageUrl": "https://placehold.co/500x500",
+    "navigateTo": "/#"
+  },
+  {
+    "name": "Recycling Accent Chair",
+    "price": 170,
+    "location": "Wichita, KS",
+    "imageUrl": "https://placehold.co/500x500",
+    "navigateTo": "/#"
+  },
+  {
+    "name": "Rx8 Hyperchip",
+    "price": 200,
+    "location": "Wichita, KS",
+    "imageUrl": "https://placehold.co/500x500",
+    "navigateTo": "/#"
+  },
+  {
+    "name": "Rocking Chair",
+    "price": 20,
+    "location": "Wichita, KS",
+    "imageUrl": "https://placehold.co/500x500",
+    "navigateTo": "/#"
+  },
+  {
+    "name": "Xbox Elite 20",
+    "price": 150,
+    "location": "Wichita, KS",
+    "imageUrl": "https://placehold.co/500x500",
+    "navigateTo": "/#"
+  },
+  {
+    "name": "Jordan Fire Red 4's 2012",
+    "price": 170,
+    "location": "Wichita, KS",
+    "imageUrl": "https://placehold.co/500x500",
+    "navigateTo": "/#"
+  },
+  {
+    "name": "Authentic Louis Vuit",
+    "price": 1500,
+    "location": "Wichita, KS",
+    "imageUrl": "https://placehold.co/500x500",
+    "navigateTo": "/#"
+  },
+  {
+    "name": "2021 Tesla Model 3",
+    "price": 36495,
+    "location": "Great NCK PLZ, NY",
+    "imageUrl": "https://placehold.co/500x500",
+    "navigateTo": "/#",
+    "additionalInfo": "20k miles"
+  },
+  {
+    "name": "Petelon Bike+",
+    "price": 1200,
+    "location": "Wichita, KS",
+    "imageUrl": "https://placehold.co/500x500",
+    "navigateTo": "/#"
+  },
+  {
+    "name": "Recycling Accent Chair",
+    "price": 170,
+    "location": "Wichita, KS",
+    "imageUrl": "https://placehold.co/500x500",
+    "navigateTo": "/#"
+  },
+  {
+    "name": "Rx8 Hyperchip",
+    "price": 200,
+    "location": "Wichita, KS",
+    "imageUrl": "https://placehold.co/500x500",
+    "navigateTo": "/#"
+  },
+  {
+    "name": "Rocking Chair",
+    "price": 20,
+    "location": "Wichita, KS",
+    "imageUrl": "https://placehold.co/500x500",
+    "navigateTo": "/#"
+  },
+  {
+    "name": "Xbox Elite 20",
+    "price": 150,
+    "location": "Wichita, KS",
+    "imageUrl": "https://placehold.co/500x500",
+    "navigateTo": "/#"
+  },
+  {
+    "name": "Jordan Fire Red 4's 2012",
+    "price": 170,
+    "location": "Wichita, KS",
+    "imageUrl": "https://placehold.co/500x500",
+    "navigateTo": "/#"
+  }
+]
