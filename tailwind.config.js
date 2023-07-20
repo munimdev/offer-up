@@ -51,7 +51,6 @@ module.exports = {
           foreground: "hsl(var(--card-foreground))",
         },
         sky: {
-          DEFAULT: "hsl(var(--sky))",
           foreground: "hsl(var(--sky))",
         },
       },
