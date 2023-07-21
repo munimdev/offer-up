@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 import placeholder from "./placeholder.png";
 
-interface ItemProps {
+export interface ItemProps {
   imageUrl: string;
   title: string;
   price: number;
