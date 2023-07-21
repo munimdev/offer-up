@@ -306,10 +306,12 @@ function LoginDialog() {
     const signupSchema = z.object({
       firstName: z.string({
         required_error: "First Name is required",
-        invalid_type_error: "Furst Name must be a string",
+        // message: "First Name is required",
+        invalid_type_error: "First Name must be a string",
       }),
       lastName: z.string({
         required_error: "Last Name is required",
+        // message: "Last Name is required",
         invalid_type_error: "Last Name must be a string",
       }),
       email: z.string().email({
@@ -327,8 +329,8 @@ function LoginDialog() {
     const form = useForm<z.infer<typeof signupSchema>>({
       resolver: zodResolver(signupSchema),
       defaultValues: {
-        firstName: "",
-        lastName: "",
+        // firstName: "",
+        // lastName: "",
         email: "",
         password: "",
       },
@@ -351,7 +353,7 @@ function LoginDialog() {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col space-y-3"
+            className="flex flex-col space-y-3 text-black"
           >
             <FormField
               control={form.control}
