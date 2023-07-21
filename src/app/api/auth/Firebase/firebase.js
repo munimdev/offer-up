@@ -39,23 +39,23 @@ const provider = new FacebookAuthProvider();
 
 // Functionality
 export const createUserAuth = async (user) => {
-  const { email, name, username, password } = user;
-  const userExists = await checkExistingUsername(
-    db,
-    collection,
-    getDocs,
-    query,
-    where,
-    username
-  );
-  if (userExists) {
-    throw new Error("auth/username-already-in-use");
-  }
+  const { email, firstName, lastName, password } = user;
+  // const userExists = await checkExistingUsername(
+  //   db,
+  //   collection,
+  //   getDocs,
+  //   query,
+  //   where,
+  //   email
+  // );
+  // if (userExists) {
+  //   throw new Error("auth/lastName-already-in-use");
+  // }
   const response = await createUserWithEmailAndPassword(auth, email, password);
   const docRef = await addDoc(collection(db, "users"), {
     email,
-    name,
-    username,
+    firstName,
+    lastName,
     auth: response.user.uid,
   });
   return docRef;

@@ -1,10 +1,14 @@
 "use client";
 
-import React from "react";
+import React, { useContext } from "react";
 import Link from "next/link";
 import "./Modal.css";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import {
+  createUserAuth,
+  loginUserAuth,
+} from "@/app/api/auth/Firebase/firebase";
 
 import {
   NavigationMenu,
@@ -59,6 +63,7 @@ import { Searchbar } from "@/components/searchbar/Searchbar";
 import Logo from "@/components/icons/Logo";
 import { MapPin, Truck, Menu } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { AuthContext } from "@/app/api/auth/[...nextauth]/route";
 
 interface NavbarProps {}
 
@@ -86,6 +91,10 @@ const navList = [
 ];
 
 export const Navbar = ({}: NavbarProps) => {
+  const { currentUser } = useContext(AuthContext);
+
+  console.log(currentUser.accessToken);
+
   return (
     <>
       <div className="flex items-center gap-4 p-4 mt-2">
@@ -228,8 +237,10 @@ function LoginDialog() {
       }),
     });
 
-    function onSubmit(values: z.infer<typeof loginSchema>) {
+    async function onSubmit(values: z.infer<typeof loginSchema>) {
       console.log(values);
+      const user = await loginUserAuth({ ...values });
+      console.log(user);
     }
 
     const form = useForm<z.infer<typeof loginSchema>>({
@@ -294,7 +305,7 @@ function LoginDialog() {
               {"Don't have an account? Sign Up"}
             </button>
             <Button className="flex" type="submit">
-              Sign Up
+              Login
             </Button>
           </form>
         </Form>
@@ -322,8 +333,10 @@ function LoginDialog() {
       }),
     });
 
-    function onSubmit(values: z.infer<typeof signupSchema>) {
-      console.log(values);
+    async function onSubmit(values: z.infer<typeof signupSchema>) {
+      console.log({ ...values });
+      const user = await createUserAuth({ ...values });
+      console.log(user);
     }
 
     const form = useForm<z.infer<typeof signupSchema>>({
