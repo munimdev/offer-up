@@ -50,11 +50,6 @@ const navList = [
     content: false,
   },
   {
-    title: "Post a Job",
-    to: "#",
-    content: false,
-  },
-  {
     title: "Login",
     to: "#",
     content: false,
@@ -117,7 +112,6 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
                 <DropdownMenuGroup>
                   <DropdownMenuItem>About</DropdownMenuItem>
                   <DropdownMenuItem>Help</DropdownMenuItem>
-                  <DropdownMenuItem>Post a Job</DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>Log out</DropdownMenuItem>
