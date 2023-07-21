@@ -144,7 +144,6 @@ export const Navbar = ({}: NavbarProps) => {
                 <DropdownMenuGroup>
                   <DropdownMenuItem>About</DropdownMenuItem>
                   <DropdownMenuItem>Help</DropdownMenuItem>
-                  <DropdownMenuItem>Post a Job</DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>Log out</DropdownMenuItem>
