@@ -6,6 +6,9 @@ import Sidebar from "@/components/product/Sidebar";
 import Description from "@/components/product/Description";
 import { Badge } from "@/components/ui/badge";
 import { Check, Heart, Flag, Share2 } from "lucide-react";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { Thumb } from "@radix-ui/react-scroll-area";
+import { ItemList } from "@/components/item-list/ItemList";
 
 type TDashboard = {};
 
@@ -15,7 +18,7 @@ const description =
 const Product: React.FC<TDashboard> = ({}) => {
   return (
     <div>
-      <div className="flex flex-col md:flex-row">
+      <div className="flex flex-col md:flex-row border-b mb-2">
         <div className="w-full md:w-8/12 lg:w-9/12">
           <div>
             <Slider />
@@ -73,10 +76,23 @@ const Product: React.FC<TDashboard> = ({}) => {
               </Badge>
             </div>
           </div>
+          <div className="px-4 py-2 my-4">
+            <ScrollArea className="max-w-full overflow-y-hidden whitespace-nowrap py-2">
+              {Array.from({ length: 20 }).map(() => (
+                <Badge className="bg-white text-black mx-1 border-black hover:bg-white">
+                  Car
+                </Badge>
+              ))}
+              <ScrollBar orientation="horizontal" />
+            </ScrollArea>
+          </div>
         </div>
         <div className="w-full md:w-6/12 lg:w-3/12">
           <Sidebar />
         </div>
+      </div>
+      <div className="px-4 py-2 my-4">
+        <h3 className="text-3xl text-black font-bold">Similar Items</h3>
       </div>
     </div>
   );

@@ -73,14 +73,14 @@ const Sidebar = () => {
           <MapPin className="inline" size={24} /> 2090 NJ-35, South Amboy, NJ
           08879, USA
         </p>
-        <p className="text-primary mt-1">
+        <p className="text-primary mt-2">
           <Globe className="inline" size={24} /> https://www.uniqueautomall.com/
         </p>
-        <p className="mt-1">
+        <p className="mt-2">
           <Phone className="inline" />
           (732) 707-3223
         </p>
-        <div className="mt-1">
+        <div className="mt-2">
           <CalendarDays className="inline" size={24} />{" "}
           <span className="inline-flex flex-col">
             <p className="font-semibold">Open tomorrow</p>

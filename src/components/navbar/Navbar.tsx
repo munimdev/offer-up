@@ -170,6 +170,8 @@ function LoginDialog() {
 
   const handleFacebook = () => {};
 
+  console.log("Rerender");
+
   const HomeScreen = () => (
     <div
       className={`dialog ${screen === LoginDialogScreens.home ? "active" : ""}`}
