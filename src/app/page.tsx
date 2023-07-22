@@ -14,7 +14,7 @@ export default function Home() {
           Get the app
         </Button>
       </div>
-      <ItemList />
+      <ItemList itemsList={[]} />
       <Button className="px-5 font-bold mb-6 text-white border border-white rounded-full bg-[#1BC3FF] text-md hover:bg-[#0c769c]">
         Load more
       </Button>

@@ -4,7 +4,7 @@ import placeholder from "./placeholder.png";
 
 export interface ItemProps {
   imageUrl: string;
-  title: string;
+  name: string;
   price: number;
   location: string;
   navigateTo: string;
@@ -13,14 +13,14 @@ export interface ItemProps {
 
 export const Item = ({
   imageUrl,
-  title,
+  name,
   price,
   location,
   navigateTo,
   additionalInfo,
 }: ItemProps) => {
   return (
-    <div className="flex flex-col p-2">
+    <div className="flex flex-col py-2">
       <Image
         className="object-cover w-full rounded-lg"
         // src={imageUrl}
@@ -30,7 +30,7 @@ export const Item = ({
         height={100}
         quality={100}
       />
-      <span className="text-lg font-bold text-ellipsis">{title}</span>
+      <span className="text-lg font-bold text-ellipsis">{name}</span>
       <div className="flex flex-col justify-end h-full">
         <div className="flex flex-row justify-between">
           <span className="text-base font-medium">{`$${price}`}</span>

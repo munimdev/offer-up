@@ -1,73 +1,190 @@
 import React from "react";
-import { Item } from "@/components/item/Item";
+import {
+  SellerCompanyProps,
+  SellerIndividualProps,
+  SellerComponentProps,
+} from "@/types/types";
+import IndividualSeller from "../components/IndividualSeller";
+import CompanySeller from "../components/CompanySeller";
 
-type Review = {
-  comment: string;
-  userImage: string;
+function isIndividualSeller(
+  seller: SellerComponentProps
+): seller is SellerIndividualProps {
+  return seller.type === "individual";
+}
+
+function isCompanySeller(
+  seller: SellerComponentProps
+): seller is SellerCompanyProps {
+  return seller.type === "company";
+}
+
+const individualSeller: SellerIndividualProps = {
+  type: "individual",
+  lastActice: new Date("2023-07-21 01:15:00"), // Last active date
+  displayName: "John Doe",
+  imageUrl: "https://placehold.co/500x500",
+  rating: 4.5,
+  reviews: [
+    {
+      comment:
+        "ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit",
+      userImage: "https://placehold.co/500x500",
+    },
+    {
+      comment:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt, voluptatum. Recusandae impedit quisquam laborum molestias maxime incidunt nulla et voluptatem possimus, aliquid ipsam, cupiditate eveniet. Ea laborum porro accusamus veritatis?",
+      userImage: "https://placehold.co/500x500",
+    },
+    {
+      comment:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas, quibusdam. Recusandae impedit quisquam laborum molestias maxime",
+      userImage: "https://placehold.co/500x500",
+    },
+  ],
+  products: [
+    {
+      name: "Product 1",
+      price: 100,
+      imageUrl: "https://placehold.co/500x500",
+      navigateTo: "/",
+      location: "San Francisco, CA",
+    },
+    {
+      name: "Product 1",
+      price: 100,
+      imageUrl: "https://placehold.co/500x500",
+      navigateTo: "/",
+      location: "San Francisco, CA",
+    },
+    {
+      name: "Product 1",
+      price: 100,
+      imageUrl: "https://placehold.co/500x500",
+      navigateTo: "/",
+      location: "San Francisco, CA",
+    },
+    {
+      name: "Product 1",
+      price: 100,
+      imageUrl: "https://placehold.co/500x500",
+      navigateTo: "/",
+      location: "San Francisco, CA",
+    },
+  ],
+  joinDate: new Date("2022-11-27 03:48:22"),
+  replyRate: 100,
+  emailVerified: true,
+  bought: 10,
+  sold: 51,
+  followers: 14,
 };
 
-type Contact = {
-  phone: string;
-  email: string;
+const companySeller: SellerCompanyProps = {
+  type: "company",
+  displayName: "John Doe",
+  imageUrl: "https://placehold.co/500x500",
+  rating: 4.7,
+  reviews: [
+    {
+      comment: "This is a review",
+      userImage: "https://placehold.co/500x500",
+    },
+    {
+      comment: "This is a review",
+      userImage: "https://placehold.co/500x500",
+    },
+    {
+      comment: "This is a review",
+      userImage: "https://placehold.co/500x500",
+    },
+  ],
+  products: [
+    {
+      name: "Product 1",
+      price: 100,
+      imageUrl: "https://placehold.co/500x500",
+      navigateTo: "/",
+      location: "San Francisco, CA",
+    },
+    {
+      name: "Product 1",
+      price: 100,
+      imageUrl: "https://placehold.co/500x500",
+      navigateTo: "/",
+      location: "San Francisco, CA",
+    },
+    {
+      name: "Product 1",
+      price: 100,
+      imageUrl: "https://placehold.co/500x500",
+      navigateTo: "/",
+      location: "San Francisco, CA",
+    },
+    {
+      name: "Product 1",
+      price: 100,
+      imageUrl: "https://placehold.co/500x500",
+      navigateTo: "/",
+      location: "San Francisco, CA",
+    },
+  ],
+  address: "123 Main St, San Francisco, CA",
+  website: "https://www.google.com",
+  workingHours: [
+    {
+      day: "Monday",
+      start: "9:00 AM",
+      end: "5:00 PM",
+    },
+    {
+      day: "Tuesday",
+      start: "9:00 AM",
+      end: "5:00 PM",
+    },
+    {
+      day: "Wednesday",
+      start: "9:00 AM",
+      end: "5:00 PM",
+    },
+    {
+      day: "Thursday",
+      start: "9:00 AM",
+      end: "5:00 PM",
+    },
+    {
+      day: "Friday",
+      start: "9:00 AM",
+      end: "5:00 PM",
+    },
+    {
+      day: "Saturday",
+      start: "9:00 AM",
+      end: "5:00 PM",
+    },
+    {
+      day: "Sunday",
+      start: "9:00 AM",
+      end: "5:00 PM",
+    },
+  ],
+  contact: {
+    phone: "123-456-7890",
+    email: "company@company.com",
+  },
+  about:
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, diam id aliquam ultrices, nisl velit ultrices nunc, quis aliquam diam nisl eu nunc. Sed euismod, diam id aliquam ultrices, nisl velit ultrices nunc, quis aliquam diam nisl eu nunc.",
 };
 
-type WorkHour = {
-  day: string;
-  start: string;
-  end: string;
-};
-
-type ProductProps = React.ComponentPropsWithoutRef<typeof Item>;
-
-type SellerProps = {
-  type: "individual" | "company";
-  displayName: string;
-  imageUrl: string;
-  rating: number;
-  reviews: Review[];
-  products: ProductProps[];
-};
-
-type SellerIndividualProps = SellerProps & {
-  joinDate: Date;
-  replyRate: number;
-  emailVerified: boolean;
-  bought: number; // Fixed typo
-  sold: number;
-  followers: number;
-};
-
-type SellerCompanyProps = SellerProps & {
-  address: string;
-  website: string;
-  workingHours: WorkHour[];
-  contact: Contact;
-  about: string;
-};
-
-type SellerComponentProps = SellerCompanyProps | SellerIndividualProps;
-
-const Seller = (props: SellerComponentProps) => {
-  const {
-    type,
-    displayName,
-    imageUrl,
-    rating,
-    reviews,
-    products,
-    ...otherProps
-  } = props;
-
-  // Determine the type of seller and render the appropriate component
-  if (type === "individual") {
-    const { joinDate, replyRate, emailVerified, bought, sold, followers } =
-      otherProps as SellerIndividualProps;
-  } else if (type === "company") {
-    const { address, website, workingHours, contact, about } =
-      otherProps as SellerCompanyProps;
+const SellerSection = (props: SellerComponentProps) => {
+  if (isIndividualSeller(individualSeller)) {
+    return <IndividualSeller {...individualSeller} />;
+  } else if (isCompanySeller(props)) {
+    return <CompanySeller {...props} />;
   }
 
-  return <div>I am a seller</div>;
+  // default return for unexpected cases.
+  return null;
 };
 
-export default Seller;
+export default SellerSection;
