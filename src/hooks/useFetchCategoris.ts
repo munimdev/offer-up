@@ -1,23 +1,6 @@
-import { useQuery, PlaceholderDataFunction } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import * as Queries from "@/utils/queries";
-import { AxiosResponse } from "axios";
-
-type Result = {
-  statusCode: string;
-  message: string;
-  messageCode: string;
-  dataObject: Category[];
-};
-
-type Category = {
-  id: number;
-  name: string;
-  description: string;
-  level: number;
-  parentCategoryId: number;
-  isActive: boolean;
-  isDeleted: boolean;
-};
+import { Category } from "@/utils/types";
 
 export const useFetchCategories = () => {
   const {
@@ -26,10 +9,7 @@ export const useFetchCategories = () => {
     isError,
     error,
     refetch,
-  } = useQuery<AxiosResponse<Result[]>>(
-    ["query-category"],
-    async () => await Queries.getCategories()
-  );
+  } = useQuery(["query-category"], async () => await Queries.getCategories());
 
   const level1 = response?.dataObject.filter(
     (item: Category) => item.level === 1
