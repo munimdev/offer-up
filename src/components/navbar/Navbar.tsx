@@ -60,6 +60,9 @@ import Logo from "@/components/icons/Logo";
 import { MapPin, Truck, Menu } from "lucide-react";
 import { useForm } from "react-hook-form";
 
+// Hooks
+import { useLogin, useSignup } from "@/hooks";
+
 interface NavbarProps {}
 
 const navList = [
@@ -221,6 +224,8 @@ function LoginDialog() {
   );
 
   const LoginScreen = () => {
+    const { mutateAsync, error, isError } = useLogin();
+
     const loginSchema = z.object({
       email: z.string().email({
         message: "Email is required",
@@ -230,8 +235,14 @@ function LoginDialog() {
       }),
     });
 
-    function onSubmit(values: z.infer<typeof loginSchema>) {
-      console.log(values);
+    async function onSubmit(values: z.infer<typeof loginSchema>) {
+      const response = await mutateAsync(values);
+      if (response.dataObject === null) {
+        form.setError("root", {
+          type: "custom",
+          message: response.message,
+        });
+      }
     }
 
     const form = useForm<z.infer<typeof loginSchema>>({
@@ -262,6 +273,13 @@ function LoginDialog() {
             onSubmit={form.handleSubmit(onSubmit)}
             className="flex flex-col space-y-3"
           >
+            {/* Error */}
+            {form.formState.errors && (
+              <div className="text-red-500 text-sm">
+                {form.formState.errors.root?.message}
+              </div>
+            )}
+
             <FormField
               control={form.control}
               name="email"
@@ -305,6 +323,8 @@ function LoginDialog() {
   };
 
   const SignupScreen = () => {
+    const { mutateAsync } = useSignup();
+
     const signupSchema = z.object({
       firstName: z.string({
         required_error: "First Name is required",
@@ -322,8 +342,19 @@ function LoginDialog() {
       }),
     });
 
-    function onSubmit(values: z.infer<typeof signupSchema>) {
-      console.log(values);
+    async function onSubmit(values: z.infer<typeof signupSchema>) {
+      const response = await mutateAsync({
+        ...values,
+        accTypeLookupId: 10061,
+        registeredFromPlatformLookupId: 10061,
+      });
+      if (response.dataObject === null) {
+        form.setError("root", {
+          type: "custom",
+          message: response.message,
+        });
+      }
+      console.log(response);
     }
 
     const form = useForm<z.infer<typeof signupSchema>>({
@@ -355,6 +386,12 @@ function LoginDialog() {
             onSubmit={form.handleSubmit(onSubmit)}
             className="flex flex-col space-y-3"
           >
+            {/* Error */}
+            {form.formState.errors && (
+              <div className="text-red-500 text-sm">
+                {form.formState.errors.root?.message}
+              </div>
+            )}
             <FormField
               control={form.control}
               name="firstName"
