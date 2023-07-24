@@ -63,6 +63,11 @@ import { useForm } from "react-hook-form";
 // Hooks
 import { useLogin, useSignup } from "@/hooks";
 
+// Jotai
+import { useSetAtom } from "jotai/react";
+import { userAtom } from "@/utils/atoms";
+import { useSession } from "@/hooks/useSession";
+
 interface NavbarProps {}
 
 const navList = [
@@ -81,11 +86,6 @@ const navList = [
     to: "#",
     content: false,
   },
-  // {
-  //   title: "Login",
-  //   to: "#",
-  //   content: false,
-  // },
 ];
 
 export const Navbar = ({}: NavbarProps) => {
@@ -170,14 +170,15 @@ const LoginDialogScreens = {
 
 function LoginDialog() {
   const [screen, setScreen] = React.useState(LoginDialogScreens.home);
+  const setUser = useSetAtom(userAtom);
 
   const handleFacebook = () => {};
 
-  console.log("Rerender");
-
   const HomeScreen = () => (
     <div
-      className={`dialog ${screen === LoginDialogScreens.home ? "active" : ""}`}
+      className={`dialog ${
+        screen === LoginDialogScreens.home ? "active" : ""
+      } h-full p-5 flex flex-col`}
     >
       <DialogHeader className="flex flex-col items-center">
         <div></div>
@@ -188,7 +189,7 @@ function LoginDialog() {
           {"Offer Up"}
         </DialogDescription>
       </DialogHeader>
-      <div className="flex flex-col flex-wrap items-stretch gap-4 mt-4">
+      <div className="flex-1 flex flex-col flex-wrap items-stretch justify-center gap-4 mt-4">
         <Button onClick={handleFacebook}>Continue with Facebook</Button>
         <Button onClick={handleFacebook}>Continue with Google</Button>
         <Button onClick={handleFacebook}>Continue with Apple</Button>
@@ -201,7 +202,9 @@ function LoginDialog() {
 
   const AuthScreen = () => (
     <div
-      className={`dialog ${screen === LoginDialogScreens.auth ? "active" : ""}`}
+      className={`dialog ${
+        screen === LoginDialogScreens.auth ? "active" : ""
+      }  h-full p-5 flex flex-col`}
     >
       <DialogHeader className="flex flex-col items-center">
         <div></div>
@@ -212,7 +215,7 @@ function LoginDialog() {
           {"Offer Up"}
         </DialogDescription>
       </DialogHeader>
-      <div className="flex flex-col flex-wrap items-stretch gap-4">
+      <div className="flex-1 flex flex-col flex-wrap items-stretch justify-center gap-4">
         <Button onClick={() => setScreen(LoginDialogScreens.signup)}>
           Continue with Signup
         </Button>
@@ -242,6 +245,10 @@ function LoginDialog() {
           type: "custom",
           message: response.message,
         });
+      } else {
+        const { token, ...userData } = response.dataObject;
+        setUser(userData);
+        localStorage.setItem("accessToken", token as string);
       }
     }
 
@@ -257,7 +264,7 @@ function LoginDialog() {
       <div
         className={`dialog ${
           screen === LoginDialogScreens.login ? "active" : ""
-        }`}
+        }  h-full p-5 flex flex-col`}
       >
         <DialogHeader className="flex flex-col items-center">
           <div></div>
@@ -271,7 +278,7 @@ function LoginDialog() {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col space-y-3"
+            className="flex-1 flex flex-col space-y-3 justify-center"
           >
             {/* Error */}
             {form.formState.errors && (
@@ -314,7 +321,7 @@ function LoginDialog() {
               {"Don't have an account? Sign Up"}
             </button>
             <Button className="flex" type="submit">
-              Sign Up
+              Login
             </Button>
           </form>
         </Form>
@@ -353,8 +360,11 @@ function LoginDialog() {
           type: "custom",
           message: response.message,
         });
+      } else {
+        const { token, ...userData } = response.dataObject;
+        setUser(userData);
+        localStorage.setItem("accessToken", token as string);
       }
-      console.log(response);
     }
 
     const form = useForm<z.infer<typeof signupSchema>>({
@@ -371,7 +381,7 @@ function LoginDialog() {
       <div
         className={`dialog ${
           screen === LoginDialogScreens.signup ? "active" : ""
-        }`}
+        }  h-full p-5 flex flex-col`}
       >
         <DialogHeader className="flex flex-col items-center">
           <DialogTitle className="text-3xl font-bold text-black">
@@ -384,7 +394,7 @@ function LoginDialog() {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col space-y-3"
+            className="flex-1 flex flex-col space-y-3 justify-center"
           >
             {/* Error */}
             {form.formState.errors && (
@@ -462,17 +472,23 @@ function LoginDialog() {
     );
   };
 
+  const { isLoggedIn } = useSession();
+
+  console.log(isLoggedIn);
+
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="outline">Login</Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] text-primary dialog-container h-[375px]">
-        <HomeScreen />
-        <AuthScreen />
-        <LoginScreen />
-        <SignupScreen />
-      </DialogContent>
-    </Dialog>
+    !isLoggedIn && (
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button variant="outline">Login</Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px] text-primary dialog-container h-4/6 p-0">
+          <HomeScreen />
+          <AuthScreen />
+          <LoginScreen />
+          <SignupScreen />
+        </DialogContent>
+      </Dialog>
+    )
   );
 }

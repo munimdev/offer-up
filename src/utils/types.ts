@@ -22,10 +22,10 @@ export type SignupData = {
 };
 
 export type User = {
-  id: number;
+  id: string;
   name: string;
   email: string;
-  token: string;
+  token?: string;
   isActive: boolean;
   isDeleted: boolean;
 };
