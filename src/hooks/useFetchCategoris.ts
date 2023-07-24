@@ -27,6 +27,5 @@ export const useFetchCategories = () => {
       children,
     };
   });
-
   return { data, isLoading, isError, error, refetch };
 };
