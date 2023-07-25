@@ -58,10 +58,10 @@ import { Searchbar } from "@/components/searchbar/Searchbar";
 // Icons
 import Logo from "@/components/icons/Logo";
 import { MapPin, Truck, Menu } from "lucide-react";
-import { useForm } from "react-hook-form";
 
 // Hooks
 import { useLogin, useSignup } from "@/hooks";
+import { useForm } from "react-hook-form";
 
 // Jotai
 import { useSetAtom } from "jotai/react";
@@ -189,7 +189,7 @@ function LoginDialog() {
           {"Offer Up"}
         </DialogDescription>
       </DialogHeader>
-      <div className="flex-1 flex flex-col flex-wrap items-stretch justify-center gap-4 mt-4">
+      <div className="flex flex-col flex-wrap items-stretch justify-center flex-1 gap-4 mt-4">
         <Button onClick={handleFacebook}>Continue with Facebook</Button>
         <Button onClick={handleFacebook}>Continue with Google</Button>
         <Button onClick={handleFacebook}>Continue with Apple</Button>
@@ -215,7 +215,7 @@ function LoginDialog() {
           {"Offer Up"}
         </DialogDescription>
       </DialogHeader>
-      <div className="flex-1 flex flex-col flex-wrap items-stretch justify-center gap-4">
+      <div className="flex flex-col flex-wrap items-stretch justify-center flex-1 gap-4">
         <Button onClick={() => setScreen(LoginDialogScreens.signup)}>
           Continue with Signup
         </Button>
@@ -278,11 +278,11 @@ function LoginDialog() {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="flex-1 flex flex-col space-y-3 justify-center"
+            className="flex flex-col justify-center flex-1 space-y-3"
           >
             {/* Error */}
             {form.formState.errors && (
-              <div className="text-red-500 text-sm">
+              <div className="text-sm text-red-500">
                 {form.formState.errors.root?.message}
               </div>
             )}
@@ -394,11 +394,11 @@ function LoginDialog() {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="flex-1 flex flex-col space-y-3 justify-center"
+            className="flex flex-col justify-center flex-1 space-y-3"
           >
             {/* Error */}
             {form.formState.errors && (
-              <div className="text-red-500 text-sm">
+              <div className="text-sm text-red-500">
                 {form.formState.errors.root?.message}
               </div>
             )}
