@@ -1,5 +1,4 @@
-import { AxiosResponse } from "axios";
-import { LoginData, SignupData } from "@/utils/types";
+import { LoginData, SignupData, SubCategory } from "@/utils/types";
 import { Result, User, Category } from "@/utils/types";
 import instance from "./axios";
 
@@ -11,3 +10,6 @@ export const signupUser = (data: SignupData): Promise<Result<User>> =>
 
 export const getCategories = (): Promise<Result<Category[]>> =>
   instance.get("/Category/getCategories");
+
+export const getSubCategories = (id: number): Promise<Result<SubCategory[]>> =>
+  instance.post("/Category/getSubCategories", { id });
