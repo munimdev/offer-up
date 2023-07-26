@@ -473,9 +473,6 @@ function LoginDialog() {
   };
 
   const { isLoggedIn } = useSession();
-
-  console.log(isLoggedIn);
-
   return (
     !isLoggedIn && (
       <Dialog>

@@ -40,6 +40,15 @@ export type Category = {
   isDeleted: boolean;
 };
 
+export type SubCategory = {
+  id: number;
+  name: string;
+  description: string;
+  categoryId: number;
+  isActive: boolean;
+  isDeleted: boolean;
+};
+
 export type Result<T> = {
   statusCode: string;
   message: string;
