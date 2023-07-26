@@ -105,14 +105,15 @@ const SubNav = () => {
                       <NavigationMenuTrigger>{item.name}</NavigationMenuTrigger>
                       <NavigationMenuContent>
                         {/* <ul className="grid gap-3 p-2 lg:grid-cols-[.75fr_1fr]"> */}
-                        <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                        <ul className="grid p-4 w-[200px]">
                           {item.children.map((child: any, index: number) => (
                             <ListItem
                               key={index}
                               href={`/categories/${child.id}`}
                               title={child.name}
+                              className="w-full"
                             >
-                              {child.description}
+                              {/* {child.description} */}
                             </ListItem>
                           ))}
                         </ul>
