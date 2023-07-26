@@ -38,7 +38,9 @@ const Selling = () => {
     <div className="flex flex-row justify-center p-5 gap-20 py-10">
       <div className="flex-1 flex flex-col font-bold text-2xl gap-5">
         <h3 className="self-center">Add an Item</h3>
-        <FileUpload />
+        <div className="grid w-full max-w-md gap-1.5 self-end">
+          <FileUpload />
+        </div>
         <div className="grid w-full max-w-md gap-1.5 self-end">
           <Label htmlFor="title">Title</Label>
           <Input
