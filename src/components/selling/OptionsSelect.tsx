@@ -22,7 +22,7 @@ const OptionsSelect: React.FC<TOptionsSelect> = ({ title, options }) => {
       </SelectTrigger>
       <SelectContent>
         {options.map((option: any) => (
-          <SelectItem value={option.name}>{option.name}</SelectItem>
+          <SelectItem value={option}>{option}</SelectItem>
         ))}
       </SelectContent>
     </Select>

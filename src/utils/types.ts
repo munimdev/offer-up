@@ -49,6 +49,28 @@ export type SubCategory = {
   isDeleted: boolean;
 };
 
+export type CategoryAttribute = {
+  id: number;
+  name: string;
+  isForCategory: boolean;
+  categoryId: number;
+  isForSubCategory: boolean;
+  subCategoryId: number;
+  attributeType: string;
+  options: string;
+  lenght: number;
+  isRequired: boolean;
+  isActive: boolean;
+  isDeleted: boolean;
+};
+
+export type FetchAttributesDto = {
+  isForCategory: boolean;
+  categoryId: number;
+  isForSubCategory: boolean;
+  subCategoryId: number;
+};
+
 export type Result<T> = {
   statusCode: string;
   message: string;
