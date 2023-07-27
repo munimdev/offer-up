@@ -1,4 +1,10 @@
-import { LoginData, SignupData, SubCategory } from "@/utils/types";
+import {
+  CategoryAttribute,
+  FetchAttributesDto,
+  LoginData,
+  SignupData,
+  SubCategory,
+} from "@/utils/types";
 import { Result, User, Category } from "@/utils/types";
 import instance from "./axios";
 
@@ -13,3 +19,8 @@ export const getCategories = (): Promise<Result<Category[]>> =>
 
 export const getSubCategories = (id: number): Promise<Result<SubCategory[]>> =>
   instance.post("/Category/getSubCategories", { id });
+
+export const getCategoryAttributes = (
+  data: FetchAttributesDto
+): Promise<Result<CategoryAttribute[]>> =>
+  instance.post("/Category/getCategoryAttributesFiltered", data);

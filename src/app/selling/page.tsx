@@ -10,9 +10,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
 import OptionsSelect from "@/components/selling/OptionsSelect";
 import OptionsDropdown from "@/components/selling/OptionsDropdown";
+import { Category, CategoryAttribute, SubCategory } from "@/utils/types";
 import { Category, SubCategory } from "@/utils/types";
 import FileUpload from "./components/FileUpload";
-
+        
 const Selling = () => {
   const { data: categories, isLoading } = useFetchCategories();
 
@@ -29,6 +30,20 @@ const Selling = () => {
   const { data: subCategories } = useFetch({
     key: ["query-subCategory", category.id.toString()],
     fn: () => Queries.getSubCategories(category.id),
+    options: {
+      enabled: !!category.name,
+    },
+  });
+
+  const { data: attributes } = useFetch({
+    key: ["query-attributes", category.id.toString()],
+    fn: () =>
+      Queries.getCategoryAttributes({
+        isForCategory: true,
+        categoryId: category.id,
+        isForSubCategory: false,
+        subCategoryId: 0,
+      }),
     options: {
       enabled: !!category.name,
     },
@@ -59,7 +74,7 @@ const Selling = () => {
           />
         </div>
         <div className="w-full max-w-md self-end font-medium">
-          <Label htmlFor="description">Categories</Label>
+          <Label htmlFor="description">Category</Label>
           {isLoading ? (
             <Skeleton className="w-full h-10" />
           ) : (
@@ -72,16 +87,24 @@ const Selling = () => {
           )}
         </div>
         {subCategories && (
-          <>
+          <div className="w-full max-w-md self-end font-medium">
+            <Label htmlFor="description">Sub Category</Label>
+            <OptionsSelect
+              title="Select Sub Category"
+              options={subCategories.dataObject.map((item: any) => item.name)}
+            />
+          </div>
+        )}
+        {attributes &&
+          attributes.dataObject?.map((attribute: CategoryAttribute) => (
             <div className="w-full max-w-md self-end font-medium">
-              <Label htmlFor="description">Sub Categories</Label>
+              <Label htmlFor="description">Select {attribute.name}</Label>
               <OptionsSelect
-                title="Select Sub Category"
-                options={subCategories.dataObject}
+                title={attribute.name}
+                options={attribute.options.split(",")}
               />
             </div>
-          </>
-        )}
+          ))}
       </div>
       <div className="flex-1 flex flex-col justify-center">
         <Image
