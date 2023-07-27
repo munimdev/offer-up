@@ -11,11 +11,13 @@ import Image from "next/image";
 import OptionsSelect from "@/components/selling/OptionsSelect";
 import OptionsDropdown from "@/components/selling/OptionsDropdown";
 import { Category, CategoryAttribute, SubCategory } from "@/utils/types";
-
+import { Category, SubCategory } from "@/utils/types";
+import FileUpload from "./components/FileUpload";
+        
 const Selling = () => {
   const { data: categories, isLoading } = useFetchCategories();
 
-  const [category, setCategory] = useState({
+  const [category, setCategory] = useState<Category>({
     id: 0,
     name: "",
     description: "",
@@ -51,6 +53,9 @@ const Selling = () => {
     <div className="flex flex-row justify-center p-5 gap-20 py-10">
       <div className="flex-1 flex flex-col font-bold text-2xl gap-5">
         <h3 className="self-center">Add an Item</h3>
+        <div className="grid w-full max-w-md gap-1.5 self-end">
+          <FileUpload />
+        </div>
         <div className="grid w-full max-w-md gap-1.5 self-end">
           <Label htmlFor="title">Title</Label>
           <Input

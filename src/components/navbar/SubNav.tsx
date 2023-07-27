@@ -13,6 +13,7 @@ import Link from "next/link";
 import { useFetchCategories } from "@/hooks";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getTotalWidth, getElementWidth } from "@/utils";
+import Description from "@/components/product/Description";
 
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
@@ -30,7 +31,7 @@ const ListItem = React.forwardRef<
           {...props}
         >
           <div className="text-sm font-medium leading-none">{title}</div>
-          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+          <p className="text-sm leading-snug line-clamp-2 text-muted-foreground">
             {children}
           </p>
         </a>
@@ -38,11 +39,12 @@ const ListItem = React.forwardRef<
     </li>
   );
 });
+ListItem.displayName = "ListItem";
 
 const SubNav = () => {
   const { data, isLoading } = useFetchCategories();
-  const [visibleOptions, setVisibleOptions] = useState([]);
-  const [hiddenOptions, setHiddenOptions] = useState([]);
+  const [visibleOptions, setVisibleOptions] = useState<typeof data>([]);
+  const [hiddenOptions, setHiddenOptions] = useState<typeof data>([]);
 
   useEffect(() => {
     const handleMoreToggler = () => {
@@ -51,7 +53,7 @@ const SubNav = () => {
         "navigation-menu-item"
       ) as HTMLCollectionOf<HTMLElement>;
       let totalWidth = 0;
-      let moreIndex = Number(window.innerWidth / 150);
+      let moreIndex = Number(window.innerWidth / 175);
 
       for (let i = 0; i < menuItems.length; i++) {
         const itemWidth = getElementWidth(menuItems[i]);
@@ -77,9 +79,11 @@ const SubNav = () => {
     };
   }, [isLoading]);
 
+  console.log(visibleOptions);
+
   return (
-    <div className="border-b overflow-hidden">
-      <div className="flex justify-stretch gap-5"></div>
+    <div className="border-b ">
+      <div className="flex gap-5 justify-stretch"></div>
       <NavigationMenu className="z-0">
         <NavigationMenuList id="navigation-menu-list">
           {isLoading
@@ -91,52 +95,51 @@ const SubNav = () => {
                   <Skeleton className="block w-24 h-5" />
                 </NavigationMenuItem>
               ))
-            : visibleOptions.map((item: any) => (
-                <Link href="#" passHref>
-                  <NavigationMenuItem
-                    key={item.name}
-                    className="navigation-menu-item"
-                  >
-                    {item.children > 0 ? (
-                      <>
-                        <NavigationMenuTrigger>
-                          {item.name}
-                        </NavigationMenuTrigger>
-                        <NavigationMenuContent>
-                          <ul className="grid gap-3 p-2 lg:grid-cols-[.75fr_1fr]">
-                            {item.children.map((child: any) => (
-                              <li className="row-span-3 text-black font-semibold">
-                                <Link href="#" legacyBehavior passHref>
-                                  <NavigationMenuLink
-                                    className={navigationMenuTriggerStyle()}
-                                  >
-                                    {child.name}
-                                  </NavigationMenuLink>
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
-                        </NavigationMenuContent>
-                      </>
-                    ) : (
-                      <Link href="#" legacyBehavior passHref>
-                        <NavigationMenuLink
-                          className={navigationMenuTriggerStyle()}
-                        >
-                          {item.name}
-                        </NavigationMenuLink>
-                      </Link>
-                    )}
-                  </NavigationMenuItem>
-                </Link>
+            : visibleOptions?.map((item: any, idx) => (
+                <NavigationMenuItem
+                  key={item.id}
+                  className="navigation-menu-item"
+                >
+                  {item.children.length > 0 ? (
+                    <>
+                      <NavigationMenuTrigger>{item.name}</NavigationMenuTrigger>
+                      <NavigationMenuContent>
+                        {/* <ul className="grid gap-3 p-2 lg:grid-cols-[.75fr_1fr]"> */}
+                        <ul className="grid p-4 w-[200px]">
+                          {item.children.map((child: any, index: number) => (
+                            <ListItem
+                              key={index}
+                              href={`/categories/${child.id}`}
+                              title={child.name}
+                              className="w-full"
+                            >
+                              {/* {child.description} */}
+                            </ListItem>
+                          ))}
+                        </ul>
+                      </NavigationMenuContent>
+                    </>
+                  ) : (
+                    <Link href="#" legacyBehavior passHref>
+                      <NavigationMenuLink
+                      // className={navigationMenuTriggerStyle()}
+                      >
+                        {item.name}
+                      </NavigationMenuLink>
+                    </Link>
+                  )}
+                </NavigationMenuItem>
               ))}
-          {hiddenOptions.length > 0 && (
+          {hiddenOptions?.length! > 0 && (
             <NavigationMenuItem>
               <NavigationMenuTrigger>More</NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ul className="grid gap-3 p-2 lg:grid-cols-[.75fr_1fr]">
-                  {hiddenOptions.map((item: any) => (
-                    <li className="row-span-3 text-black font-semibold">
+                  {hiddenOptions?.map((item: any, idx) => (
+                    <li
+                      key={idx}
+                      className="row-span-3 font-semibold text-black"
+                    >
                       <Link href="#" legacyBehavior passHref>
                         <NavigationMenuLink
                           className={navigationMenuTriggerStyle()}

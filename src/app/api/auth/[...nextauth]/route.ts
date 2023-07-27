@@ -16,7 +16,7 @@ const handler = NextAuth({
       },
       async authorize(credentials) {
         return {
-          id: 1,
+          id: "1",
         };
       },
     }),
