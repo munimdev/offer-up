@@ -31,6 +31,5 @@ export const useFetchCategories = () => {
     };
   });
 
-  console.log(data);
   return { data, isLoading, isError, error, refetch };
 };

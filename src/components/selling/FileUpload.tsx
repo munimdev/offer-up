@@ -5,12 +5,18 @@ import { DropResult } from "react-beautiful-dnd";
 
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import { UploadCloud, Eye } from "lucide-react";
+import { toBase64 } from "@/utils";
+import { Images } from "@/types/types";
 
 interface FileWithPreview extends File {
   preview?: string;
 }
 
-const FileUpload: React.FC = () => {
+type Props = {
+  onUpload: (files: Images[]) => void;
+};
+
+const FileUpload: React.FC<Props> = ({ onUpload }) => {
   const [files, setFiles] = useState<FileWithPreview[]>([]);
   const [isHovered, setIsHovered] = useState<string | null>(null);
 
@@ -19,7 +25,20 @@ const FileUpload: React.FC = () => {
       files.forEach((file) => URL.revokeObjectURL(file.preview || ""));
   }, [files]);
 
-  const onDrop = (acceptedFiles: File[]) => {
+  const onDrop = async (acceptedFiles: File[]) => {
+    const files = await Promise.all(
+      acceptedFiles.map(async (file: File, idx: number) => {
+        const base64 = await toBase64(file);
+
+        return {
+          imageOrder: idx,
+          //@ts-ignore
+          image: base64.split(",")[1],
+        } as Images;
+      })
+    );
+    onUpload(files);
+
     setFiles((prev) => [
       ...prev,
       ...acceptedFiles.map((file: File) =>
@@ -56,7 +75,7 @@ const FileUpload: React.FC = () => {
       <div
         {...getRootProps({
           className:
-            "dropzone flex flex-col justify-center items-center p-6 my-4 border-2 border-dashed rounded text-center cursor-pointer",
+            "dropzone flex flex-col justify-center items-center px-6 py-20 my-4 border-2 border-dashed rounded text-center cursor-pointer",
         })}
         onClick={open} // Make the entire dropzone a button
       >
@@ -65,7 +84,7 @@ const FileUpload: React.FC = () => {
         <UploadCloud className="text-gray-400 mt-6" size={40} />
       </div>
       <aside>
-        <h4 className="mb-2 text-sm font-semibold">Images</h4>
+        {/* <h4 className="mb-2 text-sm text-center font-semibold">Images</h4> */}
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="droppable" direction="horizontal">
             {(provided) => (
@@ -85,7 +104,7 @@ const FileUpload: React.FC = () => {
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
-                        className="relative w-24 h-24"
+                        className="relative w-20 h-20"
                         onMouseEnter={() => setIsHovered(file.name)}
                         onMouseLeave={() => setIsHovered(null)}
                       >

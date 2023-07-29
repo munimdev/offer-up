@@ -1,119 +1,61 @@
 "use client";
 
-import React, { useState } from "react";
-import * as Queries from "@/utils/queries";
-import { useFetchCategories, useFetch } from "@/hooks";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Skeleton } from "@/components/ui/skeleton";
-import Image from "next/image";
-import OptionsSelect from "@/components/selling/OptionsSelect";
-import OptionsDropdown from "@/components/selling/OptionsDropdown";
-import { Category, CategoryAttribute, SubCategory } from "@/utils/types";
-import { Category, SubCategory } from "@/utils/types";
-import FileUpload from "./components/FileUpload";
-        
+import React from "react";
+import { useAtomValue } from "jotai";
+import { itemFormDataAtom } from "@/utils/atoms";
+import { useItemMutation } from "@/hooks/useItemMutation";
+import Stepper from "@/components/ui/stepper";
+import ItemDetail from "@/components/selling/ItemDetail";
+import { Button } from "@/components/ui/button";
+import CategoryDetail from "@/components/selling/CategoryDetail";
+import PriceLocation from "@/components/selling/Price&Location";
+
+const tabs = ["Item", "Category", "Price & Location"];
+
 const Selling = () => {
-  const { data: categories, isLoading } = useFetchCategories();
+  const itemData = useAtomValue(itemFormDataAtom);
+  const [currentTab, setCurrentTab] = React.useState(1);
+  const { mutateAsync } = useItemMutation();
 
-  const [category, setCategory] = useState<Category>({
-    id: 0,
-    name: "",
-    description: "",
-    level: 0,
-    parentCategoryId: 0,
-    isActive: false,
-    isDeleted: false,
-  });
-
-  const { data: subCategories } = useFetch({
-    key: ["query-subCategory", category.id.toString()],
-    fn: () => Queries.getSubCategories(category.id),
-    options: {
-      enabled: !!category.name,
-    },
-  });
-
-  const { data: attributes } = useFetch({
-    key: ["query-attributes", category.id.toString()],
-    fn: () =>
-      Queries.getCategoryAttributes({
-        isForCategory: true,
-        categoryId: category.id,
-        isForSubCategory: false,
-        subCategoryId: 0,
-      }),
-    options: {
-      enabled: !!category.name,
-    },
-  });
-
+  const onFormSubmitHandler = async () => {
+    await mutateAsync({
+      name: itemData.name,
+      description: itemData.description,
+      price: itemData.price,
+      isPriceFixed: itemData.isPriceFixed,
+      images: itemData.images,
+      categoryId: itemData.category.parentCategoryId,
+      childCategoryId: itemData.category.id,
+      subCategoryId: itemData.subCategory.id,
+      validUpto: itemData.validUpto,
+      zipcode: itemData.zipcode,
+      locationLat: itemData.locationLat,
+      locationLng: itemData.locationLng,
+      conditionLookUpId: 10001,
+    });
+  };
   return (
-    <div className="flex flex-row justify-center p-5 gap-20 py-10">
-      <div className="flex-1 flex flex-col font-bold text-2xl gap-5">
-        <h3 className="self-center">Add an Item</h3>
-        <div className="grid w-full max-w-md gap-1.5 self-end">
-          <FileUpload />
-        </div>
-        <div className="grid w-full max-w-md gap-1.5 self-end">
-          <Label htmlFor="title">Title</Label>
-          <Input
-            type="text"
-            id="title"
-            placeholder="Tile of the item"
-            className="font-medium border-gray placeholder:text-gray placeholder:font-medium"
-          />
-        </div>
-        <div className="grid w-full max-w-md items-center gap-1.5 self-end">
-          <Label htmlFor="description">Description</Label>
-          <Textarea
-            id="description"
-            placeholder="Description"
-            className="placeholder:font-medium"
-          />
-        </div>
-        <div className="w-full max-w-md self-end font-medium">
-          <Label htmlFor="description">Category</Label>
-          {isLoading ? (
-            <Skeleton className="w-full h-10" />
-          ) : (
-            <OptionsDropdown
-              title="Select Category"
-              options={categories}
-              onChange={setCategory}
-              value={category.name}
-            />
-          )}
-        </div>
-        {subCategories && (
-          <div className="w-full max-w-md self-end font-medium">
-            <Label htmlFor="description">Sub Category</Label>
-            <OptionsSelect
-              title="Select Sub Category"
-              options={subCategories.dataObject.map((item: any) => item.name)}
-            />
-          </div>
-        )}
-        {attributes &&
-          attributes.dataObject?.map((attribute: CategoryAttribute) => (
-            <div className="w-full max-w-md self-end font-medium">
-              <Label htmlFor="description">Select {attribute.name}</Label>
-              <OptionsSelect
-                title={attribute.name}
-                options={attribute.options.split(",")}
-              />
-            </div>
-          ))}
+    <div className="my-5 flex-1 flex flex-col font-bold text-2xl gap-5 items-center">
+      <div className="grid w-full max-w-lg items-center gap-1.5">
+        <Stepper tabs={tabs} activeTab={currentTab} />
       </div>
-      <div className="flex-1 flex flex-col justify-center">
-        <Image
-          width={500}
-          height={300}
-          alt="add-item"
-          src="/images/add-item.png"
-        />
-      </div>
+      {currentTab === 1 && <ItemDetail />}
+      {currentTab === 2 && <CategoryDetail />}
+      {currentTab === 3 && <PriceLocation />}
+
+      {currentTab === 3 ? (
+        <div className="grid w-full max-w-md gap-1.5">
+          <Button type="button" onClick={() => onFormSubmitHandler()}>
+            Add Item
+          </Button>
+        </div>
+      ) : (
+        <div className="grid w-full max-w-md gap-1.5">
+          <Button type="button" onClick={() => setCurrentTab(currentTab + 1)}>
+            Next
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

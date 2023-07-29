@@ -4,8 +4,11 @@ import {
   LoginData,
   SignupData,
   SubCategory,
+  Result,
+  User,
+  Category,
+  SaveItemDto,
 } from "@/utils/types";
-import { Result, User, Category } from "@/utils/types";
 import instance from "./axios";
 
 export const loginUser = (data: LoginData): Promise<Result<User>> =>
@@ -24,3 +27,6 @@ export const getCategoryAttributes = (
   data: FetchAttributesDto
 ): Promise<Result<CategoryAttribute[]>> =>
   instance.post("/Category/getCategoryAttributesFiltered", data);
+
+export const saveItem = (data: SaveItemDto) =>
+  instance.post("/Item/createitem", data);

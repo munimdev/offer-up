@@ -16,6 +16,11 @@ export type WorkHour = {
   end: string;
 };
 
+export type Images = {
+  imageOrder: number;
+  image: string;
+};
+
 export type ProductProps = React.ComponentPropsWithoutRef<typeof Item>;
 
 export type SellerProps = {

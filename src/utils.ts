@@ -24,7 +24,12 @@ export const getElementWidth = (element: HTMLElement) => {
   const marginLeft = parseFloat(styles.marginLeft);
   const marginRight = parseFloat(styles.marginRight);
   return width + marginLeft + marginRight;
-  // const width = element.getBoundingClientRect().width;
-  // const leftPos = element.getBoundingClientRect().left;
-  // return width + leftPos + marginLeft + marginRight;
 };
+
+export const toBase64 = (file: File) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+  });

@@ -1,3 +1,5 @@
+import { Images } from "@/types/types";
+
 export type SVG = {
   className: string;
 };
@@ -69,6 +71,49 @@ export type FetchAttributesDto = {
   categoryId: number;
   isForSubCategory: boolean;
   subCategoryId: number;
+};
+
+export type ItemAtom = {
+  name: string;
+  description?: string;
+  subCategory: SubCategory;
+  category: Category;
+  attributes?: [
+    {
+      categoryAttributeId: number;
+      selectedValue: string;
+    }
+  ];
+  conditionLookUpId: number;
+  price: number;
+  isPriceFixed: boolean;
+  validUpto: string;
+  zipcode: string;
+  locationLat: number;
+  locationLng: number;
+  images: Images[];
+};
+
+export type SaveItemDto = {
+  name: string;
+  description?: string;
+  categoryId: number;
+  childCategoryId: number;
+  subCategoryId?: number;
+  attributes?: [
+    {
+      categoryAttributeId: number;
+      selectedValue: string;
+    }
+  ];
+  conditionLookUpId: number;
+  price: number;
+  isPriceFixed: boolean;
+  validUpto: string;
+  zipcode: string;
+  locationLat: number;
+  locationLng: number;
+  images: Images[];
 };
 
 export type Result<T> = {

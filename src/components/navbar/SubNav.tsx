@@ -79,8 +79,6 @@ const SubNav = () => {
     };
   }, [isLoading]);
 
-  console.log(visibleOptions);
-
   return (
     <div className="border-b ">
       <div className="flex gap-5 justify-stretch"></div>

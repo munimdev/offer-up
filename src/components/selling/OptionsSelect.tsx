@@ -2,9 +2,7 @@ import React from "react";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -12,9 +10,14 @@ import {
 type TOptionsSelect = {
   title: string;
   options: any;
+  onChange: (e: any) => void;
 };
 
-const OptionsSelect: React.FC<TOptionsSelect> = ({ title, options }) => {
+const OptionsSelect: React.FC<TOptionsSelect> = ({
+  title,
+  options,
+  onChange,
+}) => {
   return (
     <Select>
       <SelectTrigger className="w-full">
@@ -22,7 +25,9 @@ const OptionsSelect: React.FC<TOptionsSelect> = ({ title, options }) => {
       </SelectTrigger>
       <SelectContent>
         {options.map((option: any) => (
-          <SelectItem value={option}>{option}</SelectItem>
+          <SelectItem value={option.name} onMouseDown={() => onChange(option)}>
+            {option.name}
+          </SelectItem>
         ))}
       </SelectContent>
     </Select>
