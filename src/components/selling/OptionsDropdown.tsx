@@ -38,14 +38,17 @@ const OptionsDropdown: React.FC<TOptionsDropdown> = ({
           <DropdownMenuGroup>
             {options.map((option: any) =>
               option.children.length > 0 ? (
-                <DropdownMenuSub>
+                <DropdownMenuSub key={option.id}>
                   <DropdownMenuSubTrigger className="font-semibold">
                     {option.name}
                   </DropdownMenuSubTrigger>
                   <DropdownMenuPortal>
                     <DropdownMenuSubContent>
                       {option.children.map((child: any) => (
-                        <DropdownMenuItem onClick={() => onChange(child)}>
+                        <DropdownMenuItem
+                          key={child.id}
+                          onClick={() => onChange(child)}
+                        >
                           {child.name}
                         </DropdownMenuItem>
                       ))}
@@ -54,6 +57,7 @@ const OptionsDropdown: React.FC<TOptionsDropdown> = ({
                 </DropdownMenuSub>
               ) : (
                 <DropdownMenuItem
+                  key={option.id}
                   className="font-semibold"
                   onClick={() => onChange(option)}
                 >
