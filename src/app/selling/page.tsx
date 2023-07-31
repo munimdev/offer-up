@@ -25,6 +25,7 @@ const Selling = () => {
       isPriceFixed: itemData.isPriceFixed,
       images: itemData.images,
       categoryId: itemData.category.parentCategoryId,
+      attributes:  itemData.attributes || [],
       childCategoryId: itemData.category.id,
       subCategoryId: itemData.subCategory.id,
       validUpto: itemData.validUpto,

@@ -78,12 +78,11 @@ export type ItemAtom = {
   description?: string;
   subCategory: SubCategory;
   category: Category;
-  attributes?: [
+  attributes:
     {
       categoryAttributeId: number;
       selectedValue: string;
-    }
-  ];
+    } [];
   conditionLookUpId: number;
   price: number;
   isPriceFixed: boolean;
@@ -100,12 +99,11 @@ export type SaveItemDto = {
   categoryId: number;
   childCategoryId: number;
   subCategoryId?: number;
-  attributes?: [
+  attributes?:
     {
       categoryAttributeId: number;
       selectedValue: string;
-    }
-  ];
+    }[];
   conditionLookUpId: number;
   price: number;
   isPriceFixed: boolean;

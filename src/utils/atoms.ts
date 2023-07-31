@@ -12,6 +12,7 @@ export const userAtom = atomWithStorage<User>("user", {
 
 export const itemFormDataAtom = atom<ItemAtom>({
   name: "",
+  attributes: [],
   category: {
     id: 0,
     name: "",
