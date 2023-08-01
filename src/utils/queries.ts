@@ -6,8 +6,10 @@ import {
   SubCategory,
   Result,
   User,
+  Item,
   Category,
   SaveItemDto,
+  UserProfile,
 } from "@/utils/types";
 import instance from "./axios";
 
@@ -30,3 +32,6 @@ export const getCategoryAttributes = (
 
 export const saveItem = (data: SaveItemDto) =>
   instance.post("/Item/createitem", data);
+
+export const userDetails = (data: {id: string}) : Promise<Result<UserProfile>> => instance.post("/customer/getcustomerProfile", data);
+export const userItems = (data: {id: string}) : Promise<Result<Item>> => instance.post("/Item/getItemsOfCurrentUser", data);

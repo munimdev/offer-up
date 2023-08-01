@@ -1,25 +1,16 @@
 import React from "react";
 import Image from "next/image";
 import placeholder from "./placeholder.png";
-
-export interface ItemProps {
-  imageUrl: string;
-  name: string;
-  price: number;
-  location: string;
-  navigateTo: string;
-  additionalInfo?: string;
-}
+import { TItem } from "@/utils/types";
+import Link from "next/link";
 
 export const Item = ({
-  imageUrl,
+  id,
   name,
   price,
-  location,
-  navigateTo,
-  additionalInfo,
-}: ItemProps) => {
+}: TItem) => {
   return (
+    <Link href={`/product/${id}`}>
     <div className="flex flex-col py-2">
       <Image
         className="object-cover w-full rounded-lg"
@@ -34,10 +25,12 @@ export const Item = ({
       <div className="flex flex-col justify-end h-full">
         <div className="flex flex-row justify-between">
           <span className="text-base font-medium">{`$${price}`}</span>
-          <span className="text-base font-medium">{additionalInfo}</span>
+          {/* <span className="text-base font-medium">{additionalInfo}</span> */}
         </div>
-        <span className="text-sm font-normal text-gray-500/80">{location}</span>
+        {/* <span className="text-sm font-normal text-gray-500/80">{location}</span> */}
+        <span className="text-sm font-normal text-gray-500/80">Islamabad, PK</span>
       </div>
     </div>
+    </Link>
   );
 };

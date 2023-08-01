@@ -32,6 +32,67 @@ export type User = {
   isDeleted: boolean;
 };
 
+export type UserProfile = {
+  id: string;
+  name: string;
+  firstName: string;
+  middleName: string;
+  lastName: string;
+  totalItems: number;
+  totalFollowers: number;
+  totalFollowing: number;
+  totalRating: number;
+  totalSold: number;
+  totalBought: number;
+  isEmailVerified: boolean;
+  isNumberVerified: boolean;
+  imagePath: string;
+  imagePath250: string;
+  registeredOn: Date;
+};
+
+type ItemImage = {
+  id: number;
+  itemId: string;
+  imageOrder: number;
+  imagePath: string;
+  imagePath250: string;
+  image: string;
+  isImageDeleted: boolean;
+  isImageAdded: boolean;
+  isActive: boolean;
+  isDeleted: boolean;
+};
+
+export type TItem = {
+  id: string;
+  name: string;
+  description: string;
+  totalMessages: number;
+  totalViews: number;
+  totalFavorite: number;
+  categoryId: number;
+  childCategoryId: number;
+  subCategoryId: number;
+  conditionLookUpId: number;
+  conditionDescription: string;
+  price: number;
+  isPriceFixed: boolean;
+  validUpto: string;
+  isSold: boolean;
+  isPromoted: boolean;
+  customerId: number;
+  userId: string;
+  isArchived: boolean;
+  locationLat: number;
+  locationLng: number;
+  zipCode: string;
+  images: ItemImage[];
+  attributes: any[];
+  isActive: boolean;
+  isDeleted: boolean;
+};
+
 export type Category = {
   id: number;
   name: string;
@@ -78,11 +139,10 @@ export type ItemAtom = {
   description?: string;
   subCategory: SubCategory;
   category: Category;
-  attributes:
-    {
-      categoryAttributeId: number;
-      selectedValue: string;
-    } [];
+  attributes: {
+    categoryAttributeId: number;
+    selectedValue: string;
+  }[];
   conditionLookUpId: number;
   price: number;
   isPriceFixed: boolean;
@@ -99,11 +159,10 @@ export type SaveItemDto = {
   categoryId: number;
   childCategoryId: number;
   subCategoryId?: number;
-  attributes?:
-    {
-      categoryAttributeId: number;
-      selectedValue: string;
-    }[];
+  attributes?: {
+    categoryAttributeId: number;
+    selectedValue: string;
+  }[];
   conditionLookUpId: number;
   price: number;
   isPriceFixed: boolean;
