@@ -14,6 +14,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import Rating from "@/components/misc/Rating";
+import { TItem, UserProfile } from "@/utils/types";
 
 const getLastActiveTime = (lastActive: Date): string => {
   const timeNow = new Date().getTime();
@@ -43,30 +44,20 @@ const getLastActiveTime = (lastActive: Date): string => {
   }
 };
 
-const IndividualSeller = (props: SellerIndividualProps) => {
-  const {
-    displayName,
-    lastActice,
-    imageUrl,
-    rating,
-    reviews,
-    products,
-    joinDate,
-    replyRate,
-    emailVerified,
-    bought,
-    sold,
-    followers,
-  } = props;
+const IndividualSeller = ({profile, items} : {profile: UserProfile, items: TItem[]}) => {
 
-  const lastActivity = getLastActiveTime(lastActice);
+  const joinDate = new Date("2023-07-07");
+  // last active 2 days ago. Get current date and minus 2 days
+  const lastActive = new Date();
+  lastActive.setDate(lastActive.getDate() - 2);
+  const lastActivity = getLastActiveTime(lastActive);
 
   return (
     <div className="max-w-full p-4">
       <div className="flex w-full text-sm gap-x-2">
         <Link href="/">Home</Link>
         {">"}
-        <Link href="/">{displayName} </Link>
+        <Link href="/">{profile?.name} </Link>
       </div>
       <div className="grid grid-cols-12 gap-4 mt-6">
         <div className="flex flex-col col-span-3 gap-8">
@@ -81,11 +72,11 @@ const IndividualSeller = (props: SellerIndividualProps) => {
             />
             <div className="flex flex-col items-start gap-1 text-sm">
               <div className="flex items-center font-bold">
-                <span className="mr-1">{displayName}</span>
+                <span className="mr-1">{profile?.name}</span>
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger>
-                      {emailVerified ? (
+                      {profile?.isEmailVerified ? (
                         <BadgeCheck
                           className="text-primary"
                           size={16}
@@ -100,7 +91,7 @@ const IndividualSeller = (props: SellerIndividualProps) => {
                       )}
                     </TooltipTrigger>
                     <TooltipContent>
-                      {emailVerified
+                      {profile?.isEmailVerified
                         ? "This user has verified their identity"
                         : "This user has not verified their identity"}
                     </TooltipContent>
@@ -123,38 +114,32 @@ const IndividualSeller = (props: SellerIndividualProps) => {
           </div>
           <div className="flex flex-row gap-12 py-4 justify-evenly border-y">
             <div className="flex flex-col items-center">
-              <p className="text-lg font-bold">{bought}</p>
+              <p className="text-lg font-bold">{profile?.totalBought}</p>
               <p className="font-semibold">Bought</p>
             </div>
             <div className="flex flex-col items-center">
-              <p className="text-lg font-bold">{sold}</p>
+              <p className="text-lg font-bold">{profile?.totalSold}</p>
               <p className="font-semibold">Sold</p>
             </div>
             <div className="flex flex-col items-center">
-              <p className="text-lg font-bold">{followers}</p>
+              <p className="text-lg font-bold">{profile?.totalFollowers}</p>
               <p className="font-semibold">Followers</p>
             </div>
           </div>
         </div>
         <div className="flex flex-col col-span-7 col-start-5">
-          <p className="flex items-center mb-2">
+          {/* <p className="flex items-center mb-2">
             <span className="text-2xl font-bold">Reviews: </span>
             <span className="mx-2">{rating}</span>
             <Rating rating={rating} />
           </p>
-          <ReviewList reviews={reviews} />
+          <ReviewList reviews={reviews} /> */}
         </div>
       </div>
       <div className="mt-10">
         <h3 className="text-3xl font-bold">Items from this seller</h3>
-        <ItemList itemsList={[]} />
+        <ItemList itemsList={items} />
       </div>
-      <p>Joined on: {joinDate.toLocaleDateString()}</p>
-      <p>Reply rate: {replyRate}%</p>
-      <p>Email Verified: {emailVerified ? "Yes" : "No"}</p>
-      <p>Items bought: {bought}</p>
-      <p>Items sold: {sold}</p>
-      <p>Followers: {followers}</p>
     </div>
   );
 };
