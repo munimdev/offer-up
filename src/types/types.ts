@@ -93,3 +93,27 @@ export type Item = {
   isActive: boolean;
   isDeleted: boolean;
 };
+
+export type FavoriteListItem = {
+  id: number;
+  favouriteListId: number;
+  favouriteListName: string;
+  itemId: string;
+  itemName: string;
+  itemImage: string;
+  userId: string;
+  isActive: boolean;
+  isDeleted: boolean;
+};
+
+export type FavoriteList = {
+  id: number;
+  totalItems: number;
+  name: string;
+  userId: string;
+  userName: string;
+  imagePath: string;
+  lstFavouriteListItems: FavoriteListItem[];
+  isActive: boolean;
+  isDeleted: boolean;
+};
