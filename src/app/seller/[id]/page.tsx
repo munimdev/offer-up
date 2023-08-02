@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React from "react";
 import {
@@ -9,7 +9,7 @@ import {
 import IndividualSeller from "../components/IndividualSeller";
 import CompanySeller from "../components/CompanySeller";
 import { useFetchCategories, useFetch } from "@/hooks";
-import * as Queries from '@/utils/queries';
+import * as Queries from "@/utils/queries";
 
 function isIndividualSeller(
   seller: SellerComponentProps
@@ -184,25 +184,27 @@ const SellerSection = ({ params }: { params: { id: string } }) => {
   const id = params.id;
   const { data: sellerData } = useFetch({
     key: ["query-sellerData"],
-    fn: () => Queries.userDetails({id: id}),
+    fn: () => Queries.userDetails({ id: id }),
     options: {
-      enabled: true
+      enabled: true,
     },
   });
 
-  const {data: sellerItems } = useFetch({
+  const { data: sellerItems } = useFetch({
     key: ["query-sellerItems"],
     fn: () => Queries.userItems({ id: id }),
     options: {
-      enabled: true
+      enabled: true,
     },
   });
 
-  console.log(sellerData);
-  console.log(sellerItems);
-
   // return "hello"
-  return <IndividualSeller profile={sellerData?.dataObject} items={sellerItems?.dataObject} />;
+  return (
+    <IndividualSeller
+      profile={sellerData?.dataObject}
+      items={sellerItems?.dataObject}
+    />
+  );
 
   //  else if (isCompanySeller(props)) {
   //   return <CompanySeller {...props} />;
