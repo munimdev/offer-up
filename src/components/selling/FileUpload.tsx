@@ -34,18 +34,17 @@ const FileUpload: React.FC<Props> = ({ onUpload }) => {
   }, [files]);
 
   const onDrop = async (acceptedFiles: File[]) => {
-    const files = await Promise.all(
+    const newFiles = await Promise.all(
       acceptedFiles.map(async (file: File, idx: number) => {
         const base64 = await toBase64(file);
-
         return {
-          imageOrder: idx,
+          imageOrder: files.length + idx,
           //@ts-ignore
           image: base64.split(",")[1],
         } as Images;
       })
     );
-    onUpload(files);
+    onUpload(newFiles);
 
     setFiles((prev) => [
       ...prev,
