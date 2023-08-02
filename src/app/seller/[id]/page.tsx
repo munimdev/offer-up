@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React from "react";
 import {
@@ -197,9 +197,6 @@ const SellerSection = ({ params }: { params: { id: string } }) => {
       enabled: true
     },
   });
-
-  console.log(sellerData);
-  console.log(sellerItems);
 
   // return "hello"
   return <IndividualSeller profile={sellerData?.dataObject} items={sellerItems?.dataObject} />;

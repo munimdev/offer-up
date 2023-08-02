@@ -12,32 +12,58 @@ import {
   Globe,
   CalendarDays,
 } from "lucide-react";
+import React from "react";
+import { Item } from "@/types/types";
+import { number } from "zod";
 
-const Sidebar = () => {
+type Props = {
+  data: Item;
+};
+
+const conditionLookup = (id: number) => {
+  switch (id) {
+    case 10001:
+      return "New";
+    case 10002:
+      return "Reconditioned / Certified";
+    case 10003:
+      return "Open box (never used)";
+    case 10004:
+      return "Used";
+    case 10005:
+      return "For parts";
+    case 10006:
+      return "Other (see descrption)";
+    default:
+      return "N/A";
+  }
+};
+
+const Sidebar: React.FC<Props> = ({ data }) => {
   return (
     <div className="flex flex-col gap-2 p-5">
-      <h3 className="text-3xl font-bold text-black">2020 BMW 7 Series Sedan</h3>
-      <h3 className="text-3xl font-bold text-black">$53,500</h3>
-      <div className="flex gap-2">
+      <h3 className="text-3xl font-bold text-black">{data?.name}</h3>
+      <h3 className="text-3xl font-bold text-black">${data?.price}</h3>
+      {/* <div className="flex gap-2">
         <div className="flex items-ceneter">
           <Meter /> <span>32,764 Miles</span>
         </div>
         <div className="flex items-center">
           <Fuel /> <span>17/25 MPG</span>
         </div>
-      </div>
-      <div className="flex flex-wrap">
+      </div> */}
+      {/* <div className="flex flex-wrap">
         <Badge className="mx-1 text-black bg-gray-300">Used</Badge>
         <Badge className="mx-1 text-black bg-gray-300">Used</Badge>
         <Badge className="mx-1 text-black bg-gray-300">Used</Badge>
         <Badge className="mx-1 text-black bg-gray-300">Used</Badge>
         <Badge className="mx-1 text-black bg-gray-300">Used</Badge>
-      </div>
+      </div> */}
       <p>
-        <span className="font-semibold">VIN</span> WBA7U2C05LCD52147
+        <span className="font-semibold">VIN</span> {data?.id}
       </p>
-      <p>Posted 24 days ago in Laurence Harbor, NJ</p>
-      <p>Condition: Good</p>
+      <p>Posted 24 days ago in Islamabd, PK</p>
+      <p>Condition: {conditionLookup(data?.conditionLookUpId)}</p>
       <p>Vehicles - Cars & Trucks</p>
       <Button className="rounded-full bg-primary hover:bg-primary">
         <Phone fill="#fff" size={18} className="mr-2" /> Call for Details
