@@ -14,29 +14,10 @@ import {
 } from "lucide-react";
 import React from "react";
 import { Item } from "@/types/types";
-import { number } from "zod";
+import Image from "next/image";
 
 type Props = {
   data: Item;
-};
-
-const conditionLookup = (id: number) => {
-  switch (id) {
-    case 10001:
-      return "New";
-    case 10002:
-      return "Reconditioned / Certified";
-    case 10003:
-      return "Open box (never used)";
-    case 10004:
-      return "Used";
-    case 10005:
-      return "For parts";
-    case 10006:
-      return "Other (see descrption)";
-    default:
-      return "N/A";
-  }
 };
 
 const Sidebar: React.FC<Props> = ({ data }) => {
@@ -63,8 +44,10 @@ const Sidebar: React.FC<Props> = ({ data }) => {
         <span className="font-semibold">VIN</span> {data?.id}
       </p>
       <p>Posted 24 days ago in Islamabd, PK</p>
-      <p>Condition: {conditionLookup(data?.conditionLookUpId)}</p>
-      <p>Vehicles - Cars & Trucks</p>
+      <p>Condition: {data?.conditionLookUpName}</p>
+      <p>
+        {data.categoryName} - {data.subCategoryName}
+      </p>
       <Button className="rounded-full bg-primary hover:bg-primary">
         <Phone fill="#fff" size={18} className="mr-2" /> Call for Details
       </Button>
@@ -82,26 +65,33 @@ const Sidebar: React.FC<Props> = ({ data }) => {
       </div>
       <div className="flex gap-4 py-4 my-4 border-y">
         <div>
-          <img src="images/Dealership.png" className="rounded-full" alt="" />
+          <Image
+            src={data.customer.imagePath || "/images/placeholder.png"}
+            className="rounded-full"
+            alt=""
+            width={70}
+            height={70}
+          />
         </div>
         <div>
-          <p className="font-bold text-black">Unique Auto Part</p>
+          <p className="font-bold text-black">
+            {data.customer.name.toUpperCase()}
+          </p>
           <div className="flex gap-1 text-xs">
-            <span>3.8</span>
-            <Rating rating={3.8} />
+            <span>{data.customer.totalRating}</span>
+            <Rating rating={data.customer.totalRating} />
             <span>(Google Reviews)</span>
           </div>
-          <p>Verified Auto Dealer</p>
+          <p>{data.customer.isEmailVerified ? "Verifeid" : "Not Verified"}</p>
         </div>
       </div>
       <div>
         <p className="text-primary">
-          <MapPin className="inline" size={24} /> 2090 NJ-35, South Amboy, NJ
-          08879, USA
+          <MapPin className="inline" size={24} /> Islamabad, PK
         </p>
-        <p className="mt-2 text-primary">
+        {/* <p className="mt-2 text-primary">
           <Globe className="inline" size={24} /> https://www.uniqueautomall.com/
-        </p>
+        </p> */}
         <p className="mt-2">
           <Phone className="inline" />
           (732) 707-3223

@@ -65,6 +65,35 @@ export type ItemImages = {
   isDeleted: boolean;
 };
 
+export type Customer = {
+  id: string;
+  name: string;
+  firstName: string;
+  middleName: string;
+  lastName: string;
+  totalItems: number;
+  totalFollowers: number;
+  totalFollowing: number;
+  totalRating: number;
+  totalSold: number;
+  totalBought: number;
+  isEmailVerified: boolean;
+  isNumberVerified: boolean;
+  imagePath: string;
+  imagePath250: string;
+  registeredOn: string;
+};
+
+export type Attribute = {
+  id: number;
+  itemId: string;
+  categoryAttributeId: number;
+  categoryAttributeName: string;
+  selectedValue: string;
+  isActive: boolean;
+  isDeleted: boolean;
+};
+
 export type Item = {
   id: string;
   name: string;
@@ -75,21 +104,26 @@ export type Item = {
   totalViews: number;
   totalFavorite: number;
   categoryId: number;
+  categoryName: string;
   childCategoryId: number;
+  childCategoryName: string;
   subCategoryId: number;
+  subCategoryName: string;
   conditionLookUpId: number;
+  conditionLookUpName: string;
   conditionDescription: string;
   isPriceFixed: boolean;
   validUpto: string;
   isSold: boolean;
   isPromoted: boolean;
   customerId: number;
+  customer: Customer;
   userId: string;
   isArchived: boolean;
   locationLat: number;
   locationLng: number;
   zipCode: string;
-  attributes: [];
+  attributes: Attribute[];
   isActive: boolean;
   isDeleted: boolean;
 };

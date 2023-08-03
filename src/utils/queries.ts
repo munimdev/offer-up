@@ -30,13 +30,18 @@ export const getCategoryAttributes = (
 ): Promise<Result<CategoryAttribute[]>> =>
   instance.post("/Category/getCategoryAttributesFiltered", data);
 
+// Products
 export const saveItem = (data: SaveItemDto) =>
   instance.post("/Item/createitem", data);
+
+export const getItemById = (id: string): Promise<Result<any>> =>
+  instance.post("/Item/getItemDetail", { id });
 
 export const userDetails = (data: {
   id: string;
 }): Promise<Result<UserProfile>> =>
   instance.post("/customer/getcustomerProfile", data);
+
 export const userItems = (data: { id: string }): Promise<Result<Item>> =>
   instance.post("/Item/getItemsOfCurrentUser", data);
 

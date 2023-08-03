@@ -10,19 +10,18 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useFetch } from "@/hooks";
 import * as Queries from "@/utils/queries";
 import { Item, ItemImages } from "@/types/types";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Product = ({ params }: { params: { id: string } }) => {
   const { id } = params;
-  const { data: sellerItems } = useFetch({
-    key: ["query-sellerItems"],
-    fn: () => Queries.userItems({ id: id }),
+  const { data } = useFetch({
+    key: ["query-currentItem"],
+    fn: () => Queries.getItemById(id),
     options: {
-      enabled: true,
+      enabled: !!id,
     },
   });
-  const currentItem = sellerItems?.dataObject.filter(
-    (item: Item) => item.id == id
-  )[0];
+  const currentItem = data?.dataObject as Item;
   return (
     <div>
       <div className="flex flex-col mb-2 border-b md:flex-row">
@@ -89,12 +88,12 @@ const Product = ({ params }: { params: { id: string } }) => {
           </div>
           <div className="px-4 py-2 my-4">
             <ScrollArea className="max-w-full py-2 overflow-y-hidden whitespace-nowrap">
-              {Array.from({ length: 20 }).map((_, key) => (
+              {currentItem?.attributes.map((attr, key) => (
                 <Badge
-                  key={key}
+                  key={attr.id + attr.categoryAttributeName}
                   className="mx-1 text-black bg-white border-black hover:bg-white"
                 >
-                  Car
+                  {attr.selectedValue}
                 </Badge>
               ))}
               <ScrollBar orientation="horizontal" />
@@ -102,7 +101,11 @@ const Product = ({ params }: { params: { id: string } }) => {
           </div>
         </div>
         <div className="w-full md:w-6/12 lg:w-3/12">
-          <Sidebar data={currentItem} />
+          {currentItem ? (
+            <Sidebar data={currentItem} />
+          ) : (
+            <Skeleton className="w-full h-5/6" />
+          )}
         </div>
       </div>
       <div className="px-4 py-2 my-4">
