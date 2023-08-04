@@ -115,11 +115,11 @@ const Product = ({ params }: { params: { id: string } }) => {
   );
 };
 
-export const getServerSideProps = async (context: any) => {
-  console.log(context);
-  return {
-    props: {},
-  };
-};
+// export const getServerSideProps = async (context: any) => {
+//   console.log(context);
+//   return {
+//     props: {},
+//   };
+// };
 
 export default Product;

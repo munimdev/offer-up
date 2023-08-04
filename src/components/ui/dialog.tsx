@@ -3,6 +3,7 @@
 import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 import { cn } from "@/utils";
 
@@ -112,10 +113,21 @@ const DialogDescription = React.forwardRef<
 ));
 DialogDescription.displayName = DialogPrimitive.Description.displayName;
 
+const DialogCloseButton = React.forwardRef<
+  React.ElementRef<typeof DialogPrimitive.Close>,
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Close>
+>(({ className, children, ...props }, ref) => (
+  <DialogPrimitive.Close ref={ref} className={cn("", className)} {...props}>
+    {children}
+  </DialogPrimitive.Close>
+));
+DialogCloseButton.displayName = DialogPrimitive.Close.displayName;
+
 export {
   Dialog,
   DialogTrigger,
   DialogContent,
+  DialogCloseButton,
   DialogHeader,
   DialogFooter,
   DialogTitle,

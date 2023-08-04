@@ -53,3 +53,20 @@ export const getFavoriteListById = (
   id: number
 ): Promise<Result<FavoriteList>> =>
   instance.post("/FavouriteList/getFavouriteListById", { id });
+
+export const createFavoriteList = (data: {
+  name: string;
+}): Promise<Result<FavoriteList>> =>
+  instance.post("/FavouriteList/createFavouriteList", data);
+
+export const addItemToFavouriteList = (data: {
+  itemId: string;
+  favouriteListId: number;
+}): Promise<Result<FavoriteList>> =>
+  instance.post("/FavouriteList/addItemToFavouriteList", data);
+  
+export const removeItemFromFavouriteList = (data: {
+  itemId: string;
+  favouriteListId: number;
+}): Promise<Result<FavoriteList>> =>
+  instance.post("/FavouriteList/removeItemFromFavouriteList", data);

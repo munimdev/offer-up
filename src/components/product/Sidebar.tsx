@@ -13,14 +13,47 @@ import {
   CalendarDays,
 } from "lucide-react";
 import React from "react";
-import { Item } from "@/types/types";
+import { FavoriteList, Item } from "@/types/types";
 import Image from "next/image";
+import { useFetch } from "@/hooks";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { useMutation } from "@tanstack/react-query";
+import * as Queries from "@/utils/queries";
+import { useToast } from "@/components/ui/use-toast";
+import { ToastAction } from "@/components/ui/toast";
+import { Result } from "@/utils/types";
+import Link from "next/link";
 
 type Props = {
   data: Item;
 };
 
 const Sidebar: React.FC<Props> = ({ data }) => {
+  const { toast } = useToast();
+
+  const {
+    mutateAsync: addItemToList,
+    error,
+    isError,
+    isSuccess,
+  } = useMutation(Queries.addItemToFavouriteList);
+
+  const { data: savedList }: { data: Result<FavoriteList[]> } = useFetch({
+    key: ["query-favoriteList"],
+    fn: () => Queries.getFavoriteList(),
+    options: {
+      enabled: !!data.id,
+    },
+  });
+
   return (
     <div className="flex flex-col gap-2 p-5">
       <h3 className="text-3xl font-bold text-black">{data?.name}</h3>
@@ -55,9 +88,54 @@ const Sidebar: React.FC<Props> = ({ data }) => {
         <Message className="mr-2" /> Chat
       </Button>
       <div className="flex justify-between text-primary">
-        <span className="cursor-pointer">
-          <Heart size={20} className="inline-block mr-2" /> Save
-        </span>
+        <Dialog>
+          <DialogTrigger asChild>
+            <button className="">
+              <Heart size={20} className="inline-block mr-2" /> Save
+            </button>
+          </DialogTrigger>
+          <DialogContent className="max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Save Item To List</DialogTitle>
+              <DialogDescription>
+                {"You can save this item to a list to view it later."}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="flex flex-col py-4">
+              {savedList?.dataObject?.map((list) => (
+                <button
+                  key={list.id}
+                  className="w-full py-2 transition-colors duration-300 ease-in-out border-b hover:bg-gray-200 bg-none"
+                  onClick={() => {
+                    addItemToList({
+                      favouriteListId: list.id,
+                      itemId: data.id,
+                    });
+                    toast({
+                      title: "Item Saved",
+                      description: "Item has been saved to your list",
+                      duration: 2000,
+                      action: (
+                        <ToastAction
+                          altText="View List"
+                          onClick={() => {
+                            console.log("View List");
+                          }}
+                        >
+                          <Link href={`/saved-list/${list.id}`} passHref>
+                            View List
+                          </Link>
+                        </ToastAction>
+                      ),
+                    });
+                  }}
+                >
+                  {list.name}
+                </button>
+              ))}
+            </div>
+          </DialogContent>
+        </Dialog>
         <span className="cursor-pointer">
           <Share2 className="inline-block mr-2" />
           Share
