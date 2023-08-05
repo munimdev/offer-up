@@ -37,6 +37,7 @@ type Props = {
 };
 
 const Sidebar: React.FC<Props> = ({ data }) => {
+  const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
   const { toast } = useToast();
 
   const {
@@ -88,7 +89,7 @@ const Sidebar: React.FC<Props> = ({ data }) => {
         <Message className="mr-2" /> Chat
       </Button>
       <div className="flex justify-between text-primary">
-        <Dialog>
+        <Dialog open={isDialogOpen} onOpenChange={(e) => setIsDialogOpen(e)}>
           <DialogTrigger asChild>
             <button className="">
               <Heart size={20} className="inline-block mr-2" /> Save
@@ -103,35 +104,44 @@ const Sidebar: React.FC<Props> = ({ data }) => {
             </DialogHeader>
             <div className="flex flex-col py-4">
               {savedList?.dataObject?.map((list) => (
-                <button
-                  key={list.id}
-                  className="w-full py-2 transition-colors duration-300 ease-in-out border-b hover:bg-gray-200 bg-none"
-                  onClick={() => {
-                    addItemToList({
-                      favouriteListId: list.id,
-                      itemId: data.id,
-                    });
-                    toast({
-                      title: "Item Saved",
-                      description: "Item has been saved to your list",
-                      duration: 2000,
-                      action: (
-                        <ToastAction
-                          altText="View List"
-                          onClick={() => {
-                            console.log("View List");
-                          }}
-                        >
-                          <Link href={`/saved-list/${list.id}`} passHref>
-                            View List
-                          </Link>
-                        </ToastAction>
-                      ),
-                    });
-                  }}
-                >
-                  {list.name}
-                </button>
+                <div className="flex flex-row items-center gap-3 py-1 transition-colors duration-300 ease-in-out border-b hover:bg-gray-200 bg-none">
+                  <Image
+                    width={60}
+                    height={60}
+                    src={list.imagePath}
+                    alt="list-img"
+                  />
+                  <button
+                    key={list.id}
+                    className="w-full"
+                    onClick={() => {
+                      addItemToList({
+                        favouriteListId: list.id,
+                        itemId: data.id,
+                      });
+                      toast({
+                        title: "Item Saved",
+                        description: "Item has been saved to your list",
+                        duration: 2000,
+                        action: (
+                          <ToastAction
+                            altText="View List"
+                            onClick={() => {
+                              console.log("View List");
+                            }}
+                          >
+                            <Link href={`/saved-list/${list.id}`} passHref>
+                              View List
+                            </Link>
+                          </ToastAction>
+                        ),
+                      });
+                      setIsDialogOpen(false);
+                    }}
+                  >
+                    {list.name}
+                  </button>
+                </div>
               ))}
             </div>
           </DialogContent>

@@ -7,7 +7,7 @@ import { FavoriteList } from "@/types/types";
 
 const ItemList = ({ params }: { params: { id: number } }) => {
   const { id } = params;
-  const { data } = useFetch({
+  const { data, refetch } = useFetch({
     key: ["query-favoriteListData"],
     fn: () => Queries.getFavoriteListById(id),
     options: { enabled: !!id },
@@ -18,7 +18,7 @@ const ItemList = ({ params }: { params: { id: number } }) => {
       <h1 className="mb-4 text-3xl font-bold">{item?.name}</h1>
       <div className="px-4 py-2">
         {item?.lstFavouriteListItems.map((data, i) => (
-          <Item data={data} key={data.id} />
+          <Item refetch={refetch} data={data} key={data.id} />
         ))}
       </div>
     </div>

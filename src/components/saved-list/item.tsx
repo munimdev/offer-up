@@ -24,9 +24,10 @@ import { useEffect } from "react";
 
 type Props = {
   data: FavoriteListItem;
+  refetch: () => Promise<any>;
 };
 
-const Item = ({ data }: Props) => {
+const Item = ({ data, refetch }: Props) => {
   const { toast } = useToast();
 
   const {
@@ -49,6 +50,7 @@ const Item = ({ data }: Props) => {
         title: "Item removed.",
         description: `The item ${data.itemName} has been removed from your list.`,
       });
+      refetch();
     }
   }, [data.itemName, isSuccess, toast]);
 
@@ -78,7 +80,9 @@ const Item = ({ data }: Props) => {
           <p className="text-lg font-semibold">{data.itemName}</p>
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="outline">Delete</Button>
+              <Button variant="outline" className="my-auto w-fit">
+                Delete
+              </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>

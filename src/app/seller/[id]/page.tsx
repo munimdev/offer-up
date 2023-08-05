@@ -5,11 +5,12 @@ import {
   SellerCompanyProps,
   SellerIndividualProps,
   SellerComponentProps,
+  Customer,
 } from "@/types/types";
 import IndividualSeller from "../components/IndividualSeller";
 import CompanySeller from "../components/CompanySeller";
-import { useFetchCategories, useFetch } from "@/hooks";
-import * as Queries from '@/utils/queries';
+import { useFetchCategories, useFetch, useSession } from "@/hooks";
+import * as Queries from "@/utils/queries";
 
 function isIndividualSeller(
   seller: SellerComponentProps
@@ -181,25 +182,45 @@ function isCompanySeller(
 // };
 
 const SellerSection = ({ params }: { params: { id: string } }) => {
+  const { user } = useSession();
   const id = params.id;
   const { data: sellerData } = useFetch({
     key: ["query-sellerData"],
-    fn: () => Queries.userDetails({id: id}),
+    fn: () => Queries.userDetails({ id: id }),
     options: {
-      enabled: true
+      enabled: true,
     },
   });
 
-  const {data: sellerItems } = useFetch({
+  const { data: sellerItems } = useFetch({
     key: ["query-sellerItems"],
     fn: () => Queries.userItems({ id: id }),
     options: {
-      enabled: true
+      enabled: true,
     },
   });
 
-  // return "hello"
-  return <IndividualSeller profile={sellerData?.dataObject} items={sellerItems?.dataObject} />;
+  const { data: sellerFollowers } = useFetch({
+    key: ["query-sellerFollowers"],
+    fn: () => Queries.getCustomerFollowers(id),
+    options: {
+      enabled: true,
+    },
+  });
+
+  const isFollowed = sellerFollowers?.dataObject?.some(
+    (customer: Customer) => customer.id === user.id
+  );
+
+  console.log(isFollowed);
+
+  return (
+    <IndividualSeller
+      profile={sellerData?.dataObject}
+      items={sellerItems?.dataObject}
+      isFollowed={isFollowed}
+    />
+  );
 
   //  else if (isCompanySeller(props)) {
   //   return <CompanySeller {...props} />;

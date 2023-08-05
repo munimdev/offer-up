@@ -6,7 +6,13 @@ import Review, { ReviewList } from "@/components/review/Review";
 import Link from "next/link";
 import placeholder from "@/components/item/placeholder.png";
 import Image from "next/image";
-import { BadgeCheck, BadgeX, Flag, Share2 } from "lucide-react";
+import {
+  BadgeCheck,
+  BadgeX,
+  UserPlus2,
+  Share2,
+  UserCheck2,
+} from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -14,7 +20,11 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import Rating from "@/components/misc/Rating";
+import { useToast } from "@/components/ui/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 import { TItem, UserProfile } from "@/utils/types";
+import { useMutation } from "@tanstack/react-query";
+import * as Querues from "@/utils/queries";
 
 const getLastActiveTime = (lastActive: Date): string => {
   const timeNow = new Date().getTime();
@@ -44,13 +54,54 @@ const getLastActiveTime = (lastActive: Date): string => {
   }
 };
 
-const IndividualSeller = ({profile, items} : {profile: UserProfile, items: TItem[]}) => {
-
+const IndividualSeller = ({
+  profile,
+  items,
+  isFollowed,
+}: {
+  profile: UserProfile;
+  items: TItem[];
+  isFollowed: boolean;
+}) => {
+  const { toast } = useToast();
+  const { mutateAsync: followUser } = useMutation({
+    mutationKey: ["followUser"],
+    mutationFn: (userId: string) => Querues.followCustomer(userId),
+  });
+  const { mutateAsync: unFollowUser } = useMutation({
+    mutationKey: ["unFollowUser"],
+    mutationFn: (userId: string) => Querues.unFollowCustomer(userId),
+  });
   const joinDate = new Date("2023-07-07");
-  // last active 2 days ago. Get current date and minus 2 days
   const lastActive = new Date();
   lastActive.setDate(lastActive.getDate() - 2);
   const lastActivity = getLastActiveTime(lastActive);
+
+  const onFollowHandler = async () => {
+    try {
+      await followUser(profile.id);
+      toast({
+        title: "Followed",
+        description: `You started following ${profile.name}`,
+        duration: 2000,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const onUnFollowHandler = async () => {
+    try {
+      await unFollowUser(profile.id);
+      toast({
+        title: "Followed",
+        description: `You unfollowed ${profile.name}`,
+        duration: 2000,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="max-w-full p-4">
@@ -85,7 +136,7 @@ const IndividualSeller = ({profile, items} : {profile: UserProfile, items: TItem
                       ) : (
                         <BadgeX
                           size={16}
-                          color="text-primary"
+                          className="text-primary"
                           strokeWidth={1.75}
                         />
                       )}
@@ -107,8 +158,34 @@ const IndividualSeller = ({profile, items} : {profile: UserProfile, items: TItem
                 {joinDate.getFullYear()}
               </p>
               <div className="flex flex-row items-center gap-4 text-primary">
-                <Share2 size={20} strokeWidth={1.75} />
-                <Flag size={20} strokeWidth={1.75} />
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Share2 size={20} strokeWidth={1.75} />
+                    </TooltipTrigger>
+                    <TooltipContent>Share Profile</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                <TooltipProvider>
+                  {isFollowed ? (
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <UserCheck2
+                          className="fill-primary"
+                          onClick={onUnFollowHandler}
+                        />
+                      </TooltipTrigger>
+                      <TooltipContent>Unfollow User</TooltipContent>
+                    </Tooltip>
+                  ) : (
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <UserPlus2 onClick={onFollowHandler} />
+                      </TooltipTrigger>
+                      <TooltipContent>Follow User</TooltipContent>
+                    </Tooltip>
+                  )}
+                </TooltipProvider>
               </div>
             </div>
           </div>
@@ -120,6 +197,10 @@ const IndividualSeller = ({profile, items} : {profile: UserProfile, items: TItem
             <div className="flex flex-col items-center">
               <p className="text-lg font-bold">{profile?.totalSold}</p>
               <p className="font-semibold">Sold</p>
+            </div>
+            <div className="flex flex-col items-center">
+              <p className="text-lg font-bold">{profile?.totalFollowing}</p>
+              <p className="font-semibold">Following</p>
             </div>
             <div className="flex flex-col items-center">
               <p className="text-lg font-bold">{profile?.totalFollowers}</p>
