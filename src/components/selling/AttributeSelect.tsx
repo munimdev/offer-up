@@ -19,25 +19,31 @@ type Props = {
 const AttributeSelect: React.FC<Props> = ({ data }) => {
   const [itemFormData, setItemFormData] = useAtom(itemFormDataAtom);
   const onValueChange = (attr: CategoryAttribute, e: any) => {
-    const currentIndex = itemFormData.attributes.findIndex((attribute) => attribute.categoryAttributeId == attr.id)
+    const currentIndex = itemFormData.attributes.findIndex(
+      (attribute) => attribute.categoryAttributeId == attr.id
+    );
     setItemFormData({
       ...itemFormData,
-      attributes: currentIndex === -1 ?
-      [...itemFormData.attributes, {
-        categoryAttributeId: attr.id,
-        selectedValue: e
-      }] :
-      itemFormData.attributes.map((attribute) => {
-        if (attribute.categoryAttributeId === attr.id) {
-          return {
-            ...attribute,
-            selectedValue: e
-          };
-        }
-        return attribute;
-      })
-    })
-  }
+      attributes:
+        currentIndex === -1
+          ? [
+              ...itemFormData.attributes,
+              {
+                categoryAttributeId: attr.id,
+                selectedValue: e,
+              },
+            ]
+          : itemFormData.attributes.map((attribute) => {
+              if (attribute.categoryAttributeId === attr.id) {
+                return {
+                  ...attribute,
+                  selectedValue: e,
+                };
+              }
+              return attribute;
+            }),
+    });
+  };
   return data.map((attr) => (
     <>
       <Label htmlFor="Attributes">
@@ -50,7 +56,7 @@ const AttributeSelect: React.FC<Props> = ({ data }) => {
           </SelectTrigger>
           <SelectContent>
             {attr.options.split(",").map((option: string) => (
-              <SelectItem value={option}>
+              <SelectItem key={option} value={option}>
                 {option}
               </SelectItem>
             ))}

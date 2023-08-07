@@ -208,16 +208,24 @@ const SellerSection = ({ params }: { params: { id: string } }) => {
     },
   });
 
+  const { data: sellerFollowing } = useFetch({
+    key: ["query-sellerFollowing"],
+    fn: () => Queries.getCustomerFollowing(id),
+    options: {
+      enabled: true,
+    },
+  });
+
   const isFollowed = sellerFollowers?.dataObject?.some(
     (customer: Customer) => customer.id === user.id
   );
-
-  console.log(isFollowed);
 
   return (
     <IndividualSeller
       profile={sellerData?.dataObject}
       items={sellerItems?.dataObject}
+      followers={sellerFollowers?.dataObject}
+      following={sellerFollowing?.dataObject}
       isFollowed={isFollowed}
     />
   );

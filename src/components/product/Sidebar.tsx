@@ -104,7 +104,10 @@ const Sidebar: React.FC<Props> = ({ data }) => {
             </DialogHeader>
             <div className="flex flex-col py-4">
               {savedList?.dataObject?.map((list) => (
-                <div className="flex flex-row items-center gap-3 py-1 transition-colors duration-300 ease-in-out border-b hover:bg-gray-200 bg-none">
+                <div
+                  key={list.id}
+                  className="flex flex-row items-center gap-3 py-1 transition-colors duration-300 ease-in-out border-b hover:bg-gray-200 bg-none"
+                >
                   <Image
                     width={60}
                     height={60}

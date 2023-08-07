@@ -1,8 +1,16 @@
 import React from "react";
 import { Item } from "@/components/item/Item";
-import { SellerIndividualProps } from "@/types/types";
+import { Follow, SellerIndividualProps } from "@/types/types";
 import { ItemList } from "@/components/item-list/ItemList";
-import Review, { ReviewList } from "@/components/review/Review";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import Link from "next/link";
 import placeholder from "@/components/item/placeholder.png";
 import Image from "next/image";
@@ -58,10 +66,14 @@ const IndividualSeller = ({
   profile,
   items,
   isFollowed,
+  followers,
+  following,
 }: {
   profile: UserProfile;
   items: TItem[];
   isFollowed: boolean;
+  followers: Follow[];
+  following: Follow[];
 }) => {
   const { toast } = useToast();
   const { mutateAsync: followUser } = useMutation({
@@ -189,33 +201,65 @@ const IndividualSeller = ({
               </div>
             </div>
           </div>
-          <div className="flex flex-row gap-12 py-4 justify-evenly border-y">
-            <div className="flex flex-col items-center">
+          <div className="flex flex-row gap-5 justify-evenly border-y">
+            {/* <div className="flex flex-col items-center p-3">
               <p className="text-lg font-bold">{profile?.totalBought}</p>
               <p className="font-semibold">Bought</p>
             </div>
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center p-3">
               <p className="text-lg font-bold">{profile?.totalSold}</p>
               <p className="font-semibold">Sold</p>
-            </div>
-            <div className="flex flex-col items-center">
-              <p className="text-lg font-bold">{profile?.totalFollowing}</p>
-              <p className="font-semibold">Following</p>
-            </div>
-            <div className="flex flex-col items-center">
-              <p className="text-lg font-bold">{profile?.totalFollowers}</p>
-              <p className="font-semibold">Followers</p>
-            </div>
+            </div> */}
+            <Dialog>
+              <DialogTrigger asChild>
+                <div className="flex flex-col items-center p-3 cursor-pointer hover:bg-gray-200">
+                  <p className="text-lg font-bold">{profile?.totalFollowing}</p>
+                  <p className="font-semibold">Following</p>
+                </div>
+              </DialogTrigger>
+              <DialogContent className="max-w-[425px]">
+                <DialogHeader>Following</DialogHeader>
+                {following?.map((follow) => (
+                  <div className="flex flex-col py-4" key={follow.id}>
+                    <Link
+                      href={`/seller/${follow.id}`}
+                      className="flex flex-row gap-3 p-3 transition-colors duration-300 ease-in-out border-b hover:bg-gray-200 bg-none"
+                    >
+                      <span>
+                        {follow.firstName} {follow.lastName}
+                      </span>
+                    </Link>
+                  </div>
+                ))}
+              </DialogContent>
+            </Dialog>
+
+            <Dialog>
+              <DialogTrigger asChild>
+                <div className="flex flex-col items-center p-3 cursor-pointer hover:bg-gray-200">
+                  <p className="text-lg font-bold">{profile?.totalFollowers}</p>
+                  <p className="font-semibold">Followers</p>
+                </div>
+              </DialogTrigger>
+              <DialogContent className="max-w-[425px]">
+                <DialogHeader>Following</DialogHeader>
+                {followers?.map((follow) => (
+                  <div className="flex flex-col py-4" key={follow.id}>
+                    <Link
+                      href={`/seller/${follow.id}`}
+                      className="flex flex-row gap-3 p-3 transition-colors duration-300 ease-in-out border-b hover:bg-gray-200 bg-none"
+                    >
+                      <span>
+                        {follow.firstName} {follow.lastName}
+                      </span>
+                    </Link>
+                  </div>
+                ))}
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
-        <div className="flex flex-col col-span-7 col-start-5">
-          {/* <p className="flex items-center mb-2">
-            <span className="text-2xl font-bold">Reviews: </span>
-            <span className="mx-2">{rating}</span>
-            <Rating rating={rating} />
-          </p>
-          <ReviewList reviews={reviews} /> */}
-        </div>
+        <div className="flex flex-col col-span-7 col-start-5"></div>
       </div>
       <div className="mt-10">
         <h3 className="text-3xl font-bold">Items from this seller</h3>

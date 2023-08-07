@@ -25,7 +25,11 @@ const OptionsSelect: React.FC<TOptionsSelect> = ({
       </SelectTrigger>
       <SelectContent>
         {options.map((option: any) => (
-          <SelectItem value={option.name} onMouseDown={() => onChange(option)}>
+          <SelectItem
+            key={option}
+            value={option.name}
+            onMouseDown={() => onChange(option)}
+          >
             {option.name}
           </SelectItem>
         ))}

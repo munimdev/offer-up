@@ -81,11 +81,6 @@ const navList = [
     to: "#",
     content: false,
   },
-  {
-    title: "Post a Job",
-    to: "#",
-    content: false,
-  },
 ];
 
 export const Navbar = ({}: NavbarProps) => {
@@ -472,20 +467,24 @@ function LoginDialog() {
     );
   };
 
-  const { isLoggedIn } = useSession();
-  return (
-    !isLoggedIn && (
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button variant="outline">Login</Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px] text-primary dialog-container h-4/6 p-0">
-          <HomeScreen />
-          <AuthScreen />
-          <LoginScreen />
-          <SignupScreen />
-        </DialogContent>
-      </Dialog>
-    )
+  const { isLoggedIn, user } = useSession();
+  return !isLoggedIn ? (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="outline">Login</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px] text-primary dialog-container h-4/6 p-0">
+        <HomeScreen />
+        <AuthScreen />
+        <LoginScreen />
+        <SignupScreen />
+      </DialogContent>
+    </Dialog>
+  ) : (
+    <div className="ml-5 flex items-center gap-4">
+      <span>
+        <span className="font-semibold test-sm text-primary">{user.email}</span>
+      </span>
+    </div>
   );
 }

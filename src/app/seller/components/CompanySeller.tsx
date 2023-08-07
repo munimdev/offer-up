@@ -1,5 +1,4 @@
 import React from "react";
-import { Item, ItemProps } from "@/components/item/Item";
 import { SellerCompanyProps } from "@/types/types";
 import { ItemList } from "@/components/item-list/ItemList";
 import Review from "@/components/review/Review";
