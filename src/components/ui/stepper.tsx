@@ -13,6 +13,7 @@ const Stepper: React.FC<Props> = ({ tabs, activeTab }) => {
           className={`text-lg flex items-center ${
             idx + 1 === activeTab ? "text-primary" : "text-gray-500"
           } space-x-2.5`}
+          key={idx}
         >
           <span
             className={`flex items-center justify-center w-6 h-6 border ${

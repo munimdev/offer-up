@@ -151,3 +151,23 @@ export type FavoriteList = {
   isActive: boolean;
   isDeleted: boolean;
 };
+
+export type Follow = {
+  id: string;
+  name: string;
+  firstName: string;
+  middleName: string;
+  lastName: string;
+  totalItems: number;
+  totalFollowers: number;
+  totalFollowing: number;
+  totalRating: number;
+  totalSold: number;
+  totalBought: number;
+  isEmailVerified: boolean;
+  isNumberVerified: boolean;
+  imagePath: string;
+  imagePath250: string;
+  registeredOn: string;
+  isFollowing: boolean;
+};
