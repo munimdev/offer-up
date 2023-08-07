@@ -31,6 +31,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import { Result } from "@/utils/types";
 import Link from "next/link";
+import HeartIcon from "@/components/icons/HeartIcon";
 
 type Props = {
   data: Item;
@@ -108,15 +109,15 @@ const Sidebar: React.FC<Props> = ({ data }) => {
                   key={list.id}
                   className="flex flex-row items-center gap-3 py-1 transition-colors duration-300 ease-in-out border-b hover:bg-gray-200 bg-none"
                 >
-                  <Image
+                  {/* <Image
                     width={60}
                     height={60}
-                    src={list.imagePath}
+                    src={heart}
                     alt="list-img"
-                  />
+                  /> */}
+                  <HeartIcon size={36}/>
                   <button
-                    key={list.id}
-                    className="w-full"
+                    className="w-full text-left"
                     onClick={() => {
                       addItemToList({
                         favouriteListId: list.id,

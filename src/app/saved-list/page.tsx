@@ -45,6 +45,8 @@ const SaveList = () => {
     fn: () => Queries.getFavoriteList(),
   });
 
+  console.log(data)
+
   const {
     mutateAsync: createList,
     error,
