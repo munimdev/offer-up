@@ -36,6 +36,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import { Result } from "@/utils/types";
 import { useEffect } from "react";
+import Sidebar from "@/components/navbar/siderbar";
 
 const SaveList = () => {
   const { toast } = useToast();
@@ -45,7 +46,7 @@ const SaveList = () => {
     fn: () => Queries.getFavoriteList(),
   });
 
-  console.log(data)
+  console.log(data);
 
   const {
     mutateAsync: createList,
@@ -85,75 +86,78 @@ const SaveList = () => {
   }, [isSuccess, isError, toast, collectionNameForm]);
 
   return (
-    <div className="w-8/12 py-4 mx-auto">
-      <h1 className="mb-4 text-3xl font-bold">Saved Items</h1>
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button variant="outline">Create New Collection</Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Create New Collection</DialogTitle>
-            <DialogDescription>
-              {"Create a new collection to save your favorite items."}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid items-center">
-              <Form {...collectionNameForm}>
-                <form onSubmit={collectionNameForm.handleSubmit(onSubmit)}>
-                  {/* Error */}
-                  {collectionNameForm.formState.errors && (
-                    <div className="text-sm text-red-500">
-                      {collectionNameForm.formState.errors.root?.message}
-                    </div>
-                  )}
-
-                  <FormField
-                    control={collectionNameForm.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <Label htmlFor="name" className="text-right">
-                          Name
-                        </Label>
-                        <FormControl>
-                          <Input
-                            type="text"
-                            className=""
-                            placeholder="Enter a collection name"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          {"This is your collection's name."}
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
+    <div className="flex flex-row px-20 py-10">
+      <Sidebar />
+      <div className="w-8/12 py-4 mx-auto">
+        <h1 className="mb-4 text-3xl font-bold">Saved Items</h1>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="outline">Create New Collection</Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Create New Collection</DialogTitle>
+              <DialogDescription>
+                {"Create a new collection to save your favorite items."}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid items-center">
+                <Form {...collectionNameForm}>
+                  <form onSubmit={collectionNameForm.handleSubmit(onSubmit)}>
+                    {/* Error */}
+                    {collectionNameForm.formState.errors && (
+                      <div className="text-sm text-red-500">
+                        {collectionNameForm.formState.errors.root?.message}
+                      </div>
                     )}
-                  />
-                  <DialogFooter className="mt-6">
-                    <DialogCloseButton className="px-4 text-black transition-colors duration-300 ease-in-out bg-white border rounded-md hover:bg-gray-200">
-                      Cancel
-                    </DialogCloseButton>
-                    <Button
-                      className="hover:bg-[#30b6fe] transition-colors duration-300 ease-in-out"
-                      type="submit"
-                    >
-                      Save changes
-                    </Button>
-                  </DialogFooter>
-                </form>
-              </Form>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
 
-      <div className="px-4">
-        {data?.dataObject.map((item: FavoriteList, idx: number) => (
-          <List data={item} key={item.id} />
-        ))}
+                    <FormField
+                      control={collectionNameForm.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <Label htmlFor="name" className="text-right">
+                            Name
+                          </Label>
+                          <FormControl>
+                            <Input
+                              type="text"
+                              className=""
+                              placeholder="Enter a collection name"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormDescription>
+                            {"This is your collection's name."}
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <DialogFooter className="mt-6">
+                      <DialogCloseButton className="px-4 text-black transition-colors duration-300 ease-in-out bg-white border rounded-md hover:bg-gray-200">
+                        Cancel
+                      </DialogCloseButton>
+                      <Button
+                        className="hover:bg-[#30b6fe] transition-colors duration-300 ease-in-out"
+                        type="submit"
+                      >
+                        Save changes
+                      </Button>
+                    </DialogFooter>
+                  </form>
+                </Form>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        <div className="px-4">
+          {data?.dataObject.map((item: FavoriteList, idx: number) => (
+            <List data={item} key={item.id} />
+          ))}
+        </div>
       </div>
     </div>
   );

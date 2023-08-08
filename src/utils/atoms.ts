@@ -2,7 +2,7 @@ import { atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import { ItemAtom, User } from "./types";
 
-export const userAtom = atomWithStorage<User>("user", {
+export const userAtom = atomWithStorage<User | null>("user", {
   id: "",
   name: "",
   email: "",

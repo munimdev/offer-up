@@ -216,8 +216,10 @@ const SellerSection = ({ params }: { params: { id: string } }) => {
     },
   });
 
+  const isOwnProfile = sellerData?.dataObject?.id === user?.id;
+
   const isFollowed = sellerFollowers?.dataObject?.some(
-    (customer: Customer) => customer.id === user.id
+    (customer: Customer) => customer.id === user?.id
   );
 
   return (
@@ -226,6 +228,7 @@ const SellerSection = ({ params }: { params: { id: string } }) => {
       items={sellerItems?.dataObject}
       followers={sellerFollowers?.dataObject}
       following={sellerFollowing?.dataObject}
+      isOwnProfile={isOwnProfile}
       isFollowed={isFollowed}
     />
   );

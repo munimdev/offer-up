@@ -2,6 +2,8 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 import "./Modal.css";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -50,10 +52,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 // Custom
 import SubNav from "@/components/navbar/SubNav";
 import { Searchbar } from "@/components/searchbar/Searchbar";
+import placholder from "@/components/item/placeholder.png";
 
 // Icons
 import Logo from "@/components/icons/Logo";
@@ -62,11 +66,11 @@ import { MapPin, Truck, Menu } from "lucide-react";
 // Hooks
 import { useLogin, useSignup } from "@/hooks";
 import { useForm } from "react-hook-form";
+import { useSession } from "@/hooks/useSession";
 
 // Jotai
 import { useSetAtom } from "jotai/react";
 import { userAtom } from "@/utils/atoms";
-import { useSession } from "@/hooks/useSession";
 
 interface NavbarProps {}
 
@@ -94,7 +98,7 @@ export const Navbar = ({}: NavbarProps) => {
         <span className="flex font-bold text-[#1BC3FF] items-center gap-2 cursor-pointer">
           <MapPin />{" "}
           <span className="hidden gap-2 lg:flex">
-            <p>New York 30 Miles + Shipping</p> <Truck />
+            <p>New York 30 Miles</p>
           </span>
         </span>
         <div className="ml-auto">
@@ -143,8 +147,6 @@ export const Navbar = ({}: NavbarProps) => {
                   <DropdownMenuItem>About</DropdownMenuItem>
                   <DropdownMenuItem>Help</DropdownMenuItem>
                 </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>Log out</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -468,6 +470,12 @@ function LoginDialog() {
   };
 
   const { isLoggedIn, user } = useSession();
+  const router = useRouter();
+  const onLogoutHandler = () => {
+    setUser(null);
+    localStorage.removeItem("accessToken");
+    router.push("/");
+  };
   return !isLoggedIn ? (
     <Dialog>
       <DialogTrigger asChild>
@@ -481,10 +489,46 @@ function LoginDialog() {
       </DialogContent>
     </Dialog>
   ) : (
-    <div className="ml-5 flex items-center gap-4">
-      <span>
-        <span className="font-semibold test-sm text-primary">{user.email}</span>
-      </span>
-    </div>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Avatar className="cursor-pointer">
+          <AvatarImage src="https://github.com/shadcn.png" />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="min-w-[325px]">
+        <DropdownMenuGroup>
+          <DropdownMenuItem>
+            <Link
+              href={`/seller/${user!.id}`}
+              className="flex flex-row items-center gap-x-5"
+            >
+              <Image
+                width={80}
+                height={80}
+                src={placholder}
+                alt="User Image"
+                className="rounded-full"
+              />
+              <div className="flex flex-col">
+                <span className="text-lg font-bold">User Name</span>
+                <span className="text-md">View Profile</span>
+              </div>
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem>Purchase & Sales</DropdownMenuItem>
+          <DropdownMenuItem>Account & Settings</DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuItem>About</DropdownMenuItem>
+          <DropdownMenuItem>Help</DropdownMenuItem>
+          <DropdownMenuItem>Terms of Service</DropdownMenuItem>
+          <DropdownMenuItem>Privacy</DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={onLogoutHandler}>Logout</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

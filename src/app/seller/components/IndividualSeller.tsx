@@ -66,12 +66,14 @@ const IndividualSeller = ({
   profile,
   items,
   isFollowed,
+  isOwnProfile,
   followers,
   following,
 }: {
   profile: UserProfile;
   items: TItem[];
   isFollowed: boolean;
+  isOwnProfile: boolean;
   followers: Follow[];
   following: Follow[];
 }) => {
@@ -178,26 +180,28 @@ const IndividualSeller = ({
                     <TooltipContent>Share Profile</TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
-                <TooltipProvider>
-                  {isFollowed ? (
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <UserCheck2
-                          className="fill-primary"
-                          onClick={onUnFollowHandler}
-                        />
-                      </TooltipTrigger>
-                      <TooltipContent>Unfollow User</TooltipContent>
-                    </Tooltip>
-                  ) : (
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <UserPlus2 onClick={onFollowHandler} />
-                      </TooltipTrigger>
-                      <TooltipContent>Follow User</TooltipContent>
-                    </Tooltip>
-                  )}
-                </TooltipProvider>
+                {!isOwnProfile && (
+                  <TooltipProvider>
+                    {isFollowed ? (
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <UserCheck2
+                            className="fill-primary"
+                            onClick={onUnFollowHandler}
+                          />
+                        </TooltipTrigger>
+                        <TooltipContent>Unfollow User</TooltipContent>
+                      </Tooltip>
+                    ) : (
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <UserPlus2 onClick={onFollowHandler} />
+                        </TooltipTrigger>
+                        <TooltipContent>Follow User</TooltipContent>
+                      </Tooltip>
+                    )}
+                  </TooltipProvider>
+                )}
               </div>
             </div>
           </div>
@@ -217,10 +221,10 @@ const IndividualSeller = ({
                   <p className="font-semibold">Following</p>
                 </div>
               </DialogTrigger>
-              <DialogContent className="max-w-[425px]">
+              <DialogContent className="flex flex-col max-w-[425px] h-3/6">
                 <DialogHeader>Following</DialogHeader>
                 {following?.map((follow) => (
-                  <div className="flex flex-col py-4" key={follow.id}>
+                  <div className="flex-1 flex flex-col py-4" key={follow.id}>
                     <Link
                       href={`/seller/${follow.id}`}
                       className="flex flex-row gap-3 p-3 transition-colors duration-300 ease-in-out border-b hover:bg-gray-200 bg-none"
@@ -233,7 +237,6 @@ const IndividualSeller = ({
                 ))}
               </DialogContent>
             </Dialog>
-
             <Dialog>
               <DialogTrigger asChild>
                 <div className="flex flex-col items-center p-3 cursor-pointer hover:bg-gray-200">
@@ -241,10 +244,13 @@ const IndividualSeller = ({
                   <p className="font-semibold">Followers</p>
                 </div>
               </DialogTrigger>
-              <DialogContent className="max-w-[425px]">
-                <DialogHeader>Following</DialogHeader>
+              <DialogContent className="flex flex-col max-w-[425px] h-3/6">
+                <DialogHeader>Followers</DialogHeader>
                 {followers?.map((follow) => (
-                  <div className="flex flex-col py-4" key={follow.id}>
+                  <div
+                    className="flex-1 flex flex-col py-4 overflow-y-auto"
+                    key={follow.id}
+                  >
                     <Link
                       href={`/seller/${follow.id}`}
                       className="flex flex-row gap-3 p-3 transition-colors duration-300 ease-in-out border-b hover:bg-gray-200 bg-none"
@@ -254,7 +260,11 @@ const IndividualSeller = ({
                       </span>
                     </Link>
                   </div>
-                ))}
+                )) || (
+                  <span className="text-primary text-center">
+                    No data found
+                  </span>
+                )}
               </DialogContent>
             </Dialog>
           </div>

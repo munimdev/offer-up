@@ -80,8 +80,7 @@ const SubNav = () => {
   }, [isLoading]);
 
   return (
-    <div className="border-b ">
-      <div className="flex gap-5 justify-stretch"></div>
+    <div className="border-b">
       <NavigationMenu className="z-0">
         <NavigationMenuList id="navigation-menu-list">
           {isLoading
@@ -102,7 +101,6 @@ const SubNav = () => {
                     <>
                       <NavigationMenuTrigger>{item.name}</NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        {/* <ul className="grid gap-3 p-2 lg:grid-cols-[.75fr_1fr]"> */}
                         <ul className="grid p-4 w-[200px]">
                           {item.children.map((child: any, index: number) => (
                             <ListItem
@@ -110,9 +108,7 @@ const SubNav = () => {
                               href={`/categories/${child.id}`}
                               title={child.name}
                               className="w-full"
-                            >
-                              {/* {child.description} */}
-                            </ListItem>
+                            />
                           ))}
                         </ul>
                       </NavigationMenuContent>
