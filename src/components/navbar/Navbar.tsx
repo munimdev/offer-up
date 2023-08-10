@@ -63,7 +63,11 @@ import placholder from "@/components/item/placeholder.png";
 
 // Icons
 import Logo from "@/components/icons/Logo";
-import { MapPin, Truck, Menu } from "lucide-react";
+import { MapPin, Menu, Mail } from "lucide-react";
+import Facebook from "@/components/icons/Facebook";
+import Google from "@/components/icons/Google";
+import Apple from "@/components/icons/Apple";
+import Twitter from "@/components/icons/Twitter";
 
 // Hooks
 import { useLogin, useSignup } from "@/hooks";
@@ -211,11 +215,36 @@ function LoginDialog() {
         </DialogDescription>
       </DialogHeader>
       <div className="flex flex-col flex-wrap items-stretch justify-center flex-1 gap-4 mt-4">
-        <Button onClick={handleFacebook}>Continue with Facebook</Button>
-        <Button onClick={handleGoogle}>Continue with Google</Button>
-        <Button>Continue with Apple</Button>
-        <Button onClick={() => setScreen(LoginDialogScreens.auth)}>
-          Continue with Email
+        <Button
+          onClick={handleFacebook}
+          className="flex flex-row items-center rounded bg-[#4267B2]"
+        >
+          <Facebook />
+          <span className="flex-1 text-center">Continue with Facebook</span>
+        </Button>
+        <Button
+          onClick={handleGoogle}
+          className="flex flex-row items-center rounded bg-[#4C8BF5]"
+        >
+          <span className="bg-white rounded-full p-1">
+            <Google />
+          </span>
+          <span className="flex-1 text-center">Continue with Google</span>
+        </Button>
+        <Button className="flex flex-row rounded bg-white text-black border border-black hover:bg-gray-100">
+          <Apple />
+          <span className="flex-1 text-center">Continue with Apple</span>
+        </Button>
+        <Button className="flex flex-row rounded bg-white text-black border border-black hover:bg-gray-100">
+          <Twitter />
+          <span className="flex-1 text-center">Continue with Twitter</span>
+        </Button>
+        <Button
+          className="flex flex-row items-center rounded"
+          onClick={() => setScreen(LoginDialogScreens.auth)}
+        >
+          <Mail />
+          <span className="flex-1 text-center">Continue with Email</span>
         </Button>
       </div>
     </div>
