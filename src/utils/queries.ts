@@ -11,7 +11,14 @@ import {
   UserProfile,
 } from "@/utils/types";
 import instance from "./axios";
-import { Customer, FavoriteList, Item } from "@/types/types";
+import {
+  Customer,
+  FavoriteList,
+  Item,
+  LookupList,
+  ReportDto,
+  ReportItemDto,
+} from "@/types/types";
 
 export const loginUser = (data: LoginData): Promise<Result<User>> =>
   instance.post("/auth/login", data);
@@ -83,3 +90,14 @@ export const followCustomer = (userId: string): Promise<Result<any[]>> =>
 
 export const unFollowCustomer = (userId: string): Promise<Result<any[]>> =>
   instance.post("/customer/unFollowCustomer", { userId });
+
+// Report
+export const reportUser = (data: ReportDto) =>
+  instance.post("/system/SaveCustomerReport", data);
+
+export const reportItem = (data: ReportItemDto) =>
+  instance.post("/system/SaveItemReport", data);
+
+// Misc
+export const getLookupList = (code: number): Promise<Result<LookupList[]>> =>
+  instance.post(`/system/GetLookupByGroupCode`, { groupCode: code });

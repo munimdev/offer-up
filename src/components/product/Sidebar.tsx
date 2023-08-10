@@ -1,21 +1,19 @@
-import Rating from "@/components/misc/Rating";
-import Meter from "@/components/icons/Meter";
-import Fuel from "@/components/icons/Fuel";
-import Message from "@/components/icons/Message";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Phone,
-  Heart,
-  Share2,
-  MapPin,
-  Globe,
-  CalendarDays,
-} from "lucide-react";
 import React from "react";
-import { FavoriteList, Item } from "@/types/types";
 import Image from "next/image";
+import Link from "next/link";
+
+import { useMutation } from "@tanstack/react-query";
 import { useFetch } from "@/hooks";
+import * as Queries from "@/utils/queries";
+
+import { FavoriteList, Item, ReportItemDto } from "@/types/types";
+import { Result } from "@/utils/types";
+import * as z from "zod";
+
+import Rating from "@/components/misc/Rating";
+import Message from "@/components/icons/Message";
+import { Button } from "@/components/ui/button";
+
 import {
   Dialog,
   DialogContent,
@@ -25,28 +23,37 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useMutation } from "@tanstack/react-query";
-import * as Queries from "@/utils/queries";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
-import { Result } from "@/utils/types";
-import Link from "next/link";
+import Report from "@/components/report/report";
+
+import { Phone, Heart, Share2, MapPin, CalendarDays } from "lucide-react";
 import HeartIcon from "@/components/icons/HeartIcon";
 
 type Props = {
   data: Item;
 };
 
+const formSchema = z.object({
+  reason: z.string().nonempty({
+    message: "Please select a reason",
+  }),
+  description: z.string().min(10, {
+    message: "Please enter a description with at least 10 characters",
+  }),
+});
+
 const Sidebar: React.FC<Props> = ({ data }) => {
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
   const { toast } = useToast();
 
-  const {
-    mutateAsync: addItemToList,
-    error,
-    isError,
-    isSuccess,
-  } = useMutation(Queries.addItemToFavouriteList);
+  const { mutateAsync: addItemToList } = useMutation(
+    Queries.addItemToFavouriteList
+  );
+  const { mutateAsync: reportUser } = useMutation({
+    mutationKey: ["reportItem"],
+    mutationFn: (data: ReportItemDto) => Queries.reportItem(data),
+  });
 
   const { data: savedList }: { data: Result<FavoriteList[]> } = useFetch({
     key: ["query-favoriteList"],
@@ -55,6 +62,25 @@ const Sidebar: React.FC<Props> = ({ data }) => {
       enabled: !!data.id,
     },
   });
+
+  const onReportHandler = async (dto: z.infer<typeof formSchema>) => {
+    try {
+      const { reason, description } = dto;
+      await reportUser({
+        reportedItemId: data.id,
+        reportedItemOwnerCustomerId: data.userId,
+        reportReasonLookupId: parseInt(reason),
+        note: description,
+      });
+      toast({
+        title: "Reported",
+        description: `We appreciate your feedback, and will look into this issue.`,
+        duration: 2000,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="flex flex-col gap-2 p-5">
@@ -89,11 +115,11 @@ const Sidebar: React.FC<Props> = ({ data }) => {
       <Button className="bg-white border rounded-full text-primary border-primary hover:bg-white">
         <Message className="mr-2" /> Chat
       </Button>
-      <div className="flex justify-between text-primary">
+      <div className="flex items-center justify-center gap-x-5 text-primary">
         <Dialog open={isDialogOpen} onOpenChange={(e) => setIsDialogOpen(e)}>
           <DialogTrigger asChild>
             <button className="">
-              <Heart size={20} className="inline-block mr-2" /> Save
+              <Heart size={20} className="inline-block mr-2" />
             </button>
           </DialogTrigger>
           <DialogContent className="max-w-[425px]">
@@ -109,13 +135,7 @@ const Sidebar: React.FC<Props> = ({ data }) => {
                   key={list.id}
                   className="flex flex-row items-center gap-3 py-1 transition-colors duration-300 ease-in-out border-b hover:bg-gray-200 bg-none"
                 >
-                  {/* <Image
-                    width={60}
-                    height={60}
-                    src={heart}
-                    alt="list-img"
-                  /> */}
-                  <HeartIcon size={36}/>
+                  <HeartIcon size={36} />
                   <button
                     className="w-full text-left"
                     onClick={() => {
@@ -150,9 +170,13 @@ const Sidebar: React.FC<Props> = ({ data }) => {
             </div>
           </DialogContent>
         </Dialog>
+        <Report
+          lookupId={10004}
+          formSchema={formSchema}
+          onSubmit={onReportHandler}
+        />
         <span className="cursor-pointer">
           <Share2 className="inline-block mr-2" />
-          Share
         </span>
       </div>
       <div className="flex gap-4 py-4 my-4 border-y">

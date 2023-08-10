@@ -1,38 +1,49 @@
 import React from "react";
-import { Item } from "@/components/item/Item";
-import { Follow, SellerIndividualProps } from "@/types/types";
+import Link from "next/link";
+import Image from "next/image";
+
+import { useMutation } from "@tanstack/react-query";
+import * as Querues from "@/utils/queries";
+
+import { Follow, ReportUserDto } from "@/types/types";
+import { TItem, UserProfile } from "@/utils/types";
+import * as z from "zod";
+
 import { ItemList } from "@/components/item-list/ItemList";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import Link from "next/link";
 import placeholder from "@/components/item/placeholder.png";
-import Image from "next/image";
-import {
-  BadgeCheck,
-  BadgeX,
-  UserPlus2,
-  Share2,
-  UserCheck2,
-} from "lucide-react";
+
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import Rating from "@/components/misc/Rating";
 import { useToast } from "@/components/ui/use-toast";
-import { ToastAction } from "@/components/ui/toast";
-import { TItem, UserProfile } from "@/utils/types";
-import { useMutation } from "@tanstack/react-query";
-import * as Querues from "@/utils/queries";
+import Report from "@/components/report/report";
+
+import {
+  BadgeCheck,
+  BadgeX,
+  UserPlus2,
+  Share2,
+  UserCheck2,
+  Flag,
+} from "lucide-react";
+
+const formSchema = z.object({
+  reason: z.string().nonempty({
+    message: "Please select a reason",
+  }),
+  description: z.string().min(10, {
+    message: "Please enter a description with at least 10 characters",
+  }),
+});
 
 const getLastActiveTime = (lastActive: Date): string => {
   const timeNow = new Date().getTime();
@@ -86,6 +97,11 @@ const IndividualSeller = ({
     mutationKey: ["unFollowUser"],
     mutationFn: (userId: string) => Querues.unFollowCustomer(userId),
   });
+  const { mutateAsync: reportUser } = useMutation({
+    mutationKey: ["reportUser"],
+    mutationFn: (data: ReportUserDto) => Querues.reportUser(data),
+  });
+
   const joinDate = new Date("2023-07-07");
   const lastActive = new Date();
   lastActive.setDate(lastActive.getDate() - 2);
@@ -110,6 +126,24 @@ const IndividualSeller = ({
       toast({
         title: "Followed",
         description: `You unfollowed ${profile.name}`,
+        duration: 2000,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const onReportHandler = async (data: z.infer<typeof formSchema>) => {
+    try {
+      const { reason, description } = data;
+      await reportUser({
+        reportedCustomerId: profile?.id,
+        reportReasonLookupId: parseInt(reason),
+        note: description,
+      });
+      toast({
+        title: "Reported",
+        description: `We appreciate your feedback, and will look into this issue.`,
         duration: 2000,
       });
     } catch (error) {
@@ -172,35 +206,45 @@ const IndividualSeller = ({
                 {joinDate.getFullYear()}
               </p>
               <div className="flex flex-row items-center gap-4 text-primary">
+                {/* Share Userr */}
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger>
                       <Share2 size={20} strokeWidth={1.75} />
                     </TooltipTrigger>
-                    <TooltipContent>Share Profile</TooltipContent>
+                    <TooltipContent>Share User</TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
                 {!isOwnProfile && (
-                  <TooltipProvider>
-                    {isFollowed ? (
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <UserCheck2
-                            className="fill-primary"
-                            onClick={onUnFollowHandler}
-                          />
-                        </TooltipTrigger>
-                        <TooltipContent>Unfollow User</TooltipContent>
-                      </Tooltip>
-                    ) : (
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <UserPlus2 onClick={onFollowHandler} />
-                        </TooltipTrigger>
-                        <TooltipContent>Follow User</TooltipContent>
-                      </Tooltip>
-                    )}
-                  </TooltipProvider>
+                  <>
+                    {/* Report User */}
+                    <Report
+                      formSchema={formSchema}
+                      lookupId={10005}
+                      onSubmit={onReportHandler}
+                    />
+                    {/* Unfollow */}
+                    <TooltipProvider>
+                      {isFollowed ? (
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <UserCheck2
+                              className="fill-primary"
+                              onClick={onUnFollowHandler}
+                            />
+                          </TooltipTrigger>
+                          <TooltipContent>Unfollow User</TooltipContent>
+                        </Tooltip>
+                      ) : (
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <UserPlus2 onClick={onFollowHandler} />
+                          </TooltipTrigger>
+                          <TooltipContent>Follow User</TooltipContent>
+                        </Tooltip>
+                      )}
+                    </TooltipProvider>
+                  </>
                 )}
               </div>
             </div>
@@ -214,6 +258,7 @@ const IndividualSeller = ({
               <p className="text-lg font-bold">{profile?.totalSold}</p>
               <p className="font-semibold">Sold</p>
             </div> */}
+            {/* Followers */}
             <Dialog>
               <DialogTrigger asChild>
                 <div className="flex flex-col items-center p-3 cursor-pointer hover:bg-gray-200">
@@ -237,6 +282,7 @@ const IndividualSeller = ({
                 ))}
               </DialogContent>
             </Dialog>
+            {/* Following */}
             <Dialog>
               <DialogTrigger asChild>
                 <div className="flex flex-col items-center p-3 cursor-pointer hover:bg-gray-200">

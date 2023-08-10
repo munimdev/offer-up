@@ -171,3 +171,27 @@ export type Follow = {
   registeredOn: string;
   isFollowing: boolean;
 };
+
+export type LookupList = {
+  id: number;
+  code: number;
+  description: string;
+  groupCode: number;
+  groupDescription: string;
+  isActive: boolean;
+  isDeleted: boolean;
+};
+
+export type ReportDto = {
+  reportReasonLookupId: number;
+  note: string;
+};
+
+export type ReportUserDto = {
+  reportedCustomerId: string;
+} & ReportDto;
+
+export type ReportItemDto = {
+  reportedItemId: string;
+  reportedItemOwnerCustomerId: string;
+} & ReportDto;

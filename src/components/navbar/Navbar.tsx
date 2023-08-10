@@ -1,11 +1,13 @@
 "use client";
 
+import "./Modal.css";
+
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import "./Modal.css";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { signUpWithFacebook, signUpWithGoogle } from "@/firebase/auth";
 import * as z from "zod";
 
 import {
@@ -166,10 +168,32 @@ const LoginDialogScreens = {
 };
 
 function LoginDialog() {
+  const { mutateAsync } = useSignup();
   const [screen, setScreen] = React.useState(LoginDialogScreens.home);
   const setUser = useSetAtom(userAtom);
 
-  const handleFacebook = () => {};
+  const handleFacebook = () => {
+    signUpWithFacebook();
+  };
+
+  const handleGoogle = async () => {
+    const firebase = await signUpWithGoogle();
+    const response = await mutateAsync({
+      email: firebase.user.email!,
+      password: "",
+      firstName: firebase.user.displayName!.split(" ")[0],
+      lastName: firebase.user.displayName!.split(" ")[1],
+      accTypeLookupId: 10062,
+      registeredFromPlatformLookupId: 10051,
+      gmailId: firebase.user.uid,
+    });
+
+    if (response.dataObject !== null) {
+      const { token, ...userData } = response.dataObject;
+      setUser(userData);
+      localStorage.setItem("accessToken", token as string);
+    }
+  };
 
   const HomeScreen = () => (
     <div
@@ -188,8 +212,8 @@ function LoginDialog() {
       </DialogHeader>
       <div className="flex flex-col flex-wrap items-stretch justify-center flex-1 gap-4 mt-4">
         <Button onClick={handleFacebook}>Continue with Facebook</Button>
-        <Button onClick={handleFacebook}>Continue with Google</Button>
-        <Button onClick={handleFacebook}>Continue with Apple</Button>
+        <Button onClick={handleGoogle}>Continue with Google</Button>
+        <Button>Continue with Apple</Button>
         <Button onClick={() => setScreen(LoginDialogScreens.auth)}>
           Continue with Email
         </Button>
@@ -511,7 +535,7 @@ function LoginDialog() {
                 className="rounded-full"
               />
               <div className="flex flex-col">
-                <span className="text-lg font-bold">User Name</span>
+                <span className="text-lg font-bold">{user!.name}</span>
                 <span className="text-md">View Profile</span>
               </div>
             </Link>
