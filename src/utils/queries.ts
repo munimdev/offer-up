@@ -78,6 +78,10 @@ export const removeItemFromFavouriteList = (data: {
 }): Promise<Result<FavoriteList>> =>
   instance.post("/FavouriteList/removeItemFromFavouriteList", data);
 
+// Profile
+export const getCustomerProfile = (id: string): Promise<Result<Customer>> =>
+  instance.post("/customer/getcustomerProfile", { id: id });
+
 // Following
 export const getCustomerFollowing = (id: string): Promise<Result<Customer[]>> =>
   instance.post("/customer/getCustomerFollowing", { userId: id });
