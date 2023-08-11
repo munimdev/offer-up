@@ -7,7 +7,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signUpWithFacebook, signUpWithGoogle } from "@/firebase/auth";
+import {
+  signUpWithFacebook,
+  signUpWithGoogle,
+  signUpWithApple,
+  signUpWithTwitter,
+} from "@/firebase/auth";
 import * as z from "zod";
 
 import {
@@ -181,21 +186,76 @@ function LoginDialog() {
   };
 
   const handleGoogle = async () => {
-    const firebase = await signUpWithGoogle();
-    const response = await mutateAsync({
-      email: firebase.user.email!,
-      password: "",
-      firstName: firebase.user.displayName!.split(" ")[0],
-      lastName: firebase.user.displayName!.split(" ")[1],
-      accTypeLookupId: 10062,
-      registeredFromPlatformLookupId: 10051,
-      gmailId: firebase.user.uid,
-    });
+    try {
+      const firebase = await signUpWithGoogle();
+      const response = await mutateAsync({
+        email: firebase.user.email!,
+        password: "",
+        firstName: firebase.user.displayName!.split(" ")[0],
+        lastName: firebase.user.displayName!.split(" ")[1],
+        accTypeLookupId: 10062,
+        registeredFromPlatformLookupId: 10051,
+        gmailId: firebase.user.uid,
+      });
 
-    if (response.dataObject !== null) {
-      const { token, ...userData } = response.dataObject;
-      setUser(userData);
-      localStorage.setItem("accessToken", token as string);
+      if (response.dataObject !== null) {
+        const { token, ...userData } = response.dataObject;
+        setUser(userData);
+        localStorage.setItem("accessToken", token as string);
+      }
+    } catch (error) {
+      // Error Functionality Here
+      console.log(error);
+    }
+  };
+
+  const handleApple = async () => {
+    try {
+      const firebase = await signUpWithApple();
+      console.log(firebase);
+      // const response = await mutateAsync({
+      //   email: firebase.user.email!,
+      //   password: "",
+      //   firstName: firebase.user.displayName!.split(" ")[0],
+      //   lastName: firebase.user.displayName!.split(" ")[1],
+      //   accTypeLookupId: 10062,
+      //   registeredFromPlatformLookupId: 10051,
+      //   gmailId: firebase.user.uid,
+      // });
+
+      // if (response.dataObject !== null) {
+      //   const { token, ...userData } = response.dataObject;
+      //   setUser(userData);
+      //   localStorage.setItem("accessToken", token as string);
+      // }
+    } catch (error) {
+      // Error Functionality Here
+      console.log(error);
+    }
+  };
+
+  const handleTwitter = async () => {
+    try {
+      const firebase = await signUpWithTwitter();
+      console.log(firebase);
+      // const response = await mutateAsync({
+      //   email: firebase.user.email!,
+      //   password: "",
+      //   firstName: firebase.user.displayName!.split(" ")[0],
+      //   lastName: firebase.user.displayName!.split(" ")[1],
+      //   accTypeLookupId: 10062,
+      //   registeredFromPlatformLookupId: 10051,
+      //   gmailId: firebase.user.uid,
+      // });
+
+      // if (response.dataObject !== null) {
+      //   const { token, ...userData } = response.dataObject;
+      //   setUser(userData);
+      //   localStorage.setItem("accessToken", token as string);
+      // }
+    } catch (error) {
+      // Error Functionality Here
+      console.log(error);
     }
   };
 
@@ -231,11 +291,17 @@ function LoginDialog() {
           </span>
           <span className="flex-1 text-center">Continue with Google</span>
         </Button>
-        <Button className="flex flex-row rounded bg-white text-black border border-black hover:bg-gray-100">
+        <Button
+          onClick={signUpWithApple}
+          className="flex flex-row rounded bg-white text-black border border-black hover:bg-gray-100"
+        >
           <Apple />
           <span className="flex-1 text-center">Continue with Apple</span>
         </Button>
-        <Button className="flex flex-row rounded bg-white text-black border border-black hover:bg-gray-100">
+        <Button
+          onClick={handleTwitter}
+          className="flex flex-row rounded bg-white text-black border border-black hover:bg-gray-100"
+        >
           <Twitter />
           <span className="flex-1 text-center">Continue with Twitter</span>
         </Button>
