@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -8,12 +9,18 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+} from "@/components/ui/dropdown-menu";
+
 import { cn } from "@/utils";
 import Link from "next/link";
 import { useFetchCategories } from "@/hooks";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getTotalWidth, getElementWidth } from "@/utils";
-import Description from "@/components/product/Description";
+import { getElementWidth } from "@/utils";
+import { ChevronDown } from "lucide-react";
 
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
@@ -99,24 +106,30 @@ const SubNav = () => {
                 >
                   {item.children.length > 0 ? (
                     <>
-                      <NavigationMenuTrigger>{item.name}</NavigationMenuTrigger>
-                      <NavigationMenuContent>
-                        <ul className="grid p-4 w-[200px]">
-                          {item.children.map((child: any, index: number) => (
-                            <ListItem
-                              key={index}
-                              href={`/categories/${child.id}`}
-                              title={child.name}
-                              className="w-full"
-                            />
-                          ))}
-                        </ul>
-                      </NavigationMenuContent>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger
+                          className={navigationMenuTriggerStyle()}
+                        >
+                          {item.name} <ChevronDown size={15} />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                          <ul className="grid p-4 w-[200px]">
+                            {item.children.map((child: any, index: number) => (
+                              <ListItem
+                                key={index}
+                                href={`/categories/${child.id}`}
+                                title={child.name}
+                                className="w-full"
+                              />
+                            ))}
+                          </ul>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </>
                   ) : (
                     <Link href="#" legacyBehavior passHref>
                       <NavigationMenuLink
-                      // className={navigationMenuTriggerStyle()}
+                        className={navigationMenuTriggerStyle()}
                       >
                         {item.name}
                       </NavigationMenuLink>
@@ -125,9 +138,11 @@ const SubNav = () => {
                 </NavigationMenuItem>
               ))}
           {hiddenOptions?.length! > 0 && (
-            <NavigationMenuItem>
-              <NavigationMenuTrigger>More</NavigationMenuTrigger>
-              <NavigationMenuContent>
+            <DropdownMenu>
+              <DropdownMenuTrigger className={navigationMenuTriggerStyle()}>
+                More <ChevronDown size={15} />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
                 <ul className="grid gap-3 p-2 lg:grid-cols-[.75fr_1fr]">
                   {hiddenOptions?.map((item: any, idx) => (
                     <li
@@ -144,8 +159,8 @@ const SubNav = () => {
                     </li>
                   ))}
                 </ul>
-              </NavigationMenuContent>
-            </NavigationMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           )}
         </NavigationMenuList>
       </NavigationMenu>
