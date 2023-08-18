@@ -51,6 +51,7 @@
     "react-dom": "18.2.0",
     "react-dropzone": "^14.2.3",
     "react-firebaseui": "^6.0.0",
+    "react-google-map-picker": "^1.2.3",
     "react-hook-form": "^7.45.2",
     "react-sortable-hoc": "^2.0.0",
     "swiper": "^10.0.4",

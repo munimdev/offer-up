@@ -43,6 +43,16 @@ export const saveItem = (data: SaveItemDto) =>
 
 export const getItemById = (id: string): Promise<Result<any>> =>
   instance.post("/Item/getItemDetail", { id });
+// Item/markItemSold
+export const markItemSold = (id: string): Promise<Result<any>> =>
+  instance.post("/Item/markItemSold", { id });
+//Item/markItemArchived
+export const markItemArchived = (
+  id: string,
+): Promise<Result<any>> => instance.post("/Item/markItemArchived", { id });
+// /Item/markItemUnArchived
+export const markItemUnArchived = (id: string): Promise<Result<any>> =>
+  instance.post("/Item/markItemUnArchived", { id });
 
 export const userDetails = (data: {
   id: string;
