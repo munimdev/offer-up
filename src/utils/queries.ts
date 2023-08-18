@@ -92,6 +92,17 @@ export const removeItemFromFavouriteList = (data: {
 export const getCustomerProfile = (id: string): Promise<Result<Customer>> =>
   instance.post("/customer/getcustomerProfile", { id: id });
 
+export const updateProfileImage = (
+  id: string,
+  imagePath: string
+): Promise<Result<any>> =>
+  instance.post("/customer/updateCustomerProfileImage", { id, imagePath });
+
+export const changePassword = (data: {
+  oldPassword: string;
+  newPassword: string;
+}): Promise<Result<any>> => instance.post("/auth/changePassword", data);
+
 // Following
 export const getCustomerFollowing = (id: string): Promise<Result<Customer[]>> =>
   instance.post("/customer/getCustomerFollowing", { userId: id });

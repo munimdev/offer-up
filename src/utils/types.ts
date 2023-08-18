@@ -46,6 +46,7 @@ export type UserProfile = {
   totalBought: number;
   isEmailVerified: boolean;
   isNumberVerified: boolean;
+  isFollowing: boolean;
   imagePath: string;
   imagePath250: string;
   registeredOn: Date;

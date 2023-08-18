@@ -35,6 +35,8 @@ import {
   UserCheck2,
   Flag,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const formSchema = z.object({
   reason: z.string().nonempty({
@@ -76,17 +78,17 @@ const getLastActiveTime = (lastActive: Date): string => {
 const IndividualSeller = ({
   profile,
   items,
-  isFollowed,
   isOwnProfile,
   followers,
   following,
+  refetch,
 }: {
   profile: UserProfile;
   items: TItem[];
-  isFollowed: boolean;
   isOwnProfile: boolean;
   followers: Follow[];
   following: Follow[];
+  refetch: () => Promise<any>;
 }) => {
   const { toast } = useToast();
   const { mutateAsync: followUser } = useMutation({
@@ -115,6 +117,7 @@ const IndividualSeller = ({
         description: `You started following ${profile.name}`,
         duration: 2000,
       });
+      await refetch();
     } catch (error) {
       console.log(error);
     }
@@ -128,6 +131,7 @@ const IndividualSeller = ({
         description: `You unfollowed ${profile.name}`,
         duration: 2000,
       });
+      await refetch();
     } catch (error) {
       console.log(error);
     }
@@ -156,14 +160,14 @@ const IndividualSeller = ({
       <div className="flex w-full text-sm gap-x-2">
         <Link href="/">Home</Link>
         {">"}
-        <Link href="/">{profile?.name} </Link>
+        <Link href="/">{profile?.name.toUpperCase()} </Link>
       </div>
       <div className="grid grid-cols-12 gap-4 mt-6">
         <div className="flex flex-col col-span-3 gap-8">
           <div className="flex flex-row items-center gap-4">
             <Image
               className="object-cover rounded-full"
-              src={placeholder}
+              src={profile?.imagePath250 || placeholder}
               alt=""
               width={100}
               height={100}
@@ -171,7 +175,7 @@ const IndividualSeller = ({
             />
             <div className="flex flex-col items-start gap-1 text-sm">
               <div className="flex items-center font-bold">
-                <span className="mr-1">{profile?.name}</span>
+                <span className="mr-1">{profile?.name.toUpperCase()}</span>
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger>
@@ -223,41 +227,23 @@ const IndividualSeller = ({
                       lookupId={10005}
                       onSubmit={onReportHandler}
                     />
-                    {/* Unfollow */}
-                    <TooltipProvider>
-                      {isFollowed ? (
-                        <Tooltip>
-                          <TooltipTrigger>
-                            <UserCheck2
-                              className="fill-primary"
-                              onClick={onUnFollowHandler}
-                            />
-                          </TooltipTrigger>
-                          <TooltipContent>Unfollow User</TooltipContent>
-                        </Tooltip>
-                      ) : (
-                        <Tooltip>
-                          <TooltipTrigger>
-                            <UserPlus2 onClick={onFollowHandler} />
-                          </TooltipTrigger>
-                          <TooltipContent>Follow User</TooltipContent>
-                        </Tooltip>
-                      )}
-                    </TooltipProvider>
                   </>
                 )}
               </div>
             </div>
           </div>
+          {!isOwnProfile &&
+            (profile?.isFollowing ? (
+              <Button
+                className="text-primary bg-white border border-primary hover:bg-gray-100"
+                onClick={onUnFollowHandler}
+              >
+                Unfollow
+              </Button>
+            ) : (
+              <Button onClick={onFollowHandler}>Follow</Button>
+            ))}
           <div className="flex flex-row gap-5 justify-evenly border-y">
-            {/* <div className="flex flex-col items-center p-3">
-              <p className="text-lg font-bold">{profile?.totalBought}</p>
-              <p className="font-semibold">Bought</p>
-            </div>
-            <div className="flex flex-col items-center p-3">
-              <p className="text-lg font-bold">{profile?.totalSold}</p>
-              <p className="font-semibold">Sold</p>
-            </div> */}
             {/* Followers */}
             <Dialog>
               <DialogTrigger asChild>
@@ -268,18 +254,33 @@ const IndividualSeller = ({
               </DialogTrigger>
               <DialogContent className="flex flex-col max-w-[425px] h-3/6">
                 <DialogHeader>Following</DialogHeader>
-                {following?.map((follow) => (
-                  <div className="flex-1 flex flex-col py-4" key={follow.id}>
-                    <Link
-                      href={`/seller/${follow.id}`}
-                      className="flex flex-row gap-3 p-3 transition-colors duration-300 ease-in-out border-b hover:bg-gray-200 bg-none"
-                    >
-                      <span>
-                        {follow.firstName} {follow.lastName}
-                      </span>
-                    </Link>
-                  </div>
-                ))}
+                <ScrollArea>
+                  {following?.length > 0 ? (
+                    following?.map((follow) => (
+                      <div key={follow.id}>
+                        <Link
+                          href={`/seller/${follow.id}`}
+                          className="flex flex-row items-center gap-3 px-3 py-2 transition-colors duration-300 ease-in-out border-b hover:bg-gray-200 bg-none"
+                        >
+                          <Image
+                            src="/images/placeholder.png"
+                            width={50}
+                            height={50}
+                            alt="Profile Image"
+                            className="rounded-full"
+                          />
+                          <span className="font-semibold">
+                            {follow.firstName} {follow.lastName}
+                          </span>
+                        </Link>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-sm text-center mt-5">
+                      Sorry! You haven't follow anyone yet.
+                    </p>
+                  )}
+                </ScrollArea>
               </DialogContent>
             </Dialog>
             {/* Following */}
@@ -292,25 +293,34 @@ const IndividualSeller = ({
               </DialogTrigger>
               <DialogContent className="flex flex-col max-w-[425px] h-3/6">
                 <DialogHeader>Followers</DialogHeader>
-                {followers?.map((follow) => (
-                  <div
-                    className="flex-1 flex flex-col py-4 overflow-y-auto"
-                    key={follow.id}
-                  >
-                    <Link
-                      href={`/seller/${follow.id}`}
-                      className="flex flex-row gap-3 p-3 transition-colors duration-300 ease-in-out border-b hover:bg-gray-200 bg-none"
-                    >
-                      <span>
-                        {follow.firstName} {follow.lastName}
-                      </span>
-                    </Link>
-                  </div>
-                )) || (
-                  <span className="text-primary text-center">
-                    No data found
-                  </span>
-                )}
+                <ScrollArea>
+                  {followers?.length > 0 ? (
+                    followers?.map((follow) => (
+                      <div key={follow.id}>
+                        <Link
+                          href={`/seller/${follow.id}`}
+                          className="flex flex-row items-center gap-3 px-3 py-2 transition-colors duration-300 ease-in-out border-b hover:bg-gray-200 bg-none"
+                        >
+                          <Image
+                            src="/images/placeholder.png"
+                            width={50}
+                            height={50}
+                            alt="Profile Image"
+                            className="rounded-full"
+                          />
+                          <span className="font-semibold">
+                            {follow.firstName.toUpperCase()}{" "}
+                            {follow.lastName.toUpperCase()}
+                          </span>
+                        </Link>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-sm text-center mt-5">
+                      Sorry! You have no followers yet.
+                    </p>
+                  )}
+                </ScrollArea>
               </DialogContent>
             </Dialog>
           </div>
