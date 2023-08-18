@@ -12,6 +12,7 @@ import {
   signUpWithGoogle,
   signUpWithApple,
   signUpWithTwitter,
+  signUpWithMicrosoft,
 } from "@/firebase/auth";
 import * as z from "zod";
 
@@ -29,13 +30,7 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
@@ -43,7 +38,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -52,10 +46,8 @@ import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
@@ -73,6 +65,7 @@ import Facebook from "@/components/icons/Facebook";
 import Google from "@/components/icons/Google";
 import Apple from "@/components/icons/Apple";
 import Twitter from "@/components/icons/Twitter";
+import Microsoft from "@/components/icons/Microsoft";
 
 // Hooks
 import { useLogin, useSignup } from "@/hooks";
@@ -209,25 +202,25 @@ function LoginDialog() {
     }
   };
 
-  const handleApple = async () => {
+  const handleMicrosoft = async () => {
     try {
-      const firebase = await signUpWithApple();
+      const firebase = await signUpWithMicrosoft();
       console.log(firebase);
-      // const response = await mutateAsync({
-      //   email: firebase.user.email!,
-      //   password: "",
-      //   firstName: firebase.user.displayName!.split(" ")[0],
-      //   lastName: firebase.user.displayName!.split(" ")[1],
-      //   accTypeLookupId: 10062,
-      //   registeredFromPlatformLookupId: 10051,
-      //   gmailId: firebase.user.uid,
-      // });
+      const response = await mutateAsync({
+        email: firebase.user.email!,
+        password: "",
+        firstName: firebase.user.displayName!.split(" ")[0],
+        lastName: firebase.user.displayName!.split(" ")[1],
+        accTypeLookupId: 10066,
+        registeredFromPlatformLookupId: 10051,
+        gmailId: firebase.user.uid,
+      });
 
-      // if (response.dataObject !== null) {
-      //   const { token, ...userData } = response.dataObject;
-      //   setUser(userData);
-      //   localStorage.setItem("accessToken", token as string);
-      // }
+      if (response.dataObject !== null) {
+        const { token, ...userData } = response.dataObject;
+        setUser(userData);
+        localStorage.setItem("accessToken", token as string);
+      }
     } catch (error) {
       // Error Functionality Here
       console.log(error);
@@ -238,21 +231,21 @@ function LoginDialog() {
     try {
       const firebase = await signUpWithTwitter();
       console.log(firebase);
-      // const response = await mutateAsync({
-      //   email: firebase.user.email!,
-      //   password: "",
-      //   firstName: firebase.user.displayName!.split(" ")[0],
-      //   lastName: firebase.user.displayName!.split(" ")[1],
-      //   accTypeLookupId: 10062,
-      //   registeredFromPlatformLookupId: 10051,
-      //   gmailId: firebase.user.uid,
-      // });
+      const response = await mutateAsync({
+        email: firebase.user.email!,
+        password: "",
+        firstName: firebase.user.displayName!.split(" ")[0],
+        lastName: firebase.user.displayName!.split(" ")[1],
+        accTypeLookupId: 10065,
+        registeredFromPlatformLookupId: 10051,
+        gmailId: firebase.user.uid,
+      });
 
-      // if (response.dataObject !== null) {
-      //   const { token, ...userData } = response.dataObject;
-      //   setUser(userData);
-      //   localStorage.setItem("accessToken", token as string);
-      // }
+      if (response.dataObject !== null) {
+        const { token, ...userData } = response.dataObject;
+        setUser(userData);
+        localStorage.setItem("accessToken", token as string);
+      }
     } catch (error) {
       // Error Functionality Here
       console.log(error);
@@ -292,15 +285,22 @@ function LoginDialog() {
           <span className="flex-1 text-center">Continue with Google</span>
         </Button>
         <Button
-          onClick={signUpWithApple}
+          // onClick={signUpWithApple}
           className="flex flex-row rounded bg-white text-black border border-black hover:bg-gray-100"
         >
           <Apple />
           <span className="flex-1 text-center">Continue with Apple</span>
         </Button>
         <Button
+          onClick={handleMicrosoft}
+          className="flex flex-row rounded bg-[#1480d8] text-white hover:opacity-95"
+        >
+          <Microsoft />
+          <span className="flex-1 text-center">Continue with Microsoft</span>
+        </Button>
+        <Button
           onClick={handleTwitter}
-          className="flex flex-row rounded bg-white text-black border border-black hover:bg-gray-100"
+          className="flex flex-row rounded bg-black text-white border hover:bg-gray-800"
         >
           <Twitter />
           <span className="flex-1 text-center">Continue with Twitter</span>
@@ -630,13 +630,19 @@ function LoginDialog() {
                 className="rounded-full"
               />
               <div className="flex flex-col">
-                <span className="text-lg font-bold">{user!.name}</span>
+                <span className="text-lg font-bold">
+                  {user!.name.toUpperCase()}
+                </span>
                 <span className="text-md">View Profile</span>
               </div>
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem>Purchase & Sales</DropdownMenuItem>
-          <DropdownMenuItem>Account & Settings</DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link href="/listings">My Listings</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link href="/account/setting">Account & Settings</Link>
+          </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
@@ -646,7 +652,9 @@ function LoginDialog() {
           <DropdownMenuItem>Privacy</DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={onLogoutHandler}>Logout</DropdownMenuItem>
+        <DropdownMenuItem className="cursor-pointer" onClick={onLogoutHandler}>
+          Logout
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

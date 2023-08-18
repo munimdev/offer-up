@@ -184,7 +184,8 @@ function isCompanySeller(
 const SellerSection = ({ params }: { params: { id: string } }) => {
   const { user } = useSession();
   const id = params.id;
-  const { data: sellerData } = useFetch({
+
+  const { data: sellerData, refetch: sellerRefetch } = useFetch({
     key: ["query-sellerData"],
     fn: () => Queries.userDetails({ id: id }),
     options: {
@@ -229,7 +230,7 @@ const SellerSection = ({ params }: { params: { id: string } }) => {
       followers={sellerFollowers?.dataObject}
       following={sellerFollowing?.dataObject}
       isOwnProfile={isOwnProfile}
-      isFollowed={isFollowed}
+      refetch={sellerRefetch}
     />
   );
 

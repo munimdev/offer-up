@@ -44,30 +44,26 @@ const Product = ({ params }: { params: { id: string } }) => {
           </div> */}
           <div className="p-4 my-4 border-b">
             <h3 className="text-3xl font-bold text-black">Typical Features</h3>
-            <p className="my-3">
+            <p className="my-5">
               Contact the seller to confirm vehicle details
             </p>
-            <div className="flex flex-wrap gap-10">
-              <p>
-                {" "}
-                <Check className="inline" /> AC
-              </p>
-              <p>
-                {" "}
-                <Check className="inline" /> Alloy Wheels
-              </p>
-              <p>
-                {" "}
-                <Check className="inline" /> Rims
-              </p>
-              <p>
-                {" "}
-                <Check className="inline" /> Hybrid
-              </p>
-              <p>
-                {" "}
-                <Check className="inline" /> 4x4
-              </p>
+            <div className="flex flex-wrap gap-y-5">
+              {/* Render like a flex wraped module with tabular touch, with property as regular and value as bold */}
+              {currentItem?.attributes.map((attr, key) => (
+                <div
+                  key={attr.id + attr.categoryAttributeName}
+                  className="basis-full lg:basis-3/6"
+                >
+                  <div className="flex flex-wrap">
+                    <span className="basis-3/6">
+                      {attr.categoryAttributeName}
+                    </span>
+                    <span className="basis-3/6 font-bold">
+                      {attr.selectedValue}
+                    </span>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
           <div className="p-4 my-4 border-b">
@@ -108,9 +104,10 @@ const Product = ({ params }: { params: { id: string } }) => {
           )}
         </div>
       </div>
-      <div className="px-4 py-2 my-4">
+      {/* Similar Items */}
+      {/* <div className="px-4 py-2 my-4">
         <h3 className="text-3xl font-bold text-black">Similar Items</h3>
-      </div>
+      </div> */}
     </div>
   );
 };

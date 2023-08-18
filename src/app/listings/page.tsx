@@ -23,7 +23,7 @@ const Listings = () => {
 
   const { data: sellerItems } = useFetch({
     key: ["query-sellerItems"],
-    fn: () => Queries.userItems({ id: user.id }),
+    fn: () => Queries.userItems({ id: user!.id }),
     options: {
       enabled: true,
     },
