@@ -52,6 +52,7 @@ const SubNav = () => {
   const { data, isLoading } = useFetchCategories();
   const [visibleOptions, setVisibleOptions] = useState<typeof data>([]);
   const [hiddenOptions, setHiddenOptions] = useState<typeof data>([]);
+  const [hoveredItemId, setHoveredItemId] = useState<number | null>(null);
 
   useEffect(() => {
     const handleMoreToggler = () => {
@@ -103,33 +104,45 @@ const SubNav = () => {
                 <NavigationMenuItem
                   key={item.id}
                   className="navigation-menu-item"
+                  onMouseLeave={() => setHoveredItemId(null)}
                 >
                   {item.children.length > 0 ? (
-                    <>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger
-                          className={navigationMenuTriggerStyle()}
-                        >
-                          {item.name} <ChevronDown size={15} />
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                          <ul className="grid p-4 w-[200px]">
-                            {item.children.map((child: any, index: number) => (
-                              <ListItem
-                                key={index}
-                                href={`/categories/${child.id}`}
-                                title={child.name}
-                                className="w-full"
-                              />
-                            ))}
-                          </ul>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </>
+                    <div
+                      className="relative group"
+                      onMouseEnter={() => setHoveredItemId(item.id)}
+                    >
+                      <NavigationMenuTrigger
+                        className={`${navigationMenuTriggerStyle()} ${
+                          hoveredItemId === item.id
+                            ? "opacity-100"
+                            : "opacity-75"
+                        }`}
+                      >
+                        {item.name}
+                      </NavigationMenuTrigger>
+                      <ul
+                        className={`w-fit grid p-2 lg:grid-cols-[1fr_1fr] absolute left-0 mt-2 ${
+                          hoveredItemId === item.id
+                            ? "opacity-100"
+                            : "opacity-0 invisible"
+                        } bg-white border border-gray-200 shadow rounded`}
+                      >
+                        {item.children.map((child: any, index: number) => (
+                          <ListItem
+                            key={index}
+                            href={`/categories/${child.id}`}
+                            title={child.name}
+                            className="w-full"
+                          />
+                        ))}
+                      </ul>
+                    </div>
                   ) : (
                     <Link href="#" legacyBehavior passHref>
                       <NavigationMenuLink
-                        className={navigationMenuTriggerStyle()}
+                        className={`
+                          ${navigationMenuTriggerStyle()} opacity-75
+                        `}
                       >
                         {item.name}
                       </NavigationMenuLink>
@@ -138,29 +151,40 @@ const SubNav = () => {
                 </NavigationMenuItem>
               ))}
           {hiddenOptions?.length! > 0 && (
-            <DropdownMenu>
-              <DropdownMenuTrigger className={navigationMenuTriggerStyle()}>
-                More <ChevronDown size={15} />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <ul className="grid gap-3 p-2 lg:grid-cols-[.75fr_1fr]">
-                  {hiddenOptions?.map((item: any, idx) => (
-                    <li
+            <NavigationMenuItem
+              key={999}
+              className="navigation-menu-item"
+              onMouseLeave={() => setHoveredItemId(null)}
+            >
+              <div
+                className="relative group"
+                onMouseEnter={() => setHoveredItemId(999)}
+              >
+                <NavigationMenuTrigger
+                  className={`${navigationMenuTriggerStyle()} ${
+                    hoveredItemId === 999 ? "opacity-100" : "opacity-75"
+                  }`}
+                >
+                  More
+                </NavigationMenuTrigger>
+                <ul
+                  className={`w-fit absolute left-0 mt-2 ${
+                    hoveredItemId === 999
+                      ? "opacity-100"
+                      : "opacity-0 invisible"
+                  } bg-white border border-gray-200 shadow rounded`}
+                >
+                  {hiddenOptions?.map((child: any, idx) => (
+                    <ListItem
                       key={idx}
-                      className="row-span-3 font-semibold text-black"
-                    >
-                      <Link href="#" legacyBehavior passHref>
-                        <NavigationMenuLink
-                          className={navigationMenuTriggerStyle()}
-                        >
-                          {item.name}
-                        </NavigationMenuLink>
-                      </Link>
-                    </li>
+                      href={`/categories/${child.id}`}
+                      title={child.name}
+                      className="w-full"
+                    />
                   ))}
                 </ul>
-              </DropdownMenuContent>
-            </DropdownMenu>
+              </div>
+            </NavigationMenuItem>
           )}
         </NavigationMenuList>
       </NavigationMenu>
