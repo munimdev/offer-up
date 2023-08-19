@@ -9,6 +9,7 @@ import {
   Category,
   SaveItemDto,
   UserProfile,
+  UpdateItemDto,
 } from "@/utils/types";
 import instance from "./axios";
 import {
@@ -41,18 +42,20 @@ export const getCategoryAttributes = (
 export const saveItem = (data: SaveItemDto) =>
   instance.post("/Item/createitem", data);
 
-export const getItemById = (id: string): Promise<Result<any>> =>
+export const getItemById = (id: string): Promise<Result<Item>> =>
   instance.post("/Item/getItemDetail", { id });
 // Item/markItemSold
 export const markItemSold = (id: string): Promise<Result<any>> =>
   instance.post("/Item/markItemSold", { id });
 //Item/markItemArchived
-export const markItemArchived = (
-  id: string,
-): Promise<Result<any>> => instance.post("/Item/markItemArchived", { id });
+export const markItemArchived = (id: string): Promise<Result<any>> =>
+  instance.post("/Item/markItemArchived", { id });
 // /Item/markItemUnArchived
 export const markItemUnArchived = (id: string): Promise<Result<any>> =>
   instance.post("/Item/markItemUnArchived", { id });
+// Update Item
+export const updateItem = (data: UpdateItemDto): Promise<Result<any>> =>
+  instance.post("/Item/updateitem", data);
 
 export const userDetails = (data: {
   id: string;

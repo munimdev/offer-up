@@ -25,13 +25,15 @@ const Selling = () => {
       isPriceFixed: itemData.isPriceFixed,
       images: itemData.images,
       categoryId: itemData.category.parentCategoryId,
-      attributes:  itemData.attributes || [],
+      attributes: itemData.attributes || [],
       childCategoryId: itemData.category.id,
       subCategoryId: itemData.subCategory.id,
       validUpto: itemData.validUpto,
       zipcode: itemData.zipcode,
       locationLat: itemData.locationLat,
       locationLng: itemData.locationLng,
+      fullAddress: itemData.fullAddress!,
+      shortAddress: itemData.shortAddress!,
       conditionLookUpId: 10001,
     });
   };

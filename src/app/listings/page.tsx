@@ -7,7 +7,7 @@ import * as Queries from "@/utils/queries";
 import { useMutation } from "@tanstack/react-query";
 import placeholder from "@/components/item/placeholder.png";
 import Image from "next/image";
-import { ChevronRight, Eye } from "lucide-react";
+import { ChevronRight, Eye, PencilIcon, Trash2 } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -30,14 +30,16 @@ import {
 } from "@/components/ui/sheet";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
-import { useDropzone } from "react-dropzone";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { DropResult } from "react-beautiful-dnd";
 
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 
 import { Item } from "@/types/types";
-import { ItemImages } from '../../types/types';
+import { ItemImages } from "../../types/types";
+import { useSetAtom } from "jotai";
+import { itemFormDataAtom } from "@/utils/atoms";
+import { useRouter } from "next/navigation";
 
 interface FileWithPreview extends File {
   preview?: string;
@@ -129,7 +131,7 @@ const Listings = () => {
                           <Image
                             className="object-cover object-center rounded-md"
                             // src={placeholder}
-                            src={item.images[0].imagePath}
+                            src={item.images[0]?.imagePath}
                             alt=""
                             layout="fill"
                             objectFit="cover"
@@ -173,11 +175,14 @@ interface ItemDetailsProps {
 
 const ItemDetails: React.FC<ItemDetailsProps> = ({ refetchItems, item }) => {
   const { toast } = useToast();
+  const router = useRouter();
+
   const { mutateAsync: archiveItem } = useMutation(Queries.markItemArchived);
   const { mutateAsync: markItemAsSold } = useMutation(Queries.markItemSold);
   const { mutateAsync: unarchiveItem } = useMutation(
     Queries.markItemUnArchived
   );
+  const { mutateAsync: updateItem } = useMutation(Queries.updateItem);
 
   const [cover, setCover] = useState<ItemImages>();
   const [files, setFiles] = useState<ItemImages[]>([]);
@@ -197,7 +202,6 @@ const ItemDetails: React.FC<ItemDetailsProps> = ({ refetchItems, item }) => {
     const reorderedFiles = Array.from(files);
     const [removed] = reorderedFiles.splice(result.source.index, 1);
     reorderedFiles.splice(result.destination.index, 0, removed);
-    
 
     setFiles(reorderedFiles);
   };
@@ -279,12 +283,12 @@ const ItemDetails: React.FC<ItemDetailsProps> = ({ refetchItems, item }) => {
             {item.isSold ? "Item sold" : "Mark as Sold"}
           </button>
         </div>
-        <div className="flex mt-8 justify-stretch gap-x-2">
-          {/* <Skeleton className="h-[100px] w-[100px]" />
+        {/* <div className="flex mt-8 justify-stretch gap-x-2"> */}
+        {/* <Skeleton className="h-[100px] w-[100px]" />
                             <Skeleton className="h-[100px] w-[100px]" />
                             <Skeleton className="h-[100px] w-[100px]" />
                             <Skeleton className="h-[100px] w-[100px]" /> */}
-          {item.images.map((image: any, index) => (
+        {/* {item.images.map((image: any, index) => (
             <div
               key={image.itemId}
               className="relative w-20 h-20 overflow-hidden"
@@ -299,8 +303,8 @@ const ItemDetails: React.FC<ItemDetailsProps> = ({ refetchItems, item }) => {
               />
             </div>
           ))}
-        </div>
-        <aside>
+        </div> */}
+        <aside className="my-3">
           {/* <h4 className="mb-2 text-sm font-semibold text-center">Images</h4> */}
           <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="droppable" direction="horizontal">
@@ -308,7 +312,7 @@ const ItemDetails: React.FC<ItemDetailsProps> = ({ refetchItems, item }) => {
                 <div
                   ref={provided.innerRef}
                   {...provided.droppableProps}
-                  className="flex space-x-2"
+                  className="flex flex-col space-x-2"
                 >
                   {item.images.map((image, index) => (
                     <Draggable
@@ -318,49 +322,99 @@ const ItemDetails: React.FC<ItemDetailsProps> = ({ refetchItems, item }) => {
                     >
                       {(provided) => (
                         <div
+                          className="flex flex-row justify-between items-center"
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
-                          className="relative w-20 h-20"
                           onMouseEnter={() => setIsHovered(image.itemId)}
                           onMouseLeave={() => setIsHovered(null)}
                         >
-                          <img
-                            src={image.imagePath250}
-                            alt={image.itemId}
-                            className="object-cover w-full h-full"
-                          />
-                          {isHovered === image.itemId && (
-                            <div className="absolute top-0 left-0 flex flex-col justify-between text-white">
-                              <button
-                                className="text-xs font-medium focus:outline-none bg-primary"
-                                onClick={() => setCover(image.imagePath)}
-                              >
-                                Set as cover
-                              </button>
-                              <Dialog>
-                                <DialogTrigger asChild>
-                                  <Eye
-                                    style={{
-                                      cursor: "pointer",
-                                    }}
-                                    className="text-primary"
-                                    size={16}
-                                  />
-                                </DialogTrigger>
-                                <DialogContent
-                                  className="w-5/12 h-5/12"
-                                  onClick={() => alert(image.imagePath250)}
+                          <div className="relative w-20 h-20">
+                            <img
+                              src={image.imagePath250}
+                              alt={image.itemId}
+                              className="object-cover w-full h-full"
+                            />
+                            {isHovered === image.itemId && (
+                              <div className="absolute top-0 left-0 flex flex-col justify-between text-white">
+                                <button
+                                  className="text-xs font-medium focus:outline-none bg-primary"
+                                  onClick={() => setCover(image.imagePath)}
                                 >
-                                  <img
-                                    src={image.imagePath250}
-                                    alt="selected"
-                                    className="object-cover w-full h-full"
-                                  />
-                                </DialogContent>
-                              </Dialog>
-                            </div>
-                          )}
+                                  Set as cover
+                                </button>
+                                <Dialog>
+                                  <DialogTrigger asChild>
+                                    <Eye
+                                      style={{
+                                        cursor: "pointer",
+                                      }}
+                                      className="text-primary"
+                                      size={16}
+                                    />
+                                  </DialogTrigger>
+                                  <DialogContent
+                                    className="w-5/12 h-5/12"
+                                    onClick={() => alert(image.imagePath250)}
+                                  >
+                                    <img
+                                      src={image.imagePath250}
+                                      alt="selected"
+                                      className="object-cover w-full h-full"
+                                    />
+                                  </DialogContent>
+                                </Dialog>
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex flex-row items-center gap-x-3">
+                            <PencilIcon
+                              size={20}
+                              className="cursor-pointer"
+                              onClick={() => {
+                                router.push(`/edit?itemId=${item.id}`);
+                              }}
+                            />
+                            <Trash2
+                              size={20}
+                              className="cursor-pointer"
+                              onClick={async () => {
+                                try {
+                                  await updateItem({
+                                    id: item.id,
+                                    name: item.name,
+                                    description: item.description,
+                                    price: item.price,
+                                    categoryId: item.categoryId,
+                                    childCategoryId: item.childCategoryId,
+                                    subCategoryId: item.subCategoryId,
+                                    attributes: item.attributes,
+                                    conditionLookUpId: item.conditionLookUpId,
+                                    isPriceFixed: item.isPriceFixed,
+                                    validUpto: item.validUpto,
+                                    zipcode: item.zipCode,
+                                    locationLat: item.locationLat,
+                                    locationLng: item.locationLng,
+                                    fullAddress:
+                                      "New York Central Park, NY, USA",
+                                    shortAddress: "Central Park, NY",
+                                    images: [
+                                      ...item.images.filter(
+                                        (img) => img.id !== image.id
+                                      ),
+                                      {
+                                        ...image,
+                                        isImageDeleted: true,
+                                      },
+                                    ],
+                                  });
+                                  await refetchItems();
+                                } catch (error) {
+                                  console.log(error);
+                                }
+                              }}
+                            />
+                          </div>
                         </div>
                       )}
                     </Draggable>

@@ -15,9 +15,10 @@ interface FileWithPreview extends File {
 
 type Props = {
   onUpload: (files: Images[]) => void;
+  currentImages?: any[];
 };
 
-const FileUpload: React.FC<Props> = ({ onUpload }) => {
+const FileUpload: React.FC<Props> = ({ onUpload, currentImages }) => {
   const [cover, setCover] = useState<string | null>();
   const [files, setFiles] = useState<FileWithPreview[]>([]);
   const [isHovered, setIsHovered] = useState<string | null>(null);
@@ -26,6 +27,32 @@ const FileUpload: React.FC<Props> = ({ onUpload }) => {
     return () =>
       files.forEach((file) => URL.revokeObjectURL(file.preview || ""));
   }, []);
+
+  useEffect(() => {
+    // Convert the currentImages to FileWithPreview type
+    const currentImagesWithPreviewPromsies = currentImages?.map(
+      async (image) => {
+        const response = await fetch(image.imagePath);
+        const blobData = await response.blob();
+        const blob = new Blob([blobData], {
+          type: response.headers.get("content-type")!,
+        });
+        const file = new File([blob], __filename, {
+          type: response.headers.get("content-type")!,
+        });
+
+        return Object.assign(file, {
+          preview: URL.createObjectURL(file),
+        });
+      }
+    );
+
+    if (currentImagesWithPreviewPromsies) {
+      Promise.all(currentImagesWithPreviewPromsies).then((values) => {
+        setFiles(values);
+      });
+    }
+  }, [currentImages]);
 
   useEffect(() => {
     if (files.length === 1) {

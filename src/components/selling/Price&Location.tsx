@@ -1,8 +1,7 @@
 import { useAtom } from "jotai";
 import { itemFormDataAtom } from "@/utils/atoms";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
-
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
@@ -16,7 +15,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
 import MapPicker from "react-google-map-picker";
 
 const DefaultLocation = { lat: 10, lng: 106 };
@@ -33,11 +31,11 @@ const PriceLocation = () => {
     longAddress: "",
   });
 
-  function handleChangeLocation(lat, lng) {
+  function handleChangeLocation(lat: number, lng: number) {
     setLocation({ lat: lat, lng: lng });
   }
 
-  function handleChangeZoom(newZoom) {
+  function handleChangeZoom(newZoom: number) {
     setZoom(newZoom);
   }
 
@@ -46,24 +44,37 @@ const PriceLocation = () => {
     setZoom(DefaultZoom);
   }
 
-  async function fetchAddressFromZip(zip) {
+  async function fetchAddressFromZip(zip: string) {
     try {
       const response = await axios.get(
         `https://maps.googleapis.com/maps/api/geocode/json?address=${zip}&key=AIzaSyAC1zTJy_NTO4dbq253Pv1VOSz_MB8YRTI`
       );
       const data = response.data;
       if (data.status === "OK") {
-        const shortAddress = `${data.results[0].address_components[2].short_name}, ${data.results[0].address_components[5].short_name}`;
+        const shortAddress = `${
+          data.results[0].address_components[2].short_name
+        }, ${
+          data.results[0].address_components[
+            data.results[0].address_components.length - 1
+          ].short_name
+        }`;
         const longAddress = data.results[0].formatted_address;
         console.log({ shortAddress, longAddress });
-        setAddresses({ shortAddress, longAddress });
+        setItemData({
+          ...itemData,
+          fullAddress: longAddress,
+          shortAddress: shortAddress,
+          locationLat: data.results[0].geometry.location.lat,
+          locationLng: data.results[0].geometry.location.lng,
+          zipcode: zip,
+        });
       }
     } catch (error) {
       console.error("Error fetching address from ZIP:", error);
     }
   }
 
-  async function fetchAddressFromLatLong(lat, lng) {
+  async function fetchAddressFromLatLong(lat: string, lng: string) {
     try {
       const response = await axios.get(
         `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyAC1zTJy_NTO4dbq253Pv1VOSz_MB8YRTI`
@@ -90,7 +101,7 @@ const PriceLocation = () => {
       (position) => {
         const lat = position.coords.latitude;
         const lng = position.coords.longitude;
-        fetchAddressFromLatLong(lat, lng);
+        fetchAddressFromLatLong(lat.toString(), lng.toString());
       },
       (error) => {
         console.error("Error getting current location:", error);
@@ -98,8 +109,8 @@ const PriceLocation = () => {
     );
   }
 
-  function handleMapLocationChange(lat, lng) {
-    fetchAddressFromLatLong(lat, lng);
+  function handleMapLocationChange(lat: number, lng: number) {
+    fetchAddressFromLatLong(lat.toString(), lng.toString());
   }
 
   return (

@@ -1,6 +1,7 @@
 import { atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import { ItemAtom, User } from "./types";
+import { Item } from "@/types/types";
 
 export const userAtom = atomWithStorage<User | null>("user", {
   id: "",
@@ -34,8 +35,12 @@ export const itemFormDataAtom = atom<ItemAtom>({
   price: 0,
   isPriceFixed: true,
   validUpto: "2023-07-27",
+  fullAddress: "",
+  shortAddress: "",
   zipcode: "",
   locationLat: 111.111,
   locationLng: 222.222,
   images: [],
 });
+
+export const updateItemFormDataAtom = atom<Item | null>(null);

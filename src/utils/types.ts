@@ -1,4 +1,4 @@
-import { Images } from "@/types/types";
+import { Images, ItemImages } from "@/types/types";
 
 export type SVG = {
   className: string;
@@ -148,6 +148,8 @@ export type ItemAtom = {
   price: number;
   isPriceFixed: boolean;
   validUpto: string;
+  fullAddress: string;
+  shortAddress: string;
   zipcode: string;
   locationLat: number;
   locationLng: number;
@@ -168,11 +170,32 @@ export type SaveItemDto = {
   price: number;
   isPriceFixed: boolean;
   validUpto: string;
+  fullAddress: string;
+  shortAddress: string;
   zipcode: string;
   locationLat: number;
   locationLng: number;
   images: Images[];
 };
+
+// totalMessages: 0,
+// totalViews: 0,
+// totalFavorite: 0,
+// conditionDescription: '',
+// isSold: false,
+// isPromoted: false,
+// customerId: 0,
+// userId: 'a63ae9f5-dcfe-48d0-b6d6-3a9fff8af255',
+// isArchived: false,
+// isActive: true,
+// isDeleted: false
+
+export type UpdateItemDto = {
+  id: string;
+  fullAddress: string;
+  shortAddress: string;
+  images: ItemImages[];
+} & SaveItemDto;
 
 export type Result<T> = {
   statusCode: string;

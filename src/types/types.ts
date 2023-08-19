@@ -120,6 +120,8 @@ export type Item = {
   customer: Customer;
   userId: string;
   isArchived: boolean;
+  fullAddress?: string;
+  shortAddress?: string;
   locationLat: number;
   locationLng: number;
   zipCode: string;
