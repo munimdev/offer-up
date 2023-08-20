@@ -52,12 +52,23 @@ const ItemDetail: React.FC<Props> = ({ item, setItemData }) => {
       <div className="grid w-full max-w-md gap-1.5">
         {item && (
           <FileUpload
-            onUpload={(newFiles: Images[]) =>
+            onUpload={(newFiles: Images[]) => {
+              const files = newFiles.map((file) => ({
+                ...file,
+                id: 0,
+                itemId: item.id,
+                imagePath: "",
+                imagePath250: "",
+                isImageDeleted: false,
+                isImageAdded: true,
+                isActive: true,
+                isDeleted: false,
+              }));
               setItemData({
                 ...item,
-                images: [...item.images, ...newFiles],
-              })
-            }
+                images: [...item.images, ...files],
+              });
+            }}
             currentImages={item.images}
           />
         )}
