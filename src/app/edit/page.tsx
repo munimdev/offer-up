@@ -67,6 +67,29 @@ const ItemDetail: React.FC<Props> = ({ item, setItemData }) => {
               setItemData({
                 ...item,
                 images: [...item.images, ...files],
+                
+              });
+            }}
+            onDelete={(file: Images) => {
+              setItemData({
+                ...item,
+                images: [
+                  ...item.images.filter(
+                    (image) => image.imageOrder !== file.imageOrder
+                  ),
+                ],
+              });
+            }}
+            onReorder={(files: Images[]) => {
+              console.log(item);
+              setItemData({
+                ...item,
+                images: Array.from(files).map((file, index) => ({
+                  ...item.images.find(
+                    (image) => image.imagePath === file.preview
+                  ),
+                  imageOrder: file.imageOrder,
+                })),
               });
             }}
             currentImages={item.images}
@@ -305,6 +328,7 @@ const CategoryDetail: React.FC<Props> = ({ item, setItemData }) => {
                   <SelectGroup
                     onMouseEnter={() => setCategoryHover(option.id)}
                     onMouseLeave={() => setCategoryHover(null)}
+                    key={option.id}
                   >
                     <SelectLabel className="text-start">
                       {option.name} <ChevronDown className="inline" size={18} />
@@ -412,6 +436,9 @@ const EditItem = () => {
   const itemId = searchParams.get("itemId");
   const [currentTab, setCurrentTab] = React.useState(1);
   const [itemData, setItemData] = useAtom(updateItemFormDataAtom);
+
+  console.log(itemData);
+
   const { mutateAsync } = useMutation(Queries.updateItem);
 
   const { data } = useFetch({

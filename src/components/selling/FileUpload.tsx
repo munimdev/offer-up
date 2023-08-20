@@ -15,10 +15,12 @@ interface FileWithPreview extends File {
 
 type Props = {
   onUpload: (files: Images[]) => void;
+  onDelete: (file: Images) => void;
+  onReorder: (files: Images[]) => void;
   currentImages?: any[];
 };
 
-const FileUpload: React.FC<Props> = ({ onUpload, currentImages }) => {
+const FileUpload: React.FC<Props> = ({ onUpload, onDelete, onReorder, currentImages }) => {
   const currentImagesWithPreview = currentImages?.map((image) => {
     const imageUrl = image.imagePath; // Assuming imagePath is the URL of the image
     const file = new File([], imageUrl, { type: "image/*" });
@@ -86,6 +88,13 @@ const FileUpload: React.FC<Props> = ({ onUpload, currentImages }) => {
     const [removed] = reorderedFiles.splice(result.source.index, 1);
     reorderedFiles.splice(result.destination.index, 0, removed);
 
+    const newFiles = reorderedFiles.map((file: any, idx: number) => {
+        return {
+          ...file,
+          imageOrder: idx,
+        } as Images;
+    });
+    onReorder(newFiles);
     setFiles(reorderedFiles);
   };
 
