@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import { itemFormDataAtom } from "@/utils/atoms";
+import { itemFormDataAtom, updateItemFormDataAtom } from "@/utils/atoms";
 import { useState } from "react";
 import axios from "axios";
 import { Label } from "@/components/ui/label";
@@ -17,14 +17,19 @@ import {
 } from "@/components/ui/dialog";
 import MapPicker from "react-google-map-picker";
 
-const DefaultLocation = { lat: 10, lng: 106 };
+const DefaultLocation = { lat: 38.010169996641956, lng: -105.06867700679256 };
 const DefaultZoom = 10;
 
-const PriceLocation = () => {
-  const [itemData, setItemData] = useAtom(itemFormDataAtom);
-  const [defaultLocation, setDefaultLocation] = useState(DefaultLocation);
+type Props = {
+  isUpdate?: boolean;
+};
 
-  const [location, setLocation] = useState(defaultLocation);
+const PriceLocation: React.FC<Props> = ({ isUpdate = false }) => {
+  const [isMapOpen, setIsMapOpen] = useState(false);
+  const [itemData, setItemData] = useAtom(itemFormDataAtom);
+  const [updateItemData, setUpdateItemData] = useAtom(updateItemFormDataAtom);
+
+  const [location, setLocation] = useState(DefaultLocation);
   const [zoom, setZoom] = useState(DefaultZoom);
   const [addresses, setAddresses] = useState({
     shortAddress: "",
@@ -40,7 +45,7 @@ const PriceLocation = () => {
   }
 
   function handleResetLocation() {
-    setDefaultLocation({ ...DefaultLocation });
+    setLocation({ ...DefaultLocation });
     setZoom(DefaultZoom);
   }
 
@@ -60,14 +65,23 @@ const PriceLocation = () => {
         }`;
         const longAddress = data.results[0].formatted_address;
         console.log({ shortAddress, longAddress });
-        setItemData({
-          ...itemData,
-          fullAddress: longAddress,
-          shortAddress: shortAddress,
-          locationLat: data.results[0].geometry.location.lat,
-          locationLng: data.results[0].geometry.location.lng,
-          zipcode: zip,
-        });
+        isUpdate
+          ? setUpdateItemData({
+              ...updateItemData!,
+              fullAddress: longAddress,
+              shortAddress: shortAddress,
+              locationLat: data.results[0].geometry.location.lat,
+              locationLng: data.results[0].geometry.location.lng,
+              zipCode: zip,
+            })
+          : setItemData({
+              ...itemData,
+              fullAddress: longAddress,
+              shortAddress: shortAddress,
+              locationLat: data.results[0].geometry.location.lat,
+              locationLng: data.results[0].geometry.location.lng,
+              zipcode: zip,
+            });
       }
     } catch (error) {
       console.error("Error fetching address from ZIP:", error);
@@ -81,11 +95,31 @@ const PriceLocation = () => {
       );
       const data = response.data;
       if (data.status === "OK") {
-        const shortAddress = `${data.results[0].address_components[2].short_name}, ${data.results[0].address_components[5].short_name}`;
+        const shortAddress = `${
+          data.results[0].address_components[2].short_name
+        }, ${
+          data.results[0].address_components[
+            data.results[0].address_components.length - 1
+          ].short_name
+        }`;
         const longAddress = data.results[0].formatted_address;
-        // You can set these to state or use them as needed
-        console.log({ shortAddress, longAddress });
-        setAddresses({ shortAddress, longAddress });
+        isUpdate
+          ? setUpdateItemData({
+              ...updateItemData!,
+              fullAddress: longAddress,
+              shortAddress: shortAddress,
+              locationLat: data.results[0].geometry.location.lat,
+              locationLng: data.results[0].geometry.location.lng,
+              zipCode: "",
+            })
+          : setItemData({
+              ...itemData,
+              fullAddress: longAddress,
+              shortAddress: shortAddress,
+              locationLat: data.results[0].geometry.location.lat,
+              locationLng: data.results[0].geometry.location.lng,
+              zipcode: "",
+            });
       }
     } catch (error) {
       console.error("Error fetching address from lat-long:", error);
@@ -93,7 +127,7 @@ const PriceLocation = () => {
   }
 
   function handleZipChange() {
-    fetchAddressFromZip(itemData.zipcode);
+    fetchAddressFromZip(isUpdate ? updateItemData!.zipCode : itemData.zipcode);
   }
 
   function handleGetCurrentLocation() {
@@ -122,17 +156,31 @@ const PriceLocation = () => {
           id="price"
           placeholder="Price of the item"
           className="font-medium border-gray placeholder:text-gray placeholder:font-medium"
-          value={itemData.price}
+          value={isUpdate ? updateItemData!.price : itemData.price}
           onChange={(e) =>
-            setItemData({ ...itemData, price: parseInt(e.target.value) })
+            isUpdate
+              ? setUpdateItemData({
+                  ...updateItemData!,
+                  price: parseInt(e.target.value),
+                })
+              : setItemData({ ...itemData, price: parseInt(e.target.value) })
           }
         />
       </div>
       <div className="flex items-center w-full max-w-md gap-1.5">
         <Label htmlFor="fix-price">Is Price Fixed</Label>
         <Switch
-          checked={itemData.isPriceFixed}
-          onCheckedChange={(e) => setItemData({ ...itemData, isPriceFixed: e })}
+          checked={
+            isUpdate ? updateItemData!.isPriceFixed : itemData.isPriceFixed
+          }
+          onCheckedChange={(e) =>
+            isUpdate
+              ? setUpdateItemData({
+                  ...updateItemData!,
+                  isPriceFixed: e,
+                })
+              : setItemData({ ...itemData, isPriceFixed: e })
+          }
         />
       </div>
       <div className="grid w-full max-w-md gap-1.5">
@@ -151,16 +199,26 @@ const PriceLocation = () => {
             id="zip-code"
             placeholder="Zip Code"
             className="font-medium border-gray placeholder:text-gray placeholder:font-medium"
-            value={itemData.zipcode}
+            value={
+              isUpdate ? updateItemData!.zipCode : itemData.zipcode.toString()
+            }
             onChange={(e) =>
-              setItemData({ ...itemData, zipcode: e.target.value })
+              isUpdate
+                ? setUpdateItemData({
+                    ...updateItemData!,
+                    zipCode: e.target.value,
+                  })
+                : setItemData({
+                    ...itemData,
+                    zipcode: e.target.value,
+                  })
             }
           />
           <Button onClick={handleZipChange}>Fetch Address</Button>
         </div>
       </div>
       <p className="text-xl text-center text-gray-200">OR</p>
-      <Dialog>
+      <Dialog open={isMapOpen} onOpenChange={(e) => setIsMapOpen(e)}>
         <DialogTrigger asChild>
           <Button
             variant="outline"
@@ -178,20 +236,26 @@ const PriceLocation = () => {
           </DialogHeader>
           <div>
             <MapPicker
-              defaultLocation={defaultLocation}
+              defaultLocation={location}
               zoom={zoom}
-              mapTypeId={"roadmap"}
               style={{ height: "600px", width: "900px" }}
               onChangeLocation={(lat, lng) => {
                 handleChangeLocation(lat, lng);
-                handleMapLocationChange(lat, lng);
               }}
               onChangeZoom={handleChangeZoom}
               apiKey="AIzaSyAC1zTJy_NTO4dbq253Pv1VOSz_MB8YRTI"
             />
           </div>
           <DialogFooter>
-            <Button type="submit">Save changes</Button>
+            <Button
+              type="submit"
+              onClick={() => {
+                handleMapLocationChange(location.lat, location.lng);
+                setIsMapOpen(false);
+              }}
+            >
+              Save changes
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -19,8 +19,18 @@ type Props = {
 };
 
 const FileUpload: React.FC<Props> = ({ onUpload, currentImages }) => {
+  const currentImagesWithPreview = currentImages?.map((image) => {
+    const imageUrl = image.imagePath; // Assuming imagePath is the URL of the image
+    const file = new File([], imageUrl, { type: "image/*" });
+
+    return Object.assign(file, {
+      preview: imageUrl,
+    });
+  });
   const [cover, setCover] = useState<string | null>();
-  const [files, setFiles] = useState<FileWithPreview[]>([]);
+  const [files, setFiles] = useState<FileWithPreview[]>(
+    currentImagesWithPreview! || []
+  );
   const [isHovered, setIsHovered] = useState<string | null>(null);
 
   useEffect(() => {
@@ -29,33 +39,7 @@ const FileUpload: React.FC<Props> = ({ onUpload, currentImages }) => {
   }, []);
 
   useEffect(() => {
-    // Convert the currentImages to FileWithPreview type
-    const currentImagesWithPreviewPromsies = currentImages?.map(
-      async (image) => {
-        const response = await fetch(image.imagePath);
-        const blobData = await response.blob();
-        const blob = new Blob([blobData], {
-          type: response.headers.get("content-type")!,
-        });
-        const file = new File([blob], __filename, {
-          type: response.headers.get("content-type")!,
-        });
-
-        return Object.assign(file, {
-          preview: URL.createObjectURL(file),
-        });
-      }
-    );
-
-    if (currentImagesWithPreviewPromsies) {
-      Promise.all(currentImagesWithPreviewPromsies).then((values) => {
-        setFiles(values);
-      });
-    }
-  }, [currentImages]);
-
-  useEffect(() => {
-    if (files.length === 1) {
+    if (files?.length === 1) {
       setCover(files[0].preview);
     }
   }, [files]);
@@ -75,11 +59,12 @@ const FileUpload: React.FC<Props> = ({ onUpload, currentImages }) => {
 
     setFiles((prev) => [
       ...prev,
-      ...acceptedFiles.map((file: File) =>
-        Object.assign(file, {
-          preview: URL.createObjectURL(file),
-        })
-      ),
+      ...acceptedFiles.map((file: File) => {
+        const url = URL.createObjectURL(file);
+        return Object.assign(file, {
+          preview: url,
+        });
+      }),
     ]);
   };
 
@@ -135,7 +120,7 @@ const FileUpload: React.FC<Props> = ({ onUpload, currentImages }) => {
                 {...provided.droppableProps}
                 className="flex space-x-2"
               >
-                {files.map((file, index) => (
+                {files?.map((file, index) => (
                   <Draggable
                     draggableId={file.name}
                     index={index}

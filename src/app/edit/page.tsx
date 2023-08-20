@@ -1,13 +1,14 @@
 "use client";
 
 import React from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { useFetch, useFetchCategories } from "@/hooks";
 import * as Queries from "@/utils/queries";
 import { useAtom } from "jotai";
 import { updateItemFormDataAtom } from "@/utils/atoms";
 
+import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -20,18 +21,17 @@ import {
   SelectGroup,
   SelectLabel,
 } from "@/components/ui/select";
-import {
-  Collapsible,
-  CollapsibleTrigger,
-  CollapsibleContent,
-} from "@/components/ui/collapsible";
 import Stepper from "@/components/ui/stepper";
 import { Skeleton } from "@/components/ui/skeleton";
 import FileUpload from "@/components/selling/FileUpload";
+import PriceLocation from "@/components/selling/Price&Location";
 
 import { Images, Item } from "@/types/types";
 
 import { ChevronDown } from "lucide-react";
+import { CategoryAttribute } from "@/utils/types";
+import { useMutation } from "@tanstack/react-query";
+import { useToast } from "@/components/ui/use-toast";
 
 const tabs = ["Item", "Category", "Price & Location"];
 
@@ -50,15 +50,17 @@ const ItemDetail: React.FC<Props> = ({ item, setItemData }) => {
   return (
     <>
       <div className="grid w-full max-w-md gap-1.5">
-        <FileUpload
-          onUpload={(newFiles: Images[]) =>
-            setItemData({
-              ...item,
-              images: [...item.images, ...newFiles],
-            })
-          }
-          currentImages={item?.images}
-        />
+        {item && (
+          <FileUpload
+            onUpload={(newFiles: Images[]) =>
+              setItemData({
+                ...item,
+                images: [...item.images, ...newFiles],
+              })
+            }
+            currentImages={item.images}
+          />
+        )}
       </div>
       <div className="grid w-full max-w-md gap-1.5">
         <Label htmlFor="name">Name</Label>
@@ -116,9 +118,161 @@ const ItemDetail: React.FC<Props> = ({ item, setItemData }) => {
   );
 };
 
+type TAttributeSelect = {
+  item: Item;
+  attr: CategoryAttribute;
+  setItemData: (item: Item) => void;
+};
+
+const AttributesSelect: React.FC<TAttributeSelect> = ({
+  item,
+  attr,
+  setItemData,
+}) => {
+  return (
+    <div className="w-full max-w-md font-medium">
+      <Label htmlFor="description">
+        {attr.name} {attr.isRequired ? "(required)" : "(optional)"}
+      </Label>
+      {attr.attributeType === "selectList" ? (
+        <Select
+          value={
+            item?.attributes?.find(
+              (attribute) => attribute.categoryAttributeId === attr.id
+            )?.selectedValue
+          }
+        >
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder={attr.name} />
+          </SelectTrigger>
+          <SelectContent>
+            {attr.options.split(",").map((option: string) => (
+              <SelectItem
+                key={option}
+                value={option}
+                onMouseDown={() =>
+                  setItemData({
+                    ...item,
+                    attributes: [
+                      ...item.attributes.filter(
+                        (attribute) => attribute.categoryAttributeId !== attr.id
+                      ),
+                      {
+                        ...item.attributes.filter(
+                          (attribute) =>
+                            attribute.categoryAttributeId === attr.id
+                        )[0],
+                        selectedValue: option,
+                      },
+                    ],
+                  })
+                }
+              >
+                {option}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      ) : attr.attributeType === "text" ? (
+        <Input
+          type="text"
+          id="name"
+          placeholder={attr.name}
+          value={
+            item?.attributes?.find(
+              (attribute) => attribute.categoryAttributeId === attr.id
+            )?.selectedValue
+          }
+          onChange={(e) =>
+            setItemData({
+              ...item,
+              attributes: [
+                ...item.attributes.filter(
+                  (attribute) => attribute.categoryAttributeId !== attr.id
+                ),
+                {
+                  ...item.attributes.filter(
+                    (attribute) => attribute.categoryAttributeId === attr.id
+                  )[0],
+                  selectedValue: e.target.value,
+                },
+              ],
+            })
+          }
+          className="font-medium border-gray placeholder:text-gray placeholder:font-medium"
+        />
+      ) : (
+        <Input
+          type="number"
+          id="name"
+          placeholder={attr.name}
+          value={
+            item?.attributes?.find(
+              (attribute) => attribute.categoryAttributeId === attr.id
+            )?.selectedValue
+          }
+          onChange={(e) =>
+            setItemData({
+              ...item,
+              attributes: [
+                ...item.attributes.filter(
+                  (attribute) => attribute.categoryAttributeId !== attr.id
+                ),
+                {
+                  ...item.attributes.filter(
+                    (attribute) => attribute.categoryAttributeId === attr.id
+                  )[0],
+                  selectedValue: e.target.value,
+                },
+              ],
+            })
+          }
+          className="font-medium border-gray placeholder:text-gray placeholder:font-medium"
+        />
+      )}
+    </div>
+  );
+};
+
 const CategoryDetail: React.FC<Props> = ({ item, setItemData }) => {
   const [categoryHover, setCategoryHover] = React.useState<number | null>(null);
   const { data: categories, isLoading } = useFetchCategories();
+  const { data: subCategories } = useFetch({
+    key: ["query-subCategory", item?.childCategoryId.toString()],
+    fn: () => Queries.getSubCategories(item?.childCategoryId),
+    options: {
+      enabled: !!item?.childCategoryId,
+    },
+  });
+  const { data: categoryAttributes } = useFetch({
+    key: ["query-attributes"],
+    fn: () =>
+      Queries.getCategoryAttributes({
+        isForCategory: true,
+        categoryId: item?.childCategoryId,
+        isForSubCategory: false,
+        subCategoryId: 0,
+      }),
+    options: {
+      enabled: !!item?.childCategoryId,
+      staleTime: Infinity,
+    },
+  });
+  const { data: subCategoryAttributes } = useFetch({
+    key: ["query-attributes-sub"],
+    fn: () =>
+      Queries.getCategoryAttributes({
+        isForCategory: false,
+        categoryId: 0,
+        isForSubCategory: true,
+        subCategoryId: item?.subCategoryId,
+      }),
+    options: {
+      enabled: !!item?.subCategoryId,
+      staleTime: Infinity,
+    },
+  });
+
   return (
     <>
       <div className="w-full max-w-md font-medium">
@@ -126,7 +280,7 @@ const CategoryDetail: React.FC<Props> = ({ item, setItemData }) => {
         {isLoading ? (
           <Skeleton className="w-full h-10" />
         ) : (
-          <Select>
+          <Select value={item?.childCategoryId.toString()}>
             <SelectTrigger>
               <SelectValue placeholder="Select Category" />
             </SelectTrigger>
@@ -141,40 +295,41 @@ const CategoryDetail: React.FC<Props> = ({ item, setItemData }) => {
                     onMouseEnter={() => setCategoryHover(option.id)}
                     onMouseLeave={() => setCategoryHover(null)}
                   >
-                    {/* <Collapsible>
-                      <CollapsibleTrigger className="w-full"> */}
                     <SelectLabel className="text-start">
                       {option.name} <ChevronDown className="inline" size={18} />
                     </SelectLabel>
-                    {/* </CollapsibleTrigger>
-                      <CollapsibleContent> */}
                     <div
                       className={`${
                         categoryHover === option.id ? "absolute" : "hidden"
-                      } w-11/12 h-fit bg-white z-10 shadow-lg rounded border border-gray-300`}
+                      } w-11/12 h-fit bg-white z-50 shadow-lg rounded border border-gray-300`}
                     >
                       {option.children.map((child: any) => (
                         <SelectItem
                           key={child.id}
                           value={child.id.toString()}
-                          // onMouseDown={() =>
-                          //   setItemData({ ...item, category: child })
-                          // }
+                          onMouseDown={() =>
+                            setItemData({
+                              ...item,
+                              childCategoryId: child.id,
+                            })
+                          }
                         >
                           {child.name}
                         </SelectItem>
                       ))}
                     </div>
-                    {/* </CollapsibleContent>
-                    </Collapsible> */}
                   </SelectGroup>
                 ) : (
                   <SelectItem
                     key={option.id}
                     value={option.id.toString()}
-                    // onMouseDown={() =>
-                    //   setItemData({ ...item, category: option })
-                    // }
+                    onMouseDown={() =>
+                      setItemData({
+                        ...item,
+                        categoryId: option.id,
+                        childCategoryId: option.id,
+                      })
+                    }
                   >
                     {option.name}
                   </SelectItem>
@@ -184,33 +339,69 @@ const CategoryDetail: React.FC<Props> = ({ item, setItemData }) => {
           </Select>
         )}
       </div>
-      {/* <div className="w-full max-w-md font-medium">
+      <div className="w-full max-w-md font-medium">
         <Label htmlFor="description">Sub Category</Label>
-        <OptionsSelect
-          title="Select Sub Category"
-          options={subCategories?.dataObject || []}
-          onChange={(subCategory) => setItemData({ ...itemData, subCategory })}
-        />
+        {isLoading ? (
+          <Skeleton className="w-full h-10" />
+        ) : (
+          <Select value={item?.subCategoryId.toString()}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select Sub Category" />
+            </SelectTrigger>
+            <SelectContent
+              className={`relative ${
+                categoryHover ? "bg-gray-100" : "bg-white"
+              }`}
+            >
+              {subCategories?.dataObject.map((option: any, index: number) => (
+                <SelectItem
+                  key={option.id}
+                  value={option.id.toString()}
+                  onMouseDown={() =>
+                    setItemData({
+                      ...item,
+                      subCategoryId: option.id,
+                    })
+                  }
+                >
+                  {option.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
       </div>
-      {categoryAttributes && (
-        <div className="w-full max-w-md font-medium">
-          <AttributeSelect data={categoryAttributes.dataObject} />
-        </div>
-      )}
-      {subCategoryAttributes && (
-        <div className="w-full max-w-md font-medium">
-          <AttributeSelect data={subCategoryAttributes.dataObject} />
-        </div>
-      )} */}
+
+      {!subCategoryAttributes &&
+        categoryAttributes?.dataObject.map((attr: CategoryAttribute) => (
+          <AttributesSelect
+            key={attr.id}
+            item={item}
+            setItemData={setItemData}
+            attr={attr}
+          />
+        ))}
+
+      {subCategoryAttributes?.dataObject.map((attr: CategoryAttribute) => (
+        <AttributesSelect
+          key={attr.id}
+          item={item}
+          setItemData={setItemData}
+          attr={attr}
+        />
+      ))}
     </>
   );
 };
 
 const EditItem = () => {
+  const { toast } = useToast();
+  const router = useRouter();
   const searchParams = useSearchParams();
   const itemId = searchParams.get("itemId");
-  const [currentTab, setCurrentTab] = React.useState(2);
+  const [currentTab, setCurrentTab] = React.useState(1);
   const [itemData, setItemData] = useAtom(updateItemFormDataAtom);
+  const { mutateAsync } = useMutation(Queries.updateItem);
 
   const { data } = useFetch({
     key: ["query-item"],
@@ -219,6 +410,45 @@ const EditItem = () => {
       enabled: !!itemId,
     },
   });
+
+  const onMutateHandler = async () => {
+    try {
+      if (itemData) {
+        await mutateAsync({
+          id: itemData.id,
+          name: itemData.name,
+          description: itemData.description,
+          price: itemData.price,
+          isPriceFixed: itemData.isPriceFixed,
+          images: itemData.images,
+          categoryId: itemData.categoryId,
+          attributes: itemData.attributes || [],
+          childCategoryId: itemData.childCategoryId,
+          subCategoryId: itemData.subCategoryId,
+          validUpto: itemData.validUpto,
+          zipcode: itemData.zipCode,
+          locationLat: itemData.locationLat,
+          locationLng: itemData.locationLng,
+          fullAddress: itemData.fullAddress!,
+          shortAddress: itemData.shortAddress!,
+          conditionLookUpId: 10001,
+        });
+
+        toast({
+          title: "Item Updated",
+          description: "Item has been updated successfully",
+        });
+
+        router.push("/listings");
+      }
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: "Error",
+        description: "Something went wrong",
+      });
+    }
+  };
 
   React.useEffect(() => {
     if (data?.dataObject) {
@@ -234,22 +464,24 @@ const EditItem = () => {
       {currentTab === 1 && (
         <ItemDetail item={itemData!} setItemData={setItemData} />
       )}
-      {currentTab === 2 && <CategoryDetail />}
-      {/*{currentTab === 3 && <PriceLocation />}
+      {currentTab === 2 && (
+        <CategoryDetail item={itemData!} setItemData={setItemData} />
+      )}
+      {currentTab === 3 && <PriceLocation isUpdate={true} />}
 
-  {currentTab === 3 ? (
-    <div className="grid w-full max-w-md gap-1.5">
-      <Button type="button" onClick={() => onFormSubmitHandler()}>
-        Add Item
-      </Button>
-    </div>
-  ) : (
-    <div className="grid w-full max-w-md gap-1.5">
-      <Button type="button" onClick={() => setCurrentTab(currentTab + 1)}>
-        Next
-      </Button>
-    </div>
-  )} */}
+      {currentTab === 3 ? (
+        <div className="grid w-full max-w-md gap-1.5">
+          <Button type="button" onClick={onMutateHandler}>
+            Add Item
+          </Button>
+        </div>
+      ) : (
+        <div className="grid w-full max-w-md gap-1.5">
+          <Button type="button" onClick={() => setCurrentTab(currentTab + 1)}>
+            Next
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useAtomValue } from "jotai";
+import { useAtom } from "jotai";
 import { itemFormDataAtom } from "@/utils/atoms";
 import { useItemMutation } from "@/hooks/useItemMutation";
 import Stepper from "@/components/ui/stepper";
@@ -13,7 +13,7 @@ import PriceLocation from "@/components/selling/Price&Location";
 const tabs = ["Item", "Category", "Price & Location"];
 
 const Selling = () => {
-  const itemData = useAtomValue(itemFormDataAtom);
+  const [itemData, setItemData] = useAtom(itemFormDataAtom);
   const [currentTab, setCurrentTab] = React.useState(1);
   const { mutateAsync } = useItemMutation();
 
@@ -44,7 +44,9 @@ const Selling = () => {
       </div>
       {currentTab === 1 && <ItemDetail />}
       {currentTab === 2 && <CategoryDetail />}
-      {currentTab === 3 && <PriceLocation />}
+      {currentTab === 3 && (
+        <PriceLocation itemData={itemData} setItemData={setItemData} />
+      )}
 
       {currentTab === 3 ? (
         <div className="grid w-full max-w-md gap-1.5">
