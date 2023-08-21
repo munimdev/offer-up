@@ -103,6 +103,7 @@ const PriceLocation: React.FC<Props> = ({ isUpdate = false }) => {
           ].short_name
         }`;
         const longAddress = data.results[0].formatted_address;
+        console.log({ shortAddress, longAddress });
         isUpdate
           ? setUpdateItemData({
               ...updateItemData!,

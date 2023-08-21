@@ -72,7 +72,7 @@ const CategoryDetail = () => {
           onChange={(subCategory) => setItemData({ ...itemData, subCategory })}
         />
       </div>
-      {categoryAttributes && (
+      {!subCategoryAttributes && categoryAttributes && (
         <div className="w-full max-w-md font-medium">
           <AttributeSelect data={categoryAttributes.dataObject} />
         </div>

@@ -67,7 +67,6 @@ const ItemDetail: React.FC<Props> = ({ item, setItemData }) => {
               setItemData({
                 ...item,
                 images: [...item.images, ...files],
-                
               });
             }}
             onDelete={(file: Images) => {
@@ -129,7 +128,10 @@ const ItemDetail: React.FC<Props> = ({ item, setItemData }) => {
       </div>
       <div className="w-full max-w-md font-medium">
         <Label htmlFor="description">Condition</Label>
-        <Select value={item?.conditionLookUpId.toString()}>
+        <Select
+          value={item?.conditionLookUpId.toString()}
+          onValueChange={(e) => console.log(e)}
+        >
           <SelectTrigger className="w-full">
             <SelectValue placeholder="Select Condition" />
           </SelectTrigger>
@@ -436,8 +438,6 @@ const EditItem = () => {
   const itemId = searchParams.get("itemId");
   const [currentTab, setCurrentTab] = React.useState(1);
   const [itemData, setItemData] = useAtom(updateItemFormDataAtom);
-
-  console.log(itemData);
 
   const { mutateAsync } = useMutation(Queries.updateItem);
 

@@ -20,7 +20,12 @@ type Props = {
   currentImages?: any[];
 };
 
-const FileUpload: React.FC<Props> = ({ onUpload, onDelete, onReorder, currentImages }) => {
+const FileUpload: React.FC<Props> = ({
+  onUpload,
+  onDelete,
+  onReorder,
+  currentImages,
+}) => {
   const currentImagesWithPreview = currentImages?.map((image) => {
     const imageUrl = image.imagePath; // Assuming imagePath is the URL of the image
     const file = new File([], imageUrl, { type: "image/*" });
@@ -29,7 +34,9 @@ const FileUpload: React.FC<Props> = ({ onUpload, onDelete, onReorder, currentIma
       preview: imageUrl,
     });
   });
-  const [cover, setCover] = useState<string | null>();
+  const [cover, setCover] = useState<string | null>(
+    currentImagesWithPreview![0]?.preview || null
+  );
   const [files, setFiles] = useState<FileWithPreview[]>(
     currentImagesWithPreview! || []
   );
@@ -89,10 +96,10 @@ const FileUpload: React.FC<Props> = ({ onUpload, onDelete, onReorder, currentIma
     reorderedFiles.splice(result.destination.index, 0, removed);
 
     const newFiles = reorderedFiles.map((file: any, idx: number) => {
-        return {
-          ...file,
-          imageOrder: idx,
-        } as Images;
+      return {
+        ...file,
+        imageOrder: idx,
+      } as Images;
     });
     onReorder(newFiles);
     setFiles(reorderedFiles);
@@ -100,16 +107,7 @@ const FileUpload: React.FC<Props> = ({ onUpload, onDelete, onReorder, currentIma
 
   return (
     <div className="">
-      <div
-        {...getRootProps({
-          className:
-            "relative dropzone flex flex-col justify-center items-center px-6 py-20 my-4 border-2 border-dashed rounded text-center cursor-pointer",
-        })}
-        onClick={open} // Make the entire dropzone a button
-      >
-        <input {...getInputProps()} />
-        <p>Drag and drop some files here, or click to select files</p>
-        <UploadCloud className="text-gray-400 mt-6" size={40} />
+      <div className="relative border border-dashed border-primary w-full h-[300px] my-4">
         {cover && (
           <Image
             src={cover}
@@ -119,6 +117,7 @@ const FileUpload: React.FC<Props> = ({ onUpload, onDelete, onReorder, currentIma
           />
         )}
       </div>
+
       <aside>
         {/* <h4 className="mb-2 text-sm text-center font-semibold">Images</h4> */}
         <DragDropContext onDragEnd={onDragEnd}>
@@ -127,61 +126,78 @@ const FileUpload: React.FC<Props> = ({ onUpload, onDelete, onReorder, currentIma
               <div
                 ref={provided.innerRef}
                 {...provided.droppableProps}
-                className="flex space-x-2"
+                className="flex flex-wrap gap-x-2 gap-y-2"
               >
-                {files?.map((file, index) => (
-                  <Draggable
-                    draggableId={file.name}
-                    index={index}
-                    key={file.name}
-                  >
-                    {(provided) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        className="relative w-20 h-20"
-                        onMouseEnter={() => setIsHovered(file.name)}
-                        onMouseLeave={() => setIsHovered(null)}
+                {files?.map(
+                  (file, index) =>
+                    file.preview !== cover && (
+                      <Draggable
+                        draggableId={file.name}
+                        index={index}
+                        key={file.name}
                       >
-                        <img
-                          src={file.preview}
-                          alt={file.name}
-                          className="w-full h-full object-cover"
-                        />
-                        {isHovered === file.name && (
-                          <div className="absolute top-0 left-0 flex flex-col justify-between text-white">
-                            <button
-                              className="focus:outline-none bg-primary text-xs font-medium"
-                              onClick={() => setCover(file.preview)}
-                            >
-                              Set as cover
-                            </button>
-                            <Dialog>
-                              <DialogTrigger asChild>
-                                <Eye
-                                  style={{ cursor: "pointer" }}
-                                  className="text-primary"
-                                  size={16}
-                                />
-                              </DialogTrigger>
-                              <DialogContent
-                                className="w-5/12 h-5/12"
-                                onClick={() => alert(file.preview)}
-                              >
-                                <img
-                                  src={file.preview}
-                                  alt="selected"
-                                  className="w-full h-full object-cover"
-                                />
-                              </DialogContent>
-                            </Dialog>
+                        {(provided) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            className="relative w-20 h-20"
+                            onMouseEnter={() => setIsHovered(file.name)}
+                            onMouseLeave={() => setIsHovered(null)}
+                          >
+                            <img
+                              src={file.preview}
+                              alt={file.name}
+                              className="w-full h-full object-cover"
+                            />
+                            {isHovered === file.name && (
+                              <div className="absolute top-0 left-0 flex flex-col justify-between text-white">
+                                <button
+                                  className="focus:outline-none bg-primary text-xs font-medium"
+                                  onClick={() => setCover(file.preview)}
+                                >
+                                  Set as cover
+                                </button>
+                                <Dialog>
+                                  <DialogTrigger asChild>
+                                    <Eye
+                                      style={{ cursor: "pointer" }}
+                                      className="text-primary"
+                                      size={16}
+                                    />
+                                  </DialogTrigger>
+                                  <DialogContent
+                                    className="w-5/12 h-5/12"
+                                    onClick={() => alert(file.preview)}
+                                  >
+                                    <img
+                                      src={file.preview}
+                                      alt="selected"
+                                      className="w-full h-full object-cover"
+                                    />
+                                  </DialogContent>
+                                </Dialog>
+                              </div>
+                            )}
                           </div>
                         )}
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
+                      </Draggable>
+                    )
+                )}
+
+                <div
+                  {...getRootProps({
+                    className:
+                      "relative w-20 h-20 dropzone border border-dashed border-primary cursor-pointer",
+                  })}
+                  onClick={open} // Make the entire dropzone a button
+                >
+                  <input {...getInputProps()} />
+                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                    <UploadCloud className="text-primary" size={20} />
+                  </div>
+                </div>
+
                 {provided.placeholder}
               </div>
             )}
