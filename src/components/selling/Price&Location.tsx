@@ -1,6 +1,6 @@
 import { useAtom } from "jotai";
 import { itemFormDataAtom, updateItemFormDataAtom } from "@/utils/atoms";
-import { useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -16,9 +16,10 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import MapPicker from "react-google-map-picker";
+import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
 
-const DefaultLocation = { lat: 38.010169996641956, lng: -105.06867700679256 };
-const DefaultZoom = 10;
+const DefaultLocation = { lat: 39.32002111110655, lng: -101.0586845610812 };
+const DefaultZoom = 5;
 
 type Props = {
   isUpdate?: boolean;
@@ -82,6 +83,7 @@ const PriceLocation: React.FC<Props> = ({ isUpdate = false }) => {
               locationLng: data.results[0].geometry.location.lng,
               zipcode: zip,
             });
+        setLocationFetched(true);
       }
     } catch (error) {
       console.error("Error fetching address from ZIP:", error);
@@ -111,7 +113,7 @@ const PriceLocation: React.FC<Props> = ({ isUpdate = false }) => {
               shortAddress: shortAddress,
               locationLat: data.results[0].geometry.location.lat,
               locationLng: data.results[0].geometry.location.lng,
-              zipCode: "",
+              zipCode: data.results[0].address_components[0].short_name,
             })
           : setItemData({
               ...itemData,
@@ -119,8 +121,9 @@ const PriceLocation: React.FC<Props> = ({ isUpdate = false }) => {
               shortAddress: shortAddress,
               locationLat: data.results[0].geometry.location.lat,
               locationLng: data.results[0].geometry.location.lng,
-              zipcode: "",
+              zipcode: data.results[0].address_components[0].short_name,
             });
+        setLocationFetched(true);
       }
     } catch (error) {
       console.error("Error fetching address from lat-long:", error);
@@ -147,6 +150,62 @@ const PriceLocation: React.FC<Props> = ({ isUpdate = false }) => {
   function handleMapLocationChange(lat: number, lng: number) {
     fetchAddressFromLatLong(lat.toString(), lng.toString());
   }
+
+  const mapContainerStyle = {
+    width: "900px",
+    height: "600px",
+  };
+
+  const { isLoaded } = useJsApiLoader({
+    id: "google-map-script",
+    googleMapsApiKey: "AIzaSyAC1zTJy_NTO4dbq253Pv1VOSz_MB8YRTI",
+  });
+
+  const [map, setMap] = React.useState(null);
+
+  const onLoad = React.useCallback(function callback(map) {
+    const bounds = new window.google.maps.LatLngBounds(DefaultLocation);
+    setLocation({
+      lat: DefaultLocation.lat,
+      lng: DefaultLocation.lng,
+    });
+    setMap(map);
+  }, []);
+
+  const onUnmount = React.useCallback(function callback(map) {
+    setMap(null);
+  }, []);
+
+  const changeMarkerPosition = () => {
+    const newCenter = map.getCenter();
+    setLocation({
+      lat: newCenter.lat(),
+      lng: newCenter.lng(),
+    });
+    fetchAddressFromLatLong(
+      newCenter.lat().toString(),
+      newCenter.lng().toString()
+    );
+  };
+
+  const [locationFetched, setLocationFetched] = useState(false);
+  function handleMapClick(event: any) {
+  const clickedLat = event.latLng.lat();
+  const clickedLng = event.latLng.lng();
+  setLocation({
+    lat: clickedLat,
+    lng: clickedLng,
+  });
+  fetchAddressFromLatLong(clickedLat.toString(), clickedLng.toString());
+}
+
+function handleZoomChange() {
+  if (map) {
+    const currentZoom = map.getZoom();
+    setZoom(currentZoom);
+  }
+}
+
 
   return (
     <>
@@ -236,7 +295,7 @@ const PriceLocation: React.FC<Props> = ({ isUpdate = false }) => {
             </DialogDescription>
           </DialogHeader>
           <div>
-            <MapPicker
+            {/* <MapPicker
               defaultLocation={location}
               zoom={zoom}
               style={{ height: "600px", width: "900px" }}
@@ -245,7 +304,19 @@ const PriceLocation: React.FC<Props> = ({ isUpdate = false }) => {
               }}
               onChangeZoom={handleChangeZoom}
               apiKey="AIzaSyAC1zTJy_NTO4dbq253Pv1VOSz_MB8YRTI"
-            />
+            /> */}
+            <GoogleMap
+              mapContainerStyle={mapContainerStyle}
+              center={location} // Use the location state as the center
+              zoom={zoom}
+              onLoad={onLoad}
+              onUnmount={onUnmount}
+              onDragEnd={changeMarkerPosition}
+              onClick={handleMapClick}
+              onZoomChanged={handleZoomChange}
+            >
+              <Marker position={location} /> {/* Add a marker at the center */}
+            </GoogleMap>
           </div>
           <DialogFooter>
             <Button
@@ -260,6 +331,14 @@ const PriceLocation: React.FC<Props> = ({ isUpdate = false }) => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      {locationFetched && (
+        <div className="mt-4">
+          <p className="text-base font-medium">
+            {isUpdate ? updateItemData!.fullAddress : itemData.fullAddress} 
+            {/* ({location.lat.toFixed(3)},{location.lng.toFixed(3)}) */}
+          </p>
+        </div>
+      )}
     </>
   );
 };

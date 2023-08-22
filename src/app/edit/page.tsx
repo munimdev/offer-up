@@ -510,7 +510,7 @@ const EditItem = () => {
       {currentTab === 3 ? (
         <div className="grid w-full max-w-md gap-1.5">
           <Button type="button" onClick={onMutateHandler}>
-            Add Item
+            Update Item
           </Button>
         </div>
       ) : (
