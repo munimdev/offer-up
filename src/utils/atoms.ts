@@ -44,3 +44,9 @@ export const itemFormDataAtom = atom<ItemAtom>({
 });
 
 export const updateItemFormDataAtom = atom<Item | null>(null);
+export const zipCodeAtom = atom<string>("");
+export const locationAtom = atom<{ lat: number; lng: number }>({
+  lat: 0,
+  lng: 0,
+});
+export const locationNameAtom = atom<string>("");

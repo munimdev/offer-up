@@ -190,22 +190,21 @@ const PriceLocation: React.FC<Props> = ({ isUpdate = false }) => {
 
   const [locationFetched, setLocationFetched] = useState(false);
   function handleMapClick(event: any) {
-  const clickedLat = event.latLng.lat();
-  const clickedLng = event.latLng.lng();
-  setLocation({
-    lat: clickedLat,
-    lng: clickedLng,
-  });
-  fetchAddressFromLatLong(clickedLat.toString(), clickedLng.toString());
-}
-
-function handleZoomChange() {
-  if (map) {
-    const currentZoom = map.getZoom();
-    setZoom(currentZoom);
+    const clickedLat = event.latLng.lat();
+    const clickedLng = event.latLng.lng();
+    setLocation({
+      lat: clickedLat,
+      lng: clickedLng,
+    });
+    fetchAddressFromLatLong(clickedLat.toString(), clickedLng.toString());
   }
-}
 
+  function handleZoomChange() {
+    if (map) {
+      const currentZoom = map.getZoom();
+      setZoom(currentZoom);
+    }
+  }
 
   return (
     <>
@@ -334,7 +333,7 @@ function handleZoomChange() {
       {locationFetched && (
         <div className="mt-4">
           <p className="text-base font-medium">
-            {isUpdate ? updateItemData!.fullAddress : itemData.fullAddress} 
+            {isUpdate ? updateItemData!.fullAddress : itemData.fullAddress}
             {/* ({location.lat.toFixed(3)},{location.lng.toFixed(3)}) */}
           </p>
         </div>

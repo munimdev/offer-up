@@ -25,6 +25,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { Separator } from "@/components/ui/separator";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -42,6 +43,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Input } from "@/components/ui/input";
 import {
   Form,
@@ -73,8 +75,10 @@ import { useForm } from "react-hook-form";
 import { useSession } from "@/hooks/useSession";
 
 // Jotai
-import { useSetAtom } from "jotai/react";
-import { userAtom } from "@/utils/atoms";
+import { useSetAtom, useAtom } from "jotai/react";
+import { userAtom, zipCodeAtom, locationAtom, locationNameAtom } from "@/utils/atoms";
+import { Slider } from "@/components/ui/slider";
+import axios from "axios";
 
 interface NavbarProps {}
 
@@ -92,6 +96,54 @@ const navList = [
 ];
 
 export const Navbar = ({}: NavbarProps) => {
+
+  const [zipCode, setZipCode] = useAtom(zipCodeAtom);
+  const [location, setLocation] = useAtom(locationAtom);
+  const [locationName, setLocationName] = useAtom(locationNameAtom);
+
+  const handleLocationByZipCode = async (code) => {
+    try {
+      const response = await axios.get(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${code}&key=AIzaSyAC1zTJy_NTO4dbq253Pv1VOSz_MB8YRTI`
+      );
+      const data = response.data;
+      const lat = data.results[0].geometry.location.lat;
+      const lng = data.results[0].geometry.location.lng;
+      const locationName = data.results[0].address_components[3].long_name;
+      setLocationName(locationName);
+      setLocation({ lat, lng });
+    }
+    catch (error) {
+      console.log(error);
+    }
+  }
+
+  const handleGetLocation = () => {
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+          const response = await axios.get(
+            `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyAC1zTJy_NTO4dbq253Pv1VOSz_MB8YRTI`
+          );
+          const data = response.data;
+          const locationName = data.results[0].address_components[4].long_name;
+          const zipCode = data.results[0].address_components[6].short_name;
+          setLocationName(locationName);
+          setZipCode(zipCode);
+          setLocation({ lat, lng });
+        }
+        catch (error) {
+          console.log(error);
+        }
+      },
+      (error) => {
+        console.error("Error getting current location:", error);
+      }
+    );
+  };
+
   return (
     <>
       <div className="flex items-center gap-4 p-4 mt-2">
@@ -99,12 +151,71 @@ export const Navbar = ({}: NavbarProps) => {
           <Logo />
         </Link>
         <Searchbar />
-        <span className="flex font-bold text-[#1BC3FF] items-center gap-2 cursor-pointer">
-          <MapPin />{" "}
-          <span className="hidden gap-2 lg:flex">
-            <p>New York 30 Miles</p>
-          </span>
-        </span>
+        <Dialog>
+          <DialogTrigger asChild>
+            <span className="flex font-bold text-[#1BC3FF] items-center gap-2 cursor-pointer">
+              <MapPin />{" "}
+              <span className="hidden gap-2 lg:flex">
+                <p>{locationName ? `${locationName}: 30 Miles` : "Set Location"}</p>
+              </span>
+            </span>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <div className="flex flex-col p-4">
+              <h2 className="text-center font-bold text-black text-2xl -translate-y-8">Location</h2>
+              <div className="space-y-2">
+                <p className="text-black font-bold text-base">
+                  Delivery Method
+                </p>
+                <p className="text-xs">
+                  Shipping to continental 48 states, excluding Arkansas
+                </p>
+                <RadioGroup defaultValue="default">
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="default" id="r1" />
+                    <Label htmlFor="r1">Local + Shipping</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="local" id="r2" />
+                    <Label htmlFor="r2">Local</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="shipping" id="r3" />
+                    <Label htmlFor="r3">Shipping</Label>
+                  </div>
+                </RadioGroup>
+              </div>
+              <Separator className="my-4" />
+              <div className="">
+                <p className="text-black font-bold text-base">ZIP Code</p>
+                <button 
+                  onClick={handleGetLocation}
+                  className="border my-2 mx-auto border-primary text-primary flex rounded-full px-2 py-2 gap-x-2"
+                >
+                  <MapPin />
+                  <span className="flex-1 text-center">Get my location</span>
+                </button>
+                <p className="text-black text-center my-2 font-bold">Or</p>
+                <Input 
+                  value={zipCode}
+                  onChange={(e) => {
+                    setZipCode(e.target.value);
+                    // check if it is a valid zip code
+                    if (e.target.value.length === 5) {
+                      handleLocationByZipCode(e.target.value);
+                    }
+                  }}
+                  className="w-44 border border-gray-100 mx-auto" 
+                  placeholder="Enter ZIP Code" 
+                />
+              </div>
+              <Separator className="my-4" />
+              <p>Distance</p>
+              <Slider defaultValue={[20]} max={100} step={20} />
+            </div>
+            <Button type="submit">See listings</Button>
+          </DialogContent>
+        </Dialog>
         <div className="ml-auto">
           <NavigationMenu className="hidden md:block">
             <NavigationMenuList>
