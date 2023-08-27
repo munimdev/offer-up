@@ -10,7 +10,7 @@ export const Item = ({ id, name, price, images }: TItem) => {
       <div className="flex flex-col py-2">
         <Image
           className="border border-gray-200 rounded-lg object-cover"
-          src={images[0].imagePath250 || placeholder}
+          src={images[0]?.imagePath250 || placeholder}
           alt=""
           width={250}
           height={250}

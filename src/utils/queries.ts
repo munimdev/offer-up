@@ -19,6 +19,8 @@ import {
   LookupList,
   ReportDto,
   ReportItemDto,
+  SearchQuery,
+  SearchResult,
 } from "@/types/types";
 
 export const loginUser = (data: LoginData): Promise<Result<User>> =>
@@ -39,6 +41,8 @@ export const getCategoryAttributes = (
   instance.post("/Category/getCategoryAttributesFiltered", data);
 
 // Products
+export const searchItems = (query: SearchQuery): Promise<Result<SearchResult>> => instance.post("/Item/searchItems", { ...query })
+
 export const saveItem = (data: SaveItemDto) =>
   instance.post("/Item/createitem", data);
 

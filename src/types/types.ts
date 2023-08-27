@@ -197,3 +197,27 @@ export type ReportItemDto = {
   reportedItemId: string;
   reportedItemOwnerCustomerId: string;
 } & ReportDto;
+
+export type SearchQuery = {
+  searchKeyword: string;
+  categoryId?: number;
+  childCategoryId?: number;
+  subCategoryId?: number;
+  distance?: number;
+  locationLat?: number;
+  locationLng?: number;
+  conditionLookupId?: number;
+  priceFrom?: number;
+  priceTo?: number;
+  sortByLookupId?: number;
+  pageSize: number;
+  pageIndex: number;
+}
+
+export type SearchResult = {
+  pageNumber: number;
+  pageSize: number;
+  totalPages: number;
+  totalRecords: number;
+  data: Item[];
+}
