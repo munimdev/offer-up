@@ -1,16 +1,15 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 import { useFetch } from "@/hooks";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import * as Queries from "@/utils/queries";
 
 import InfiniteScroll from "react-infinite-scroll-component";
 
 import { ItemList } from "@/components/item-list/ItemList";
 import { Skeleton } from "@/components/ui/skeleton";
-
-import { Item, SearchResult } from "@/types/types"
 
 const Loader = () => (
   <div className="grid grid-cols-2 mx-auto gap-x-6 gap-y-10 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-8">
@@ -21,8 +20,12 @@ const Loader = () => (
 );
 
 const Page = () => {
+  const searchParams = useSearchParams();
+  const condition = searchParams.get("condition");
+  const priceFrom = searchParams.get("priceFrom");
+  const priceTo = searchParams.get("priceTo");
+
   const [paginatedItems, setPaginatedItems] = useState<any>();
-  const queryClient = useQueryClient();
   const query = {
     searchKeyword: "",
     // categoryId: 14,
@@ -31,16 +34,16 @@ const Page = () => {
     distance: 50000,
     locationLat: 32.19668319160829,
     locationLng: 74.17810876075194,
-    conditionLookupId: 0,
-    // priceFrom: 10,
-    // priceTo: 10,
+    conditionLookupId: condition ? parseInt(condition) : 0,
+    priceFrom: priceFrom ? parseInt(priceFrom) : 0,
+    priceTo: priceTo ? parseInt(priceTo) : 999999,
     // sortByLookupId: 0,
     pageSize: 30,
     pageIndex: 0,
   }
 
   const { data, refetch } = useFetch({
-    key: ["search-products"],
+    key: ["search-products", searchParams.toString()],
     fn: () =>
       Queries.searchItems(query),
   });
