@@ -130,7 +130,7 @@ const SubNav = () => {
                         {item.children.map((child: any, index: number) => (
                           <ListItem
                             key={index}
-                            href={`/categories/${child.id}`}
+                            href={`/search/?category=${item.id}&child=${child.id}`}
                             title={child.name}
                             className="w-full"
                           />

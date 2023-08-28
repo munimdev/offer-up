@@ -86,7 +86,7 @@ const Sidebar = () => {
           onValueChange={(e) => setSelectedCondition(e)}
         >
           {conditions?.map((condition) => (
-            <div className="flex items-center gap-x-2 cursor-pointer">
+            <div key={condition.id.toString()} className="flex items-center gap-x-2 cursor-pointer">
               <RadioGroupItem
                 id={condition.id.toString()}
                 value={condition.id.toString()}

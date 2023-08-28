@@ -11,6 +11,9 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { ItemList } from "@/components/item-list/ItemList";
 import { Skeleton } from "@/components/ui/skeleton";
 
+import { useAtom } from "jotai/react";
+import { preferredDistanceAtom, locationAtom } from "@/utils/atoms";
+
 const Loader = () => (
   <div className="grid grid-cols-2 mx-auto gap-x-6 gap-y-10 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-8">
     {Array.from({ length: 16 }).map((_, index) => (
@@ -24,6 +27,13 @@ const Page = () => {
   const condition = searchParams.get("condition");
   const priceFrom = searchParams.get("priceFrom");
   const priceTo = searchParams.get("priceTo");
+  const category = searchParams.get("category");
+  const childCategory = searchParams.get("child");
+  const subCategory = searchParams.get("sub");
+
+  const [preferredDistance] = useAtom(preferredDistanceAtom);
+  const [location] = useAtom(locationAtom);
+
 
   const [paginatedItems, setPaginatedItems] = useState<any>();
   const query = {
@@ -31,9 +41,13 @@ const Page = () => {
     // categoryId: 14,
     // childCategoryId: 97,
     // subCategoryId: 38,
+    ...category && { categoryId: parseInt(category) },
+    ...childCategory && { childCategoryId: parseInt(childCategory) },
+    ...subCategory && { subCategoryId: parseInt(subCategory) },
+    // distance: preferredDistance[0],
     distance: 50000,
-    locationLat: 32.19668319160829,
-    locationLng: 74.17810876075194,
+    locationLat: location.lat,
+    locationLng: location.lng,
     conditionLookupId: condition ? parseInt(condition) : 0,
     priceFrom: priceFrom ? parseInt(priceFrom) : 0,
     priceTo: priceTo ? parseInt(priceTo) : 999999,

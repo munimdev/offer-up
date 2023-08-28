@@ -38,15 +38,32 @@ export const itemFormDataAtom = atom<ItemAtom>({
   fullAddress: "",
   shortAddress: "",
   zipcode: "",
-  locationLat: 111.111,
-  locationLng: 222.222,
+  locationLat: 39.8283,
+  locationLng: 98.5795,
   images: [],
 });
 
 export const updateItemFormDataAtom = atom<Item | null>(null);
 export const zipCodeAtom = atom<string>("");
 export const locationAtom = atom<{ lat: number; lng: number }>({
-  lat: 0,
-  lng: 0,
+  lat: 39.8283,
+  lng: 98.5795,
 });
 export const locationNameAtom = atom<string>("");
+export const preferredDistanceAtom = atom<number[]>([20]);
+export const categoryAtom = atom<{ id: number; name: string }>({
+  id: 0,
+  name: "",
+});
+export const subCategoryAtom = atom<{ id: number; name: string }>({
+  id: 0,
+  name: "",
+});
+export const conditionAtom = atom<{ id: number; name: string }>({
+  id: 0,
+  name: "",
+});
+export const searchQueryAtom = atom<{ query: string; location: string }>({
+  query: "",
+  location: "",
+});

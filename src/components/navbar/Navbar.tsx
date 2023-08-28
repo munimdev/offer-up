@@ -211,7 +211,11 @@ export const Navbar = ({}: NavbarProps) => {
               </div>
               <Separator className="my-4" />
               <p>Distance</p>
-              <Slider defaultValue={[20]} max={100} step={20} />
+              <Slider onValueChange={
+                (e) => {
+                  console.log(e);
+                }
+              } defaultValue={[20]} max={100} step={20} />
             </div>
             <Button type="submit">See listings</Button>
           </DialogContent>
