@@ -76,7 +76,7 @@ import { useSession } from "@/hooks/useSession";
 
 // Jotai
 import { useSetAtom, useAtom } from "jotai/react";
-import { userAtom, zipCodeAtom, locationAtom, locationNameAtom } from "@/utils/atoms";
+import { userAtom, zipCodeAtom, locationAtom, locationNameAtom, preferredDistanceAtom } from "@/utils/atoms";
 import { Slider } from "@/components/ui/slider";
 import axios from "axios";
 
@@ -100,6 +100,7 @@ export const Navbar = ({}: NavbarProps) => {
   const [zipCode, setZipCode] = useAtom(zipCodeAtom);
   const [location, setLocation] = useAtom(locationAtom);
   const [locationName, setLocationName] = useAtom(locationNameAtom);
+  const [preferredDistance, setPreferredDistance] = useAtom(preferredDistanceAtom);
 
   const handleLocationByZipCode = async (code) => {
     try {
@@ -214,8 +215,9 @@ export const Navbar = ({}: NavbarProps) => {
               <Slider onValueChange={
                 (e) => {
                   console.log(e);
+                  setPreferredDistance(e);
                 }
-              } defaultValue={[20]} max={100} step={20} />
+              } defaultValue={[20]} max={100} step={20} min={20} />
             </div>
             <Button type="submit">See listings</Button>
           </DialogContent>
