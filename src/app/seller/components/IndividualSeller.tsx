@@ -277,7 +277,7 @@ const IndividualSeller = ({
                     ))
                   ) : (
                     <p className="text-sm text-center mt-5">
-                      Sorry! You haven't follow anyone yet.
+                      Sorry! You haven&apos;t follow anyone yet.
                     </p>
                   )}
                 </ScrollArea>

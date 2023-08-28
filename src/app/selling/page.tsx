@@ -45,7 +45,7 @@ const Selling = () => {
       {currentTab === 1 && <ItemDetail />}
       {currentTab === 2 && <CategoryDetail />}
       {currentTab === 3 && (
-        <PriceLocation itemData={itemData} setItemData={setItemData} />
+        <PriceLocation  />
       )}
 
       {currentTab === 3 ? (

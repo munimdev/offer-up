@@ -118,7 +118,9 @@ const SubNav = () => {
                             : "opacity-75"
                         }`}
                       >
-                        {item.name}
+                        <Link href={`/search/?category=${item.id}`}>
+                          {item.name}
+                        </Link>
                       </NavigationMenuTrigger>
                       <ul
                         className={`w-fit grid p-2 lg:grid-cols-[1fr_1fr] absolute left-0 mt-2 ${

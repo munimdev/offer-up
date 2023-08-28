@@ -15,17 +15,6 @@ export const ItemList = ({ itemsList }: { itemsList: TItem[] }) => {
             {...item}
           />
         ))}
-      {/* {dummyItemsList.map((item, index) => (
-        <Item
-          imageUrl={item.imageUrl}
-          name={item.name}
-          price={item.price}
-          location={item.location}
-          navigateTo={item.navigateTo}
-          additionalInfo={item.additionalInfo}
-          key={index}
-        />
-      ))} */}
     </div>
   );
 };

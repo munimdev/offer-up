@@ -102,7 +102,7 @@ export const Navbar = ({}: NavbarProps) => {
   const [locationName, setLocationName] = useAtom(locationNameAtom);
   const [preferredDistance, setPreferredDistance] = useAtom(preferredDistanceAtom);
 
-  const handleLocationByZipCode = async (code) => {
+  const handleLocationByZipCode = async (code: string) => {
     try {
       const response = await axios.get(
         `https://maps.googleapis.com/maps/api/geocode/json?address=${code}&key=AIzaSyAC1zTJy_NTO4dbq253Pv1VOSz_MB8YRTI`
@@ -157,7 +157,7 @@ export const Navbar = ({}: NavbarProps) => {
             <span className="flex font-bold text-[#1BC3FF] items-center gap-2 cursor-pointer">
               <MapPin />{" "}
               <span className="hidden gap-2 lg:flex">
-                <p>{locationName ? `${locationName}: 30 Miles` : "Set Location"}</p>
+                <p>{locationName ? `${locationName}: ${(preferredDistance[0] / 1000)} Miles` : "Set Location"}</p>
               </span>
             </span>
           </DialogTrigger>
@@ -201,7 +201,6 @@ export const Navbar = ({}: NavbarProps) => {
                   value={zipCode}
                   onChange={(e) => {
                     setZipCode(e.target.value);
-                    // check if it is a valid zip code
                     if (e.target.value.length === 5) {
                       handleLocationByZipCode(e.target.value);
                     }
@@ -214,10 +213,9 @@ export const Navbar = ({}: NavbarProps) => {
               <p>Distance</p>
               <Slider onValueChange={
                 (e) => {
-                  console.log(e);
                   setPreferredDistance(e);
                 }
-              } defaultValue={[20]} max={100} step={20} min={20} />
+              } defaultValue={[1000]} max={50000} step={20} min={1000} />
             </div>
             <Button type="submit">See listings</Button>
           </DialogContent>

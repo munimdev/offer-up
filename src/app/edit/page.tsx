@@ -37,7 +37,7 @@ const tabs = ["Item", "Category", "Price & Location"];
 
 type Props = {
   item: Item;
-  setItemData: (item: Item) => void;
+  setItemData: (item: any) => void;
 };
 
 const ItemDetail: React.FC<Props> = ({ item, setItemData }) => {
@@ -79,7 +79,7 @@ const ItemDetail: React.FC<Props> = ({ item, setItemData }) => {
                 ],
               });
             }}
-            onReorder={(files: Images[]) => {
+            onReorder={(files: any[]) => {
               console.log(item);
               setItemData({
                 ...item,

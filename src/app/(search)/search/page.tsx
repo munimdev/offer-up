@@ -11,7 +11,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { ItemList } from "@/components/item-list/ItemList";
 import { Skeleton } from "@/components/ui/skeleton";
 
-import { useAtom } from "jotai/react";
+import { useAtom, useAtomValue } from "jotai/react";
 import { preferredDistanceAtom, locationAtom } from "@/utils/atoms";
 
 const Loader = () => (
@@ -31,21 +31,17 @@ const Page = () => {
   const childCategory = searchParams.get("child");
   const subCategory = searchParams.get("sub");
 
-  const [preferredDistance] = useAtom(preferredDistanceAtom);
+  const preferredDistance = useAtomValue(preferredDistanceAtom);
   const [location] = useAtom(locationAtom);
 
 
   const [paginatedItems, setPaginatedItems] = useState<any>();
   const query = {
     searchKeyword: "",
-    // categoryId: 14,
-    // childCategoryId: 97,
-    // subCategoryId: 38,
     ...category && { categoryId: parseInt(category) },
     ...childCategory && { childCategoryId: parseInt(childCategory) },
     ...subCategory && { subCategoryId: parseInt(subCategory) },
-    // distance: preferredDistance[0],
-    distance: 50000,
+    distance: preferredDistance[0],
     locationLat: location.lat,
     locationLng: location.lng,
     conditionLookupId: condition ? parseInt(condition) : 0,

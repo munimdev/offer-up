@@ -21,6 +21,15 @@ const Sidebar = () => {
         queryFn: () => Queries.getLookupList(10001),
         queryKey: ["query-conditions"],
       },
+      {
+        queryFn: () =>
+          Queries.getSubCategories(
+            Number(searchParam.get("child")) ||
+              Number(searchParam.get("category")) ||
+              -1
+          ),
+        queryKey: ["query-sub-categories"],
+      },
     ],
   });
   const [selectedCondition, setSelectedCondition] = useState<string>();
@@ -28,13 +37,35 @@ const Sidebar = () => {
   const [maxPrice, setMaxPrice] = useState<number>();
 
   const conditions = searchOptions?.[0]?.data?.dataObject;
+  const subCategories = searchOptions?.[1]?.data?.dataObject;
 
   return (
     <div className="h-fit border border-gray-300 overflow-y-auto overflow-x-hidden p-4 text-sm w-[300px]">
-      <p>All Categories</p>
+      <p className="font-semibold text-lg">Filter</p>
+      <Separator className="my-4" />
+      <div className="flex flex-col gap-y-3">
+        <p className="font-semibold">Sub Categories</p>
+        <RadioGroup
+          defaultValue={searchParam.get("sub")!}
+        >
+          {subCategories?.map((subCategory) => (
+            <div
+              key={subCategory.id.toString()}
+              className="flex items-center gap-x-2 cursor-pointer"
+            >
+              <RadioGroupItem
+                id={subCategory.id.toString()}
+                value={subCategory.id.toString()}
+              />
+              <Label htmlFor={subCategory.id.toString()}>
+                {subCategory.name}
+              </Label>
+            </div>
+          ))}
+        </RadioGroup>
+      </div>
       <Separator className="my-4" />
       <div className="">
-        <p className="font-semibold text-lg">Filter</p>
         <p className="font-semibold my-2">Price range</p>
         <div className="flex flex-row gap-x-2 items-center">
           <input
@@ -56,27 +87,27 @@ const Sidebar = () => {
             value={maxPrice}
             onChange={(e) => setMaxPrice(parseInt(e.target.value))}
           />
-          <Button
-            className="w-fit"
-            onClick={() => {
-              let queryString = "?";
-              searchParam.forEach((value, key) => {
-                if (key != "priceFrom" && key != "priceTo") {
-                  queryString += `${key}=${value}&`;
-                }
-              });
-              if (minPrice) {
-                queryString += `priceFrom=${minPrice}&`;
-              }
-              if (maxPrice) {
-                queryString += `priceTo=${maxPrice}`;
-              }
-              router.replace(`${pathname}${queryString}`);
-            }}
-          >
-            Go
-          </Button>
         </div>
+        <Button
+          className="mt-2 w-full"
+          onClick={() => {
+            let queryString = "?";
+            searchParam.forEach((value, key) => {
+              if (key != "priceFrom" && key != "priceTo") {
+                queryString += `${key}=${value}&`;
+              }
+            });
+            if (minPrice) {
+              queryString += `priceFrom=${minPrice}&`;
+            }
+            if (maxPrice) {
+              queryString += `priceTo=${maxPrice}`;
+            }
+            router.replace(`${pathname}${queryString}`);
+          }}
+        >
+          Filter
+        </Button>
       </div>
       <Separator className="my-4" />
       <span className="font-semibold">Conditions</span>
@@ -86,7 +117,10 @@ const Sidebar = () => {
           onValueChange={(e) => setSelectedCondition(e)}
         >
           {conditions?.map((condition) => (
-            <div key={condition.id.toString()} className="flex items-center gap-x-2 cursor-pointer">
+            <div
+              key={condition.id.toString()}
+              className="flex items-center gap-x-2 cursor-pointer"
+            >
               <RadioGroupItem
                 id={condition.id.toString()}
                 value={condition.id.toString()}

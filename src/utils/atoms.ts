@@ -44,13 +44,13 @@ export const itemFormDataAtom = atom<ItemAtom>({
 });
 
 export const updateItemFormDataAtom = atom<Item | null>(null);
-export const zipCodeAtom = atom<string>("");
-export const locationAtom = atom<{ lat: number; lng: number }>({
+export const zipCodeAtom = atomWithStorage<string>("zipcode", "");
+export const locationAtom = atomWithStorage<{ lat: number; lng: number }>("cordinates", {
   lat: 39.8283,
   lng: 98.5795,
 });
-export const locationNameAtom = atom<string>("");
-export const preferredDistanceAtom = atom<number[]>([20]);
+export const locationNameAtom = atomWithStorage<string>("location", "");
+export const preferredDistanceAtom = atomWithStorage<number[]>("distance", [1000]);
 export const categoryAtom = atom<{ id: number; name: string }>({
   id: 0,
   name: "",

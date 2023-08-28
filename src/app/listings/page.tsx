@@ -339,7 +339,7 @@ const ItemDetails: React.FC<ItemDetailsProps> = ({ refetchItems, item }) => {
                               <div className="absolute top-0 left-0 flex flex-col justify-between text-white">
                                 <button
                                   className="text-xs font-medium focus:outline-none bg-primary"
-                                  onClick={() => setCover(image.imagePath)}
+                                  onClick={() => setCover(image.imagePath as any)}
                                 >
                                   Set as cover
                                 </button>

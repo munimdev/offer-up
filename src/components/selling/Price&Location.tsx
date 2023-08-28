@@ -161,9 +161,9 @@ const PriceLocation: React.FC<Props> = ({ isUpdate = false }) => {
     googleMapsApiKey: "AIzaSyAC1zTJy_NTO4dbq253Pv1VOSz_MB8YRTI",
   });
 
-  const [map, setMap] = React.useState(null);
+  const [map, setMap] = React.useState<any>(null);
 
-  const onLoad = React.useCallback(function callback(map) {
+  const onLoad = React.useCallback(function callback(map: any) {
     const bounds = new window.google.maps.LatLngBounds(DefaultLocation);
     setLocation({
       lat: DefaultLocation.lat,
@@ -172,7 +172,7 @@ const PriceLocation: React.FC<Props> = ({ isUpdate = false }) => {
     setMap(map);
   }, []);
 
-  const onUnmount = React.useCallback(function callback(map) {
+  const onUnmount = React.useCallback(function callback(map: any) {
     setMap(null);
   }, []);
 

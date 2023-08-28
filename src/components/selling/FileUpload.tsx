@@ -15,8 +15,8 @@ interface FileWithPreview extends File {
 
 type Props = {
   onUpload: (files: Images[]) => void;
-  onDelete: (file: Images) => void;
-  onReorder: (files: Images[]) => void;
+  onDelete?: (file: Images) => void;
+  onReorder?: (files: Images[]) => void;
   currentImages?: any[];
 };
 
@@ -35,7 +35,7 @@ const FileUpload: React.FC<Props> = ({
     });
   });
   const [cover, setCover] = useState<string | null>(
-    currentImagesWithPreview![0]?.preview || null
+    currentImagesWithPreview?.[0].preview || null
   );
   const [files, setFiles] = useState<FileWithPreview[]>(
     currentImagesWithPreview! || []
@@ -49,7 +49,7 @@ const FileUpload: React.FC<Props> = ({
 
   useEffect(() => {
     if (files?.length === 1) {
-      setCover(files[0].preview);
+      setCover(files[0].preview!);
     }
   }, [files]);
 
@@ -101,7 +101,7 @@ const FileUpload: React.FC<Props> = ({
         imageOrder: idx,
       } as Images;
     });
-    onReorder(newFiles);
+    onReorder!(newFiles);
     setFiles(reorderedFiles);
   };
 
@@ -154,7 +154,7 @@ const FileUpload: React.FC<Props> = ({
                               <div className="absolute top-0 left-0 flex flex-col justify-between text-white">
                                 <button
                                   className="focus:outline-none bg-primary text-xs font-medium"
-                                  onClick={() => setCover(file.preview)}
+                                  onClick={() => setCover(file.preview!)}
                                 >
                                   Set as cover
                                 </button>
