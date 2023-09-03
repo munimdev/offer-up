@@ -1,20 +1,13 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-// import {
-//   arrayUnion,
-//   doc,
-//   addDoc,
-//   serverTimestamp,
-//   Timestamp,
-//   updateDoc,
-// } from "firebase/firestore";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { addDoc, collection, serverTimestamp,getDocs, query,deleteDoc,
   onSnapshot,doc,updateDoc } from "firebase/firestore";
-import { db} from "../../firebase/firebase";
-// import { v4 as uuid } from "uuid";
+import { db, storage} from "../../firebase/firebase";
+import { v4 as uuid } from "uuid";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { CheckCheck, MoreHorizontal, MoreVertical } from "lucide-react";
+import { CheckCheck, MoreHorizontal, MoreVertical,ImageIcon } from "lucide-react";
 import Image from "next/image";
 
 const Page = () => {
@@ -22,9 +15,53 @@ const Page = () => {
   const [isEditId,setIsEditId]=useState<string>();
   const [messages, setMessages] = useState<any[]>([]);
   const modalRef = useRef(null);
+  const fileInputRef = useRef(null);
   const [isOptionModaOpen, setIsOptionModalOpen] = useState<string>();
   const handleInputChange = (event:any) => {
     setInputValue(event.target.value);
+  };
+  const handleIconClick = () => {
+    // Trigger the file input's click event
+    fileInputRef.current.click();
+  };
+
+  const handleFileChange = (e) => {
+    const chatId = '4f7940d3-1b22-45b7-8c8a-7f41f419d27c'; // Replace with the actual chat ID
+const subcollectionId = 'a5e1493c-6f3e-4c3d-a89d-eb7bda930f09'; // Replace with the actual subcollection ID
+const currentUser = {
+  uid: 'f26f8d4a-9d58-4b81-a8b0-2a75548cc6f6', 
+  // uid: 'f26f8d4a-9d58-4b81-a8b0-2a75548cc6fe', 
+};
+
+
+    const selectedFile = e.target.files[0];
+    const storageRef = ref(storage, uuid());
+
+    const uploadTask = uploadBytesResumable(storageRef, selectedFile);
+
+    uploadTask.on(
+      (error) => {
+        //TODO:Handle Error
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+          const message = {
+            img:downloadURL,
+            senderId: currentUser.uid,
+            createdAt: serverTimestamp(), 
+          };
+          
+          const messagesCollectionRef = collection(db, 'chats', chatId, subcollectionId);
+          
+          const res = await addDoc(messagesCollectionRef, message);
+    console.log(res);
+    setInputValue('');
+    console.log('Message added successfully!');
+        });
+      }
+    );
+    // Handle the selected file as needed, e.g., upload to Firebase Storage
+    console.log("Selected File:", selectedFile);
   };
   useEffect(() => {
     // Define the chat query to retrieve messages
@@ -210,7 +247,9 @@ try {
           <p className="text-sm text-gray-600">12:00AM Aug 01</p>
           <div className="flex flex-row gap-x-2">
             <div className="bg-primary text-white w-44 p-3 rounded flex items-center justify-between">
-              {val.text} <MoreVertical size={15} className="text-white" onClick={() => setIsOptionModalOpen(val.id)} style={{ cursor: 'pointer' }}/>
+              {val.img&&<Image src={val.img} alt=""  width={80}
+              height={50} />}
+              {val.text&&val.text} <MoreVertical size={15} className="text-white" onClick={() => setIsOptionModalOpen(val.id)} style={{ cursor: 'pointer' }}/>
             </div>
             {isOptionModaOpen===val.id&&  <div
             ref={modalRef}
@@ -298,6 +337,20 @@ try {
             className="flex-1 border-none outline-none"
             placeholder="Message..."
           />
+           <input
+        type="file"
+        accept="image/*" // Specify the accepted file types (images in this case)
+        style={{ display: "none" }} // Hide the input element
+        ref={fileInputRef}
+        onChange={handleFileChange}
+      />
+      <ImageIcon
+        size={40}
+        style={{ cursor: 'pointer' }}
+        className="bg-white text-primary mr-2"
+        onClick={handleIconClick}
+      />
+          {/* <ImageIcon size={40} className="bg-white text-primary mr-2"  /> */}
           <Button
             type="button"
             onClick ={handleSendMessage}
