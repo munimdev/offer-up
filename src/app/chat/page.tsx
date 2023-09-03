@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 // import {
 //   arrayUnion,
 //   doc,
@@ -8,18 +8,20 @@ import React, { useState, useEffect } from "react";
 //   Timestamp,
 //   updateDoc,
 // } from "firebase/firestore";
-import { addDoc, collection, serverTimestamp,getDocs, query,
-  onSnapshot, } from "firebase/firestore";
+import { addDoc, collection, serverTimestamp,getDocs, query,deleteDoc,
+  onSnapshot,doc, } from "firebase/firestore";
 import { db} from "../../firebase/firebase";
 // import { v4 as uuid } from "uuid";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { CheckCheck, MoreHorizontal } from "lucide-react";
+import { CheckCheck, MoreHorizontal, MoreVertical } from "lucide-react";
 import Image from "next/image";
 
 const Page = () => {
   const [inputValue, setInputValue] = useState<string>();
   const [messages, setMessages] = useState<any[]>([]);
+  const modalRef = useRef(null);
+  const [isOptionModaOpen, setIsOptionModalOpen] = useState<string>();
   const handleInputChange = (event:any) => {
     setInputValue(event.target.value);
   };
@@ -34,21 +36,50 @@ const Page = () => {
       QuerySnapshot.forEach((doc) => {
         fetchedMessages.push({ ...doc.data(), id: doc.id });
       });
-      const sortedMessages = fetchedMessages.sort(
+  
+      // Create a copy of the fetchedMessages array and then sort it
+      const sortedMessages = [...fetchedMessages].sort(
         (a, b) => a.createdAt - b.createdAt
       );
+  console.log(sortedMessages)
       setMessages(sortedMessages);
     });
-   
+  
     return () => unsubscribe();
   }, []);
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        setIsOptionModalOpen(null);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+  const deleteChatHandler = async (messageId:string) => {
+    const chatId = '4f7940d3-1b22-45b7-8c8a-7f41f419d27c'; // Replace with the actual chat ID
+const subcollectionId = 'a5e1493c-6f3e-4c3d-a89d-eb7bda930f09'; // Replace with the actual subcollection ID
+    const messageDocRef = doc(db, 'chats', chatId, subcollectionId, messageId);
+    try {
+      await deleteDoc(messageDocRef);
+      console.log('Message deleted successfully!');
+    } catch (error) {
+      console.error('Error deleting message: ', error);
+    }
+    finally {
+      setIsOptionModalOpen(''); // Close the modal after deleting
+    }
+  }
   const handleSendMessage = async () =>{
 console.log(inputValue)
 const chatId = '4f7940d3-1b22-45b7-8c8a-7f41f419d27c'; // Replace with the actual chat ID
 const subcollectionId = 'a5e1493c-6f3e-4c3d-a89d-eb7bda930f09'; // Replace with the actual subcollection ID
 const currentUser = {
-  // uid: 'f26f8d4a-9d58-4b81-a8b0-2a75548cc6f6', 
-  uid: 'f26f8d4a-9d58-4b81-a8b0-2a75548cc6fe', 
+  uid: 'f26f8d4a-9d58-4b81-a8b0-2a75548cc6f6', 
+  // uid: 'f26f8d4a-9d58-4b81-a8b0-2a75548cc6fe', 
 };
 
 const message = {
@@ -160,9 +191,30 @@ try {
         <div className="flex flex-col gap-y-1">
           <p className="text-sm text-gray-600">12:00AM Aug 01</p>
           <div className="flex flex-row gap-x-2">
-            <div className="bg-primary text-white w-44 p-3 rounded">
-              {val.text}
+            <div className="bg-primary text-white w-44 p-3 rounded flex items-center justify-between">
+              {val.text} <MoreVertical size={15} className="text-white" onClick={() => setIsOptionModalOpen(val.id)} style={{ cursor: 'pointer' }}/>
             </div>
+            {isOptionModaOpen===val.id&&  <div
+            ref={modalRef}
+                className="bg-white p-3 rounded"
+                style={{
+                  position: 'absolute',
+                  marginTop:"30px",
+                  display:"flex",
+                  flexDirection:"column",
+                  justifyContent:"center",
+                  right: 50,
+                  zIndex: 1000,
+                  // top: 0,
+                  boxShadow: '0 2px 5px rgba(0, 0, 0, 0.2)',
+                }}
+              >
+                <button style={{fontSize:"20px",padding:"10px"}} onClick={()=>deleteChatHandler(val.id)}>Delete</button>
+                <hr />
+                <button style={{fontSize:"20px",padding:"10px"}}>Edit</button>
+              </div>}
+          
+           
             <div className="self-end p-1 bg-primary rounded-full">
               <CheckCheck size={15} className="text-white" />
             </div>
@@ -176,7 +228,7 @@ try {
           <p className="text-sm text-gray-600">12:00AM Aug 01</p>
           <div className="flex flex-row gap-x-2">
             <div className="bg-gray-300 text-black w-44 p-3 rounded">
-              {val.text}
+              {val.text} 
             </div>
             <div className="self-end p-1 bg-primary rounded-full">
               <CheckCheck size={15} className="text-white" />
