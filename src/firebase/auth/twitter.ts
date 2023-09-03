@@ -1,4 +1,4 @@
-import app from "../firebase";
+import {app} from "../firebase";
 import { getAuth, signInWithPopup, TwitterAuthProvider } from "firebase/auth";
 
 const auth = getAuth(app);
