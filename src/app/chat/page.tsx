@@ -113,6 +113,7 @@ try {
     setInputValue('');
     console.log('Message added successfully!');
   }
+  setInputValue('');
 } catch (error) {
   console.error("Error getting documents: ", error);
 }
