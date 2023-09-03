@@ -9,7 +9,7 @@ import React, { useState, useEffect, useRef } from "react";
 //   updateDoc,
 // } from "firebase/firestore";
 import { addDoc, collection, serverTimestamp,getDocs, query,deleteDoc,
-  onSnapshot,doc, } from "firebase/firestore";
+  onSnapshot,doc,updateDoc } from "firebase/firestore";
 import { db} from "../../firebase/firebase";
 // import { v4 as uuid } from "uuid";
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,7 @@ import Image from "next/image";
 
 const Page = () => {
   const [inputValue, setInputValue] = useState<string>();
+  const [isEditId,setIsEditId]=useState<string>();
   const [messages, setMessages] = useState<any[]>([]);
   const modalRef = useRef(null);
   const [isOptionModaOpen, setIsOptionModalOpen] = useState<string>();
@@ -91,11 +92,27 @@ const message = {
 const messagesCollectionRef = collection(db, 'chats', chatId, subcollectionId);
 
 try {
-  const res = await addDoc(messagesCollectionRef, message);
-  console.log(res);
-  setInputValue('');
-  console.log('Message added successfully!');
-
+  if (isEditId) {
+    // If isEditId is available, update the existing document
+    const messageDocRef = doc(
+      db,
+      'chats',
+      chatId,
+      subcollectionId,
+      isEditId
+    );
+    await updateDoc(messageDocRef, {
+      text: inputValue,
+    });
+    setIsEditId(''); // Clear the edit state
+    console.log('Message edited successfully!');
+  } else {
+    // If isEditId is not available, add a new document
+    const res = await addDoc(messagesCollectionRef, message);
+    console.log(res);
+    setInputValue('');
+    console.log('Message added successfully!');
+  }
 } catch (error) {
   console.error("Error getting documents: ", error);
 }
@@ -211,7 +228,7 @@ try {
               >
                 <button style={{fontSize:"20px",padding:"10px"}} onClick={()=>deleteChatHandler(val.id)}>Delete</button>
                 <hr />
-                <button style={{fontSize:"20px",padding:"10px"}}>Edit</button>
+                <button style={{fontSize:"20px",padding:"10px"}} onClick={()=>{setIsEditId(val.id);setInputValue(val.text);setIsOptionModalOpen('');}}>Edit</button>
               </div>}
           
            
