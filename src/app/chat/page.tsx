@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { addDoc, collection, serverTimestamp,getDocs, query,deleteDoc,
-  onSnapshot,doc,updateDoc } from "firebase/firestore";
+  onSnapshot,doc,updateDoc,orderBy } from "firebase/firestore";
 import { db, storage} from "../../firebase/firebase";
 import { v4 as uuid } from "uuid";
 import { Button } from "@/components/ui/button";
@@ -68,7 +68,7 @@ const currentUser = {
     const chatId = "4f7940d3-1b22-45b7-8c8a-7f41f419d27c"; // Replace with your actual chat ID
     const subcollectionId = "a5e1493c-6f3e-4c3d-a89d-eb7bda930f09"; // Replace with your actual subcollection ID
     const chatRef = collection(db, "chats", chatId, subcollectionId);
-    const q = query(chatRef);
+    const q = query(chatRef, orderBy("createdAt", "asc"));
     const unsubscribe = onSnapshot(q, (QuerySnapshot) => {
       const fetchedMessages = [];
       QuerySnapshot.forEach((doc) => {
@@ -76,11 +76,11 @@ const currentUser = {
       });
   
       // Create a copy of the fetchedMessages array and then sort it
-      const sortedMessages = [...fetchedMessages].sort(
-        (a, b) => a.createdAt - b.createdAt
-      );
-  console.log(sortedMessages)
-      setMessages(sortedMessages);
+      // const sortedMessages = [...fetchedMessages].sort(
+      //   (a, b) => a.createdAt - b.createdAt
+      // );
+  // console.log(sortedMessages)
+      setMessages(fetchedMessages);
     });
   
     return () => unsubscribe();
@@ -242,14 +242,17 @@ try {
           {/* Message Bubble */}
           {messages&&messages.map((val, ind) => {
     return val.senderId === 'f26f8d4a-9d58-4b81-a8b0-2a75548cc6f6' ? (
+      <>
+    
       <div className="flex flex-row justify-end" key={val.createdAt}>
-        <div className="flex flex-col gap-y-1">
+      {val.img&&<Image src={val.img} alt=""  width={180}
+              height={150} />}
+      {val.text&&  <div className="flex flex-col gap-y-1">
           <p className="text-sm text-gray-600">12:00AM Aug 01</p>
           <div className="flex flex-row gap-x-2">
             <div className="bg-primary text-white w-44 p-3 rounded flex items-center justify-between">
-              {val.img&&<Image src={val.img} alt=""  width={80}
-              height={50} />}
-              {val.text&&val.text} <MoreVertical size={15} className="text-white" onClick={() => setIsOptionModalOpen(val.id)} style={{ cursor: 'pointer' }}/>
+              
+              {val.text} <MoreVertical size={15} className="text-white" onClick={() => setIsOptionModalOpen(val.id)} style={{ cursor: 'pointer' }}/>
             </div>
             {isOptionModaOpen===val.id&&  <div
             ref={modalRef}
@@ -270,18 +273,23 @@ try {
                 <hr />
                 <button style={{fontSize:"20px",padding:"10px"}} onClick={()=>{setIsEditId(val.id);setInputValue(val.text);setIsOptionModalOpen('');}}>Edit</button>
               </div>}
-          
+        
            
             <div className="self-end p-1 bg-primary rounded-full">
               <CheckCheck size={15} className="text-white" />
             </div>
           </div>
           <p className="text-end text-sm text-gray-600">Seen</p>
-        </div>
+        </div>}
       </div>
+      </>
     ) : (
+      <>
+   
       <div className="flex flex-row justify-start" key={val.createdAt}>
-        <div className="flex flex-col gap-y-1">
+      {val.img&& <Image src={val.img} alt=""  width={180}
+              height={150} />}
+      {val.text&&  <div className="flex flex-col gap-y-1">
           <p className="text-sm text-gray-600">12:00AM Aug 01</p>
           <div className="flex flex-row gap-x-2">
             <div className="bg-gray-300 text-black w-44 p-3 rounded">
@@ -292,8 +300,9 @@ try {
             </div>
           </div>
           <p className="text-end text-sm text-gray-600">Seen</p>
-        </div>
+        </div>}
       </div>
+      </>
     );
   })}
 
