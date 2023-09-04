@@ -125,7 +125,7 @@ const message = {
   senderId: currentUser.uid,
   createdAt: serverTimestamp(), 
 };
-
+setInputValue('');
 const messagesCollectionRef = collection(db, 'chats', chatId, subcollectionId);
 
 try {
@@ -147,10 +147,9 @@ try {
     // If isEditId is not available, add a new document
     const res = await addDoc(messagesCollectionRef, message);
     console.log(res);
-    setInputValue('');
     console.log('Message added successfully!');
   }
-  setInputValue('');
+
 } catch (error) {
   console.error("Error getting documents: ", error);
 }
@@ -245,7 +244,7 @@ try {
       <>
     
       <div className="flex flex-row justify-end" key={val.createdAt}>
-      {val.img&&<div style={{border:"4px solid #62C3FE",borderRadius:"10px"}}><Image src={val.img} alt=""  width={180}
+      {val.img&&<div style={{border:"4px solid #D1D5DB",borderRadius:"10px"}}><Image src={val.img} alt=""  width={180}
               height={150} /></div>}
       {val.text&&  <div className="flex flex-col gap-y-1">
           <p className="text-sm text-gray-600">12:00AM Aug 01</p>
