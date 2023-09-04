@@ -122,6 +122,7 @@ export type Item = {
   isArchived: boolean;
   fullAddress?: string;
   shortAddress?: string;
+  lstAddedToFavoriteListIds: number[],
   locationLat: number;
   locationLng: number;
   zipCode: string;

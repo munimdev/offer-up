@@ -1,42 +1,47 @@
 import React, { useRef, useState } from "react";
-// Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
-
-// Import Swiper styles
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import "./swiper.css";
-
-// import required modules
 import { FreeMode, Navigation, Thumbs } from "swiper/modules";
 
 type Props = {
-  images: string[];
+  imagesMain: string[];
+  imagesSub: string[];
 };
 
-const Slider: React.FC<Props> = ({ images }) => {
+const Slider: React.FC<Props> = ({ imagesMain, imagesSub }) => {
+  const mainSwiperRef = useRef<any>(null);
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
+
+  const handleThumbClick = (index: number) => {
+    // if (mainSwiperRef.current) {
+    //   mainSwiperRef.current.slideTo(index); // Slide to the clicked thumb index
+    // }
+  };
 
   return (
     <>
       <Swiper
+        initialSlide={0}
+        ref={mainSwiperRef}
         spaceBetween={10}
         navigation={true}
         thumbs={{ swiper: thumbsSwiper }}
         modules={[FreeMode, Navigation, Thumbs]}
         className="mySwiper2"
       >
-        {images?.map((image) => (
+        {imagesMain?.map((image) => (
           <SwiperSlide key={image}>
-            <img src={image} />
+            <img src={image} alt={`Main Slide ${image}`} />
           </SwiperSlide>
         ))}
       </Swiper>
       <Swiper
-        onSwiper={() => {
-          setThumbsSwiper;
+        onSwiper={(swiper) => {
+          setThumbsSwiper(swiper);
         }}
         spaceBetween={10}
         slidesPerView={16}
@@ -45,9 +50,13 @@ const Slider: React.FC<Props> = ({ images }) => {
         modules={[FreeMode, Navigation, Thumbs]}
         className="mySwiper"
       >
-        {images?.map((image) => (
+        {imagesSub?.map((image, index) => (
           <SwiperSlide key={image}>
-            <img src={image} />
+            <img
+              src={image}
+              alt={`Thumb ${index}`}
+              onClick={() => handleThumbClick(index)}
+            />
           </SwiperSlide>
         ))}
       </Swiper>

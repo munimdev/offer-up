@@ -3,6 +3,12 @@ import { atomWithStorage } from "jotai/utils";
 import { ItemAtom, User } from "./types";
 import { Item } from "@/types/types";
 
+// Utils
+
+export const isLoginDialogOpenAtom = atom(false);
+
+//
+
 export const userAtom = atomWithStorage<User | null>("user", {
   id: "",
   name: "",

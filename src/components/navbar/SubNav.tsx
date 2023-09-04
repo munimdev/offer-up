@@ -104,12 +104,12 @@ const SubNav = () => {
                 <NavigationMenuItem
                   key={item.id}
                   className="navigation-menu-item"
-                  onMouseLeave={() => setHoveredItemId(null)}
                 >
                   {item.children.length > 0 ? (
                     <div
-                      className="relative group"
+                      className="relative group z-50"
                       onMouseEnter={() => setHoveredItemId(item.id)}
+                      onMouseLeave={() => setHoveredItemId(null)}
                     >
                       <NavigationMenuTrigger
                         className={`${navigationMenuTriggerStyle()} ${
@@ -123,7 +123,7 @@ const SubNav = () => {
                         </Link>
                       </NavigationMenuTrigger>
                       <ul
-                        className={`w-fit grid p-2 lg:grid-cols-[1fr_1fr] absolute left-0 mt-2 ${
+                        className={`w-fit grid p-2 grid-cols-1 absolute left-0 mt-0 ${
                           hoveredItemId === item.id
                             ? "opacity-100"
                             : "opacity-0 invisible"
@@ -170,7 +170,7 @@ const SubNav = () => {
                   More
                 </NavigationMenuTrigger>
                 <ul
-                  className={`w-fit absolute left-0 mt-2 ${
+                  className={`w-fit absolute left-0 ${
                     hoveredItemId === 999
                       ? "opacity-100"
                       : "opacity-0 invisible"

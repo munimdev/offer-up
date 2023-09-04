@@ -15,9 +15,9 @@ import { useAtom, useAtomValue } from "jotai/react";
 import { preferredDistanceAtom, locationAtom } from "@/utils/atoms";
 
 const Loader = () => (
-  <div className="grid grid-cols-2 mx-auto gap-x-6 gap-y-10 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-8">
+  <div className="grid grid-cols-2 mx-auto gap-x-6 gap-y-10 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-8 z-0">
     {Array.from({ length: 16 }).map((_, index) => (
-      <Skeleton key={index} className="w-full h-[130px]" />
+      <Skeleton key={index} className="w-full h-[130px] z-10" />
     ))}
   </div>
 );
@@ -38,7 +38,7 @@ const Page = () => {
   const [paginatedItems, setPaginatedItems] = useState<any>();
   const query = {
     searchKeyword: "",
-    ...category && { categoryId: parseInt(category) },
+    categoryId: category ? parseInt(category) : 0,
     ...childCategory && { childCategoryId: parseInt(childCategory) },
     ...subCategory && { subCategoryId: parseInt(subCategory) },
     distance: preferredDistance[0],
@@ -53,7 +53,7 @@ const Page = () => {
   }
 
   const { data, refetch } = useFetch({
-    key: ["search-products", searchParams.toString()],
+    key: ["search-products", JSON.stringify(query)],
     fn: () =>
       Queries.searchItems(query),
   });
