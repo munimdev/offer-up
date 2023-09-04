@@ -245,8 +245,8 @@ try {
       <>
     
       <div className="flex flex-row justify-end" key={val.createdAt}>
-      {val.img&&<Image src={val.img} alt=""  width={180}
-              height={150} />}
+      {val.img&&<div style={{border:"4px solid #62C3FE",borderRadius:"10px"}}><Image src={val.img} alt=""  width={180}
+              height={150} /></div>}
       {val.text&&  <div className="flex flex-col gap-y-1">
           <p className="text-sm text-gray-600">12:00AM Aug 01</p>
           <div className="flex flex-row gap-x-2">
@@ -287,8 +287,8 @@ try {
       <>
    
       <div className="flex flex-row justify-start" key={val.createdAt}>
-      {val.img&& <Image src={val.img} alt=""  width={180}
-              height={150} />}
+      {val.img&&<div style={{border:"4px solid #D1D5DB",borderRadius:"10px"}}><Image src={val.img} alt=""  width={180}
+              height={100} /></div> }
       {val.text&&  <div className="flex flex-col gap-y-1">
           <p className="text-sm text-gray-600">12:00AM Aug 01</p>
           <div className="flex flex-row gap-x-2">
