@@ -17,6 +17,8 @@ import {
 } from "@/components/ui/dialog";
 import MapPicker from "react-google-map-picker";
 import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
+import { useToast } from "@/components/ui/use-toast";
+import { ToastAction } from "@/components/ui/toast"
 
 const DefaultLocation = { lat: 39.32002111110655, lng: -101.0586845610812 };
 const DefaultZoom = 5;
@@ -97,14 +99,10 @@ const PriceLocation: React.FC<Props> = ({ isUpdate = false }) => {
       );
       const data = response.data;
       if (data.status === "OK") {
-        const shortAddress = `${
-          data.results[0].address_components[2].short_name
-        }, ${
-          data.results[0].address_components[
-            data.results[0].address_components.length - 1
-          ].short_name
-        }`;
+        const addressComponents = data.results[0].address_components;
+        const shortAddress = `${addressComponents[2].short_name}, ${addressComponents[addressComponents.length - 1].short_name}`;
         const longAddress = data.results[0].formatted_address;
+        const postalCode = addressComponents.find((component : {types: String[]}) => component.types.includes('postal_code')).long_name;
         console.log({ shortAddress, longAddress });
         isUpdate
           ? setUpdateItemData({
@@ -113,7 +111,7 @@ const PriceLocation: React.FC<Props> = ({ isUpdate = false }) => {
               shortAddress: shortAddress,
               locationLat: data.results[0].geometry.location.lat,
               locationLng: data.results[0].geometry.location.lng,
-              zipCode: data.results[0].address_components[0].short_name,
+              zipCode: postalCode,
             })
           : setItemData({
               ...itemData,
@@ -121,7 +119,7 @@ const PriceLocation: React.FC<Props> = ({ isUpdate = false }) => {
               shortAddress: shortAddress,
               locationLat: data.results[0].geometry.location.lat,
               locationLng: data.results[0].geometry.location.lng,
-              zipcode: data.results[0].address_components[0].short_name,
+              zipcode: postalCode,
             });
         setLocationFetched(true);
       }
@@ -182,10 +180,10 @@ const PriceLocation: React.FC<Props> = ({ isUpdate = false }) => {
       lat: newCenter.lat(),
       lng: newCenter.lng(),
     });
-    fetchAddressFromLatLong(
-      newCenter.lat().toString(),
-      newCenter.lng().toString()
-    );
+    // fetchAddressFromLatLong(
+    //   newCenter.lat().toString(),
+    //   newCenter.lng().toString()
+    // );
   };
 
   const [locationFetched, setLocationFetched] = useState(false);
@@ -196,7 +194,7 @@ const PriceLocation: React.FC<Props> = ({ isUpdate = false }) => {
       lat: clickedLat,
       lng: clickedLng,
     });
-    fetchAddressFromLatLong(clickedLat.toString(), clickedLng.toString());
+    // fetchAddressFromLatLong(clickedLat.toString(), clickedLng.toString());
   }
 
   function handleZoomChange() {
@@ -208,23 +206,25 @@ const PriceLocation: React.FC<Props> = ({ isUpdate = false }) => {
 
   return (
     <>
-      <div className="grid w-full max-w-md gap-1.5">
-        <Label htmlFor="price">Price</Label>
-        <Input
-          type="number"
-          id="price"
-          placeholder="Price of the item"
-          className="font-medium border-gray placeholder:text-gray placeholder:font-medium"
-          value={isUpdate ? updateItemData!.price : itemData.price}
-          onChange={(e) =>
-            isUpdate
-              ? setUpdateItemData({
-                  ...updateItemData!,
-                  price: parseInt(e.target.value),
-                })
-              : setItemData({ ...itemData, price: parseInt(e.target.value) })
-          }
-        />
+      <div className="flex items-center w-full max-w-md font-medium border border-gray">
+          <div className="$">
+              $
+          </div>
+          <Input
+            type="number"
+            id="price"
+            placeholder="Price of the item"
+            className="w-full font-medium text-center border-none placeholder:text-gray placeholder:font-medium"
+            value={isUpdate ? updateItemData!.price : itemData.price}
+            onChange={(e) =>
+              isUpdate
+                ? setUpdateItemData({
+                    ...updateItemData!,
+                    price: parseInt(e.target.value),
+                  })
+                : setItemData({ ...itemData, price: parseInt(e.target.value) })
+            }
+          />
       </div>
       <div className="flex items-center w-full max-w-md gap-1.5">
         <Label htmlFor="fix-price">Is Price Fixed</Label>
@@ -325,7 +325,7 @@ const PriceLocation: React.FC<Props> = ({ isUpdate = false }) => {
                 setIsMapOpen(false);
               }}
             >
-              Save changes
+              Get Location
             </Button>
           </DialogFooter>
         </DialogContent>

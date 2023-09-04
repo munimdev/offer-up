@@ -91,6 +91,11 @@ interface NavbarProps {}
 
 const navList = [
   {
+    title: "Post Item",
+    to: "/selling",
+    content: false,
+  },
+  {
     title: "About",
     to: "#",
     content: true,
@@ -197,13 +202,13 @@ export const Navbar = ({}: NavbarProps) => {
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <div className="flex flex-col p-4">
-              <h2 className="text-center font-bold text-black text-2xl -translate-y-4">
+              <h2 className="text-2xl font-bold text-center text-black -translate-y-4">
                 Location
               </h2>
               <h3 className="text-center">
                 {locationName ? (
                   <span>
-                    <span className="text-primary font-semibold">
+                    <span className="font-semibold text-primary">
                       Current Location:{" "}
                     </span>
                     {locationName}
@@ -214,21 +219,21 @@ export const Navbar = ({}: NavbarProps) => {
               </h3>
               <Separator className="my-2" />
               <div className="">
-                <p className="text-black font-bold text-base">ZIP Code</p>
+                <p className="text-base font-bold text-black">ZIP Code</p>
                 <button
                   onClick={handleGetLocation}
-                  className="border my-2 mx-auto border-primary text-primary flex rounded-full px-2 py-2 gap-x-2"
+                  className="flex px-2 py-2 mx-auto my-2 border rounded-full border-primary text-primary gap-x-2"
                 >
                   <MapPin />
                   <span className="flex-1 text-center">Get my location</span>
                 </button>
-                <p className="text-black text-center my-2 font-bold">Or</p>
+                <p className="my-2 font-bold text-center text-black">Or</p>
                 <Input
                   value={zipCode}
                   onChange={(e) => {
                     setZipCode(e.target.value);
                   }}
-                  className="w-44 border border-gray-100 mx-auto"
+                  className="mx-auto border border-gray-100 w-44"
                   placeholder="Enter ZIP Code"
                 />
                 <Button
@@ -278,7 +283,7 @@ export const Navbar = ({}: NavbarProps) => {
                           {item?.children?.map((child) => (
                             <li
                               key={child.to}
-                              className="row-span-3 text-black text-sm"
+                              className="row-span-3 text-sm text-black"
                             >
                               <Link href={child.to}>{child.title}</Link>
                             </li>
@@ -502,14 +507,14 @@ export function LoginDialog() {
           onClick={handleGoogle}
           className="flex flex-row items-center rounded bg-[#4C8BF5]"
         >
-          <span className="bg-white rounded-full p-1">
+          <span className="p-1 bg-white rounded-full">
             <Google />
           </span>
           <span className="flex-1 text-center">Continue with Google</span>
         </Button>
         <Button
           // onClick={signUpWithApple}
-          className="flex flex-row rounded bg-white text-black border border-black hover:bg-gray-100"
+          className="flex flex-row text-black bg-white border border-black rounded hover:bg-gray-100"
         >
           <Apple />
           <span className="flex-1 text-center">Continue with Apple</span>
@@ -523,7 +528,7 @@ export function LoginDialog() {
         </Button>
         <Button
           onClick={handleTwitter}
-          className="flex flex-row rounded bg-black text-white border hover:bg-gray-800"
+          className="flex flex-row text-white bg-black border rounded hover:bg-gray-800"
         >
           <Twitter />
           <span className="flex-1 text-center">Continue with Twitter</span>

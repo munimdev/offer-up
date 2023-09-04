@@ -5,7 +5,7 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { DropResult } from "react-beautiful-dnd";
 
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
-import { UploadCloud, Eye } from "lucide-react";
+import { UploadCloud, Eye, Trash } from "lucide-react";
 import { toBase64 } from "@/utils";
 import { Images } from "@/types/types";
 
@@ -105,6 +105,17 @@ const FileUpload: React.FC<Props> = ({
     setFiles(reorderedFiles);
   };
 
+  const handleDelete = (file: FileWithPreview) => {
+    const updatedFiles = files.filter((f) => f !== file);
+    setFiles(updatedFiles);
+    if (onDelete) {
+      onDelete({
+        image: file.preview!,
+        imageOrder: files.indexOf(file),
+      });
+    }
+  };
+
   return (
     <div className="">
       <div className="relative border border-dashed border-primary w-full h-[300px] my-4">
@@ -113,13 +124,13 @@ const FileUpload: React.FC<Props> = ({
             src={cover}
             alt="Cover Image"
             fill={true}
-            className="absolute top-0 left-0 w-full h-full object-contain bg-white"
+            className="absolute top-0 left-0 object-contain w-full h-full bg-white"
           />
         )}
       </div>
 
       <aside>
-        {/* <h4 className="mb-2 text-sm text-center font-semibold">Images</h4> */}
+        {/* <h4 className="mb-2 text-sm font-semibold text-center">Images</h4> */}
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="droppable" direction="horizontal">
             {(provided) => (
@@ -148,15 +159,21 @@ const FileUpload: React.FC<Props> = ({
                             <img
                               src={file.preview}
                               alt={file.name}
-                              className="w-full h-full object-cover"
+                              className="object-cover w-full h-full"
                             />
                             {isHovered === file.name && (
-                              <div className="absolute top-0 left-0 flex flex-col justify-between text-white">
+                              <div className="absolute top-0 left-0 flex flex-col items-stretch justify-between text-white">
                                 <button
-                                  className="focus:outline-none bg-primary text-xs font-medium"
+                                  className="text-xs font-medium focus:outline-none bg-primary"
                                   onClick={() => setCover(file.preview!)}
                                 >
                                   Set as cover
+                                </button>
+                                <button
+                                  className="text-xs font-medium focus:outline-none"
+                                  onClick={() => handleDelete(file)}
+                                >
+                                  <Trash className="text-red-600" size={16} />
                                 </button>
                                 <Dialog>
                                   <DialogTrigger asChild>
@@ -173,7 +190,7 @@ const FileUpload: React.FC<Props> = ({
                                     <img
                                       src={file.preview}
                                       alt="selected"
-                                      className="w-full h-full object-cover"
+                                      className="object-cover w-full h-full"
                                     />
                                   </DialogContent>
                                 </Dialog>
@@ -193,7 +210,7 @@ const FileUpload: React.FC<Props> = ({
                   onClick={open} // Make the entire dropzone a button
                 >
                   <input {...getInputProps()} />
-                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                  <div className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
                     <UploadCloud className="text-primary" size={20} />
                   </div>
                 </div>

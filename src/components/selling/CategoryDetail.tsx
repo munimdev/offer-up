@@ -49,6 +49,9 @@ const CategoryDetail = () => {
       enabled: !!itemData.subCategory.name,
     },
   });
+
+  console.log("itemData.category", !!itemData.category.name);
+
   return (
     <>
       <div className="w-full max-w-md font-medium">
@@ -72,9 +75,24 @@ const CategoryDetail = () => {
           onChange={(subCategory) => setItemData({ ...itemData, subCategory })}
         />
       </div>
+
       {!subCategoryAttributes && categoryAttributes && (
         <div className="w-full max-w-md font-medium">
           <AttributeSelect data={categoryAttributes.dataObject} />
+        </div>
+      )}
+      { (!!itemData.category.name && !categoryAttributes) || (!!itemData.subCategory.name && !subCategoryAttributes) && (
+        <div className="w-full max-w-md">
+          <div className="flex flex-col gap-4">
+          {
+            Array.from({ length: 3 }).map((_, index) => (
+              <div key={index} className="space-y-1">
+                <Skeleton className={`w-[20px] h-4`} />
+                <Skeleton className="w-full h-10" />
+              </div>
+            ))
+          }
+          </div>
         </div>
       )}
       {subCategoryAttributes && (

@@ -28,10 +28,10 @@ const OptionsDropdown: React.FC<TOptionsDropdown> = ({
   value = "",
 }) => {
   return (
-    <div className="border rounded px-2">
+    <div className="border rounded ">
       <DropdownMenu>
-        <DropdownMenuTrigger className="w-full" asChild>
-          <span className="text-sm">{value || title}</span>
+        <DropdownMenuTrigger className="w-full overflow-hidden" asChild>
+          <p className="flex items-center w-full h-10 px-2 text-sm hover:cursor-pointer">{value || title}</p>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-64">
           <DropdownMenuSeparator />
