@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
+import { useRouter,useSearchParams } from 'next/navigation';
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { addDoc, collection, serverTimestamp,getDocs, query,deleteDoc,
   onSnapshot,doc,updateDoc,orderBy } from "firebase/firestore";
@@ -9,11 +10,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CheckCheck, MoreHorizontal, MoreVertical,ImageIcon } from "lucide-react";
 import Image from "next/image";
-import { useRouter } from 'next/router';
+
 const Page = () => {
   const router = useRouter();
-  const chatId = router.query.chatId;
-  const userId = router.query.userId;
+  const searchParams = useSearchParams();
+  const chatId = searchParams.get('chatId');
+  const userId = searchParams.get('userId');
   const [inputValue, setInputValue] = useState<string>();
   // const[chatId,setChatId]=useState<string>(router.query.chatId);
   // const [userId,setUserId] = useState("550e8400-e29b-41d4-a716-446655440000")
