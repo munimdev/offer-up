@@ -9,9 +9,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CheckCheck, MoreHorizontal, MoreVertical,ImageIcon } from "lucide-react";
 import Image from "next/image";
-
+import { useRouter } from 'next/router';
 const Page = () => {
+  const router = useRouter();
+  const chatId = router.query.chatId;
+  const userId = router.query.userId;
   const [inputValue, setInputValue] = useState<string>();
+  // const[chatId,setChatId]=useState<string>(router.query.chatId);
+  // const [userId,setUserId] = useState("550e8400-e29b-41d4-a716-446655440000")
   const [isEditId,setIsEditId]=useState<string>();
   const [messages, setMessages] = useState<any[]>([]);
   const modalRef = useRef(null);
@@ -26,12 +31,7 @@ const Page = () => {
   };
 
   const handleFileChange = (e) => {
-    const chatId = '4f7940d3-1b22-45b7-8c8a-7f41f419d27c'; // Replace with the actual chat ID
-const subcollectionId = 'a5e1493c-6f3e-4c3d-a89d-eb7bda930f09'; // Replace with the actual subcollection ID
-const currentUser = {
-  uid: 'f26f8d4a-9d58-4b81-a8b0-2a75548cc6f6', 
-  // uid: 'f26f8d4a-9d58-4b81-a8b0-2a75548cc6fe', 
-};
+
 
 
     const selectedFile = e.target.files[0];
@@ -46,45 +46,42 @@ const currentUser = {
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
           const message = {
-            img:downloadURL,
-            senderId: currentUser.uid,
-            createdAt: serverTimestamp(), 
+            imageUrl:downloadURL,
+            isImage:true,
+            isSeen:true,
+            isSent:true,
+            messages:"",
+            senderId: userId,
+            time: serverTimestamp(), 
           };
           
-          const messagesCollectionRef = collection(db, 'chats', chatId, subcollectionId);
+          const messagesCollectionRef = collection(db, 'Chats', chatId, 'messages');
           
           const res = await addDoc(messagesCollectionRef, message);
     console.log(res);
-    setInputValue('');
+    // setInputValue('');
     console.log('Message added successfully!');
         });
       }
     );
-    // Handle the selected file as needed, e.g., upload to Firebase Storage
     console.log("Selected File:", selectedFile);
   };
   useEffect(() => {
-    // Define the chat query to retrieve messages
-    const chatId = "4f7940d3-1b22-45b7-8c8a-7f41f419d27c"; // Replace with your actual chat ID
-    const subcollectionId = "a5e1493c-6f3e-4c3d-a89d-eb7bda930f09"; // Replace with your actual subcollection ID
-    const chatRef = collection(db, "chats", chatId, subcollectionId);
-    const q = query(chatRef, orderBy("createdAt", "asc"));
-    const unsubscribe = onSnapshot(q, (QuerySnapshot) => {
+    const messagesCollectionRef = collection(db, 'Chats', chatId, 'messages');
+    const q = query(messagesCollectionRef, orderBy('time', 'asc'));
+
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const fetchedMessages = [];
-      QuerySnapshot.forEach((doc) => {
+      querySnapshot.forEach((doc) => {
         fetchedMessages.push({ ...doc.data(), id: doc.id });
       });
-  
-      // Create a copy of the fetchedMessages array and then sort it
-      // const sortedMessages = [...fetchedMessages].sort(
-      //   (a, b) => a.createdAt - b.createdAt
-      // );
-  // console.log(sortedMessages)
+
       setMessages(fetchedMessages);
     });
-  
+
     return () => unsubscribe();
-  }, []);
+  }, [chatId]);
+
   useEffect(() => {
     function handleClickOutside(event) {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -98,9 +95,8 @@ const currentUser = {
     };
   }, []);
   const deleteChatHandler = async (messageId:string) => {
-    const chatId = '4f7940d3-1b22-45b7-8c8a-7f41f419d27c'; // Replace with the actual chat ID
-const subcollectionId = 'a5e1493c-6f3e-4c3d-a89d-eb7bda930f09'; // Replace with the actual subcollection ID
-    const messageDocRef = doc(db, 'chats', chatId, subcollectionId, messageId);
+ 
+    const messageDocRef = doc(db, 'Chats', chatId, 'messages', messageId);
     try {
       await deleteDoc(messageDocRef);
       console.log('Message deleted successfully!');
@@ -108,64 +104,52 @@ const subcollectionId = 'a5e1493c-6f3e-4c3d-a89d-eb7bda930f09'; // Replace with 
       console.error('Error deleting message: ', error);
     }
     finally {
-      setIsOptionModalOpen(''); // Close the modal after deleting
+      setIsOptionModalOpen('');
     }
   }
   const handleSendMessage = async () =>{
-console.log(inputValue)
-const chatId = '4f7940d3-1b22-45b7-8c8a-7f41f419d27c'; // Replace with the actual chat ID
-const subcollectionId = 'a5e1493c-6f3e-4c3d-a89d-eb7bda930f09'; // Replace with the actual subcollection ID
-const currentUser = {
-  uid: 'f26f8d4a-9d58-4b81-a8b0-2a75548cc6f6', 
-  // uid: 'f26f8d4a-9d58-4b81-a8b0-2a75548cc6fe', 
-};
-
 const message = {
-  text:inputValue,
-  senderId: currentUser.uid,
-  createdAt: serverTimestamp(), 
+  imageUrl:"",
+  isImage:false,
+isSeen:true,
+isSent:true,
+messages:inputValue,
+  senderId: userId,
+  time: serverTimestamp(), 
 };
-setInputValue('');
-const messagesCollectionRef = collection(db, 'chats', chatId, subcollectionId);
-
+setInputValue('')
 try {
   if (isEditId) {
-    // If isEditId is available, update the existing document
+    console.log(isEditId,'isEditId')
     const messageDocRef = doc(
       db,
-      'chats',
+      'Chats',
       chatId,
-      subcollectionId,
+      'messages',
       isEditId
     );
     await updateDoc(messageDocRef, {
-      text: inputValue,
+      messages: inputValue,
     });
     setIsEditId(''); // Clear the edit state
     console.log('Message edited successfully!');
   } else {
-    // If isEditId is not available, add a new document
+    const messagesCollectionRef = collection(db, 'Chats', chatId, 'messages');
     const res = await addDoc(messagesCollectionRef, message);
-    console.log(res);
-    console.log('Message added successfully!');
+        console.log(res);
+        console.log('Message added successfully!');
   }
 
 } catch (error) {
   console.error("Error getting documents: ", error);
 }
   }
-    // querySnapshot.forEach((doc) => {
-    // Access data from each document in the "chats" collection
-    // const data = doc.data();
-    // console.log("Document data:", data);
-
-  // });
   return (
     <div className="min-h-[600px] m-5 md:m-10 lg:m-20 border border-gray-300 flex flex-row">
       {/* Sidebar */}
-      <div className="flex flex-col border-r border-gray-300">
+      {/* <div className="flex flex-col border-r border-gray-300"> */}
         {/* Item Display */}
-        <div className="p-5 flex flex-col gap-y-5">
+        {/* <div className="p-5 flex flex-col gap-y-5">
           <div className="flex flex-row gap-x-3">
             <Image
               alt="Item Image"
@@ -186,14 +170,14 @@ try {
               Sell Faster
             </Button>
           </div>
-        </div>
+        </div> */}
 
         {/* Chat List */}
-        <div className="border-t border-gray-300 pt-4">
-          <p className="px-2 font-semibold text-lg">Messages</p>
+        {/* <div className="border-t border-gray-300 pt-4">
+          <p className="px-2 font-semibold text-lg">Messages</p> */}
 
           {/* Chat Entry */}
-          <div className="flex flex-col py-4">
+          {/* <div className="flex flex-col py-4">
             <div className="p-4 flex flex-row items-center gap-x-10 border border-r-4 -mr-1 border-primary border-r-white z-10">
               <Image
                 alt="Item Image"
@@ -210,7 +194,7 @@ try {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
       {/* Sidebar End */}
 
       {/* Message Window */}
@@ -239,19 +223,19 @@ try {
         <div className="flex-1 flex flex-col gap-y-5 justify-end py-4">
 
           {/* Message Bubble */}
-          {messages&&messages.map((val, ind) => {
-    return val.senderId === 'f26f8d4a-9d58-4b81-a8b0-2a75548cc6f6' ? (
+          {userId&&messages&&messages.map((val, ind) => {
+    return val.senderId === userId ? (
       <>
     
       <div className="flex flex-row justify-end" key={val.createdAt}>
-      {val.img&&<div style={{border:"4px solid #D1D5DB",borderRadius:"10px"}}><Image src={val.img} alt=""  width={180}
+      {val.isImage&&<div style={{border:"4px solid #D1D5DB",borderRadius:"10px"}}><Image src={val.imageUrl} alt=""  width={180}
               height={150} /></div>}
-      {val.text&&  <div className="flex flex-col gap-y-1">
+      {!val.isImage&&  <div className="flex flex-col gap-y-1">
           <p className="text-sm text-gray-600">12:00AM Aug 01</p>
           <div className="flex flex-row gap-x-2">
             <div className="bg-primary text-white w-44 p-3 rounded flex items-center justify-between">
               
-              {val.text} <MoreVertical size={15} className="text-white" onClick={() => setIsOptionModalOpen(val.id)} style={{ cursor: 'pointer' }}/>
+              {val.messages} <MoreVertical size={15} className="text-white" onClick={() => setIsOptionModalOpen(val.id)} style={{ cursor: 'pointer' }}/>
             </div>
             {isOptionModaOpen===val.id&&  <div
             ref={modalRef}
@@ -270,15 +254,14 @@ try {
               >
                 <button style={{fontSize:"20px",padding:"10px"}} onClick={()=>deleteChatHandler(val.id)}>Delete</button>
                 <hr />
-                <button style={{fontSize:"20px",padding:"10px"}} onClick={()=>{setIsEditId(val.id);setInputValue(val.text);setIsOptionModalOpen('');}}>Edit</button>
+                <button style={{fontSize:"20px",padding:"10px"}} onClick={()=>{setIsEditId(val.id);setInputValue(val.messages);setIsOptionModalOpen('');}}>Edit</button>
               </div>}
         
-           
-            <div className="self-end p-1 bg-primary rounded-full">
+              {val.isSeen&&<div className="self-end p-1 bg-primary rounded-full">
               <CheckCheck size={15} className="text-white" />
-            </div>
+            </div>}
           </div>
-          <p className="text-end text-sm text-gray-600">Seen</p>
+          {/* <p className="text-end text-sm text-gray-600">Seen</p> */}
         </div>}
       </div>
       </>
@@ -286,19 +269,19 @@ try {
       <>
    
       <div className="flex flex-row justify-start" key={val.createdAt}>
-      {val.img&&<div style={{border:"4px solid #D1D5DB",borderRadius:"10px"}}><Image src={val.img} alt=""  width={180}
+      {val.isImage&&<div style={{border:"4px solid #D1D5DB",borderRadius:"10px"}}><Image src={val.imageUrl} alt=""  width={180}
               height={100} /></div> }
-      {val.text&&  <div className="flex flex-col gap-y-1">
+      {!val.isImage&&  <div className="flex flex-col gap-y-1">
           <p className="text-sm text-gray-600">12:00AM Aug 01</p>
           <div className="flex flex-row gap-x-2">
             <div className="bg-gray-300 text-black w-44 p-3 rounded">
-              {val.text} 
+              {val.messages} 
             </div>
-            <div className="self-end p-1 bg-primary rounded-full">
+            {val.isSeen&&<div className="self-end p-1 bg-primary rounded-full">
               <CheckCheck size={15} className="text-white" />
-            </div>
+            </div>}
           </div>
-          <p className="text-end text-sm text-gray-600">Seen</p>
+          {/* <p className="text-end text-sm text-gray-600">Seen</p> */}
         </div>}
       </div>
       </>
