@@ -1,11 +1,15 @@
-import React from "react";
+import React, {useState} from "react";
 import Image from "next/image";
 import Link from "next/link";
-
+import { useRouter } from "next/navigation";
+import OfferModal from "./OfferModal";
+import StartChat from "./StartChat";
 import { useMutation } from "@tanstack/react-query";
 import { useFetch } from "@/hooks";
 import * as Queries from "@/utils/queries";
-
+import { addDoc, collection, serverTimestamp,getDocs, query,deleteDoc,
+  onSnapshot,doc,updateDoc,orderBy } from "firebase/firestore";
+import { db, storage} from "../../firebase/firebase";
 import { FavoriteList, Item, ReportItemDto } from "@/types/types";
 import { Result } from "@/utils/types";
 import * as z from "zod";
@@ -27,7 +31,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import Report from "@/components/report/report";
 
-import { Phone, Heart, Share2, MapPin, CalendarDays } from "lucide-react";
+import { Phone, Heart, Share2, MapPin, CalendarDays,DollarSign } from "lucide-react";
 import HeartIcon from "@/components/icons/HeartIcon";
 
 type Props = {
@@ -44,9 +48,20 @@ const formSchema = z.object({
 });
 
 const Sidebar: React.FC<Props> = ({ data }) => {
-  const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
-  const { toast } = useToast();
+  const router = useRouter();
+  // chat info
+  const [userId,setUserId]= useState('550e8400-e29b-41d4-a716-446655440000')
+  const [userName,setUserName]=useState('Abuzar')
+  const [productOwnerName,setProductOwnerName] = useState("Ubaid")
+  const [userImg,setUserImg] = useState('https://media.licdn.com/dms/image/D4D03AQFHcbL7RVWf-Q/profile-displayphoto-shrink_100_100/0/1678616243934?e=1699488000&v=beta&t=Y3KT5r1X5JaW_hfJbtdRsJBmeJQBvbnxY-mTalBJAx4')
+  const [productOwnerImg,setProductOwnerImg] = useState('https://media.licdn.com/dms/image/D4D03AQHVLfw_m49p-g/profile-displayphoto-shrink_100_100/0/1688121844857?e=1699488000&v=beta&t=t5LgZ7YQrYVcTo10TdGgCKUCh6XLFSk788RRDDvS0CE')
 
+  // ----------------------------
+  const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
+  const [isOfferDialogOpen, setIsOfferDialogOpen] = React.useState<boolean>(false);
+  const [isChatDialogOpen, setIsChatDialogOpen] = React.useState<boolean>(false);
+  const { toast } = useToast();
+console.log(data,'data')
   const { mutateAsync: addItemToList } = useMutation(
     Queries.addItemToFavouriteList
   );
@@ -81,8 +96,74 @@ const Sidebar: React.FC<Props> = ({ data }) => {
       console.log(error);
     }
   };
+  const handleOpenOfferModal = () => {
+    setIsOfferDialogOpen(true);
+  };
+  const handleCloseOfferModal = () => {
+    setIsOfferDialogOpen(false);
+  };
+  const handleOpenChatModal = () => {
+    setIsChatDialogOpen(true);
+  };
+  const handleCloseChatModal = () => {
+    setIsChatDialogOpen(false);
+  };
 
+  const handleOfferSubmit = (price) => {
+    console.log('Offer Price:', price);
+    startChatHandler(price)
+    setIsOfferDialogOpen(false);
+  };
+  const handleChatSubmit =(chat) =>{
+    startChatHandler(chat)
+    setIsChatDialogOpen(false);
+  }
+const startChatHandler = async(text) =>{
+try {
+  const chatRef =  collection(db,'Chats')
+  const chatRes = await addDoc(chatRef, {
+    BuyerProfileImage: userImg,
+    SellerId: data.userId,
+    SellerName: productOwnerName,
+    SellerProfileImage: productOwnerImg,
+    buyerId: userId,
+    buyerName: userName,
+    itemId: data.id,
+    itemImage: data.images[0].imagePath,
+    itemName: data.name,
+    lastMessage: text,
+    lastMessageTime:  serverTimestamp(),
+    startDate: serverTimestamp(),
+    // Add more fields as needed
+  });
+  console.log(chatRes,'chatRes')
+  const messagesCollectionRef = collection(db, 'Chats', chatRes.id, 'messages');
+  const messageRef = await addDoc(messagesCollectionRef,{
+    imageUrl:"",
+    isImage:false,
+    isSeen:false,
+    isSent:true,
+    messages:text,
+    senderId:userId,
+    time:serverTimestamp(),
+    
+  });
+  router.replace('/chatList');
+} catch (error) {
+  console.log(error)
+}
+}
   return (
+    <>
+     
+       {isOfferDialogOpen && (
+       <OfferModal onClose={handleCloseOfferModal} onSubmit={handleOfferSubmit} />
+      )} 
+  
+       {isChatDialogOpen && (
+       <StartChat onClose={handleCloseChatModal} onSubmit={handleChatSubmit} />
+      )} 
+  
     <div className="flex flex-col gap-2 p-5">
       <h3 className="text-3xl font-bold text-black">{data?.name}</h3>
       <h3 className="text-3xl font-bold text-black">${data?.price}</h3>
@@ -112,7 +193,10 @@ const Sidebar: React.FC<Props> = ({ data }) => {
       <Button className="rounded-full bg-primary hover:bg-primary">
         <Phone fill="#fff" size={18} className="mr-2" /> Call for Details
       </Button>
-      <Button className="bg-white border rounded-full text-primary border-primary hover:bg-white">
+      <Button className="rounded-full bg-primary hover:bg-primary" onClick={handleOpenOfferModal}>
+        <DollarSign fill="#fff" size={18} className="mr-2" /> Make a Offer
+      </Button>
+      <Button className="bg-white border rounded-full text-primary border-primary hover:bg-white"onClick={handleOpenChatModal}>
         <Message className="mr-2" /> Chat
       </Button>
       <div className="flex items-center justify-center gap-x-5 text-primary">
@@ -222,6 +306,7 @@ const Sidebar: React.FC<Props> = ({ data }) => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

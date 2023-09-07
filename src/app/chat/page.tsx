@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { useRouter,useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { addDoc, collection, serverTimestamp,getDocs, query,deleteDoc,
   onSnapshot,doc,updateDoc,orderBy } from "firebase/firestore";
@@ -12,7 +12,6 @@ import { CheckCheck, MoreHorizontal, MoreVertical,ImageIcon } from "lucide-react
 import Image from "next/image";
 
 const Page = () => {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const chatId = searchParams.get('chatId');
   const userId = searchParams.get('userId');

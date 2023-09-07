@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from 'next/link';
+import { useSearchParams  } from 'next/router';
 import { CheckCheck, MoreHorizontal } from "lucide-react";
 import {
   addDoc,
@@ -65,6 +66,7 @@ const Page = () => {
       QuerySnapshot.forEach((doc) => {
         fetchedChats.push({ ...doc.data(), id: doc.id });
       });
+      console.log(fetchedChats,'fetchedChats')
       setChats(fetchedChats);
     });
 
