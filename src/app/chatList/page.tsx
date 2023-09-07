@@ -133,13 +133,7 @@ const Page = () => {
                   />
                   <div className="flex flex-col gap-x-2">
                     <Link
-                      href={`/chat?chatId=${val.id}&userId=${userId}&receiverName=${
-                        userId === val.SellerId ? val.buyerName : val.SellerName
-                      }&receiverImage=${
-                        userId === val.SellerId
-                          ? val.BuyerProfileImage
-                          : val.SellerProfileImage
-                      }`}
+                      href={`/chat?chatId=${val.id}&userId=${userId}`}
                       style={{ cursor: 'pointer' }}
                     >
                       <p className="text-lg font-bold">

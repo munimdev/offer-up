@@ -19,7 +19,19 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Message from "@/components/icons/Message";
-
+const chatData = [
+  {
+    id: 1,
+    user: 'User 1',
+    message: 'Hello!',
+  },
+  {
+    id: 2,
+    user: 'User 2',
+    message: 'Hi there!',
+  },
+  // Add more chat messages here
+];
 import {
   Sheet,
   SheetContent,
@@ -427,7 +439,7 @@ const ItemDetails: React.FC<ItemDetailsProps> = ({ refetchItems, item }) => {
         </aside>
         <div className="flex flex-col mt-8 justify-stretch gap-y-4">
           <h2 className="text-primary">Chat Messages</h2>
-          {Array.from(Array(5).keys()).map((i) => (
+          {/* {Array.from(Array(5).keys()).map((i) => (
             <div key={i} className="flex items-center space-x-4">
               <Skeleton className="w-12 h-12 rounded-full" />
               <div className="space-y-2">
@@ -435,7 +447,17 @@ const ItemDetails: React.FC<ItemDetailsProps> = ({ refetchItems, item }) => {
                 <Skeleton className="h-4 w-[200px]" />
               </div>
             </div>
-          ))}
+          ))} */}
+           { chatData.map((message) => (
+          <div key={message.id} className="flex items-center space-x-4">
+            <div className="w-12 h-12 bg-gray-300 rounded-full"></div>
+            <div>
+              <div className="font-semibold">{message.user}</div>
+              <div>{message.message}</div>
+            </div>
+          </div>
+        )
+      )}
         </div>
       </SheetContent>
     </Sheet>

@@ -15,15 +15,9 @@ const Page = () => {
   const searchParams = useSearchParams();
   const chatId = searchParams.get('chatId');
   const userId = searchParams.get('userId');
-  const receiverName = searchParams.get('receiverName')
-  const receiverImage =searchParams.get('receiverImage')
-  console.log(chatId,'chatId ')
-  console.log(userId,'userId')
-  console.log(receiverName,'receiverName')
-  console.log(receiverImage,'receiverImage')
+ const [chatInfo,setChatInfo]= useState({})
+
   const [inputValue, setInputValue] = useState<string>();
-  // const[chatId,setChatId]=useState<string>(router.query.chatId);
-  // const [userId,setUserId] = useState("550e8400-e29b-41d4-a716-446655440000")
   const [isEditId,setIsEditId]=useState<string>();
   const [messages, setMessages] = useState<any[]>([]);
   const modalRef = useRef(null);
@@ -83,29 +77,42 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
           const messagesCollectionRef = collection(db, 'Chats', chatId, 'messages');
           
           const res = await addDoc(messagesCollectionRef, message);
-    console.log(res);
-    // setInputValue('');
+    // console.log(res);
     console.log('Message added successfully!');
         });
       }
     );
     console.log("Selected File:", selectedFile);
   };
-  useEffect(() => {
-    const messagesCollectionRef = collection(db, 'Chats', chatId, 'messages');
-    const q = query(messagesCollectionRef, orderBy('time', 'asc'));
 
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const fetchedMessages = [];
-      querySnapshot.forEach((doc) => {
-        fetchedMessages.push({ ...doc.data(), id: doc.id });
+ useEffect(() => {
+  const chatRef = doc(db, 'Chats', chatId);
+  const messagesCollectionRef = collection(chatRef, 'messages');
+  const q = query(messagesCollectionRef, orderBy('time', 'asc'));
+
+  const unsubscribeChat = onSnapshot(chatRef, (chatDoc) => {
+    if (chatDoc.exists()) {
+      const chatData = chatDoc.data();
+      setChatInfo(chatData); // Set the chat info here
+      console.log(chatData,'chatData')
+      const unsubscribeMessages = onSnapshot(q, (querySnapshot) => {
+        const fetchedMessages = [];
+        querySnapshot.forEach((doc) => {
+          fetchedMessages.push({ ...doc.data(), id: doc.id });
+        });
+
+        setMessages(fetchedMessages);
       });
 
-      setMessages(fetchedMessages);
-    });
+      // Return the unsubscribe function for messages
+      return () => unsubscribeMessages();
+    }
+  });
 
-    return () => unsubscribe();
-  }, [chatId]);
+  // Return the unsubscribe function for chat
+  return () => unsubscribeChat();
+}, [chatId]);
+
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -230,13 +237,13 @@ try {
             <div className="flex flex-row items-center gap-x-10">
               <Image
                 alt="Item Image"
-                src={receiverImage}
+                src={chatInfo&&userId===chatInfo.buyerId?chatInfo.SellerProfileImage:chatInfo.BuyerProfileImage}
                 width={60}
                 height={30}
                 className="rounded-full"
               />
               <div className="flex flex-col gap-x-2">
-                <p className="text-lg font-bold">{receiverName}</p>
+                <p className="text-lg font-bold">{chatInfo&&userId===chatInfo.buyerId?chatInfo.SellerName:chatInfo.buyerName}</p>
                 <p>Active last day</p>
               </div>
             </div>
