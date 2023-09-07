@@ -14,7 +14,7 @@ type Props = {
 
 const Slider: React.FC<Props> = ({ imagesMain, imagesSub }) => {
   const mainSwiperRef = useRef<any>(null);
-  const [thumbsSwiper, setThumbsSwiper] = useState(null);
+  const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
 
   const handleThumbClick = (index: number) => {
     // if (mainSwiperRef.current) {

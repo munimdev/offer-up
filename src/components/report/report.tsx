@@ -47,7 +47,7 @@ import { useSetAtom } from "jotai";
 import { isLoginDialogOpenAtom } from "@/utils/atoms";
 
 type Props = {
-  isLoggedIn: boolean;
+  isLoggedIn?: boolean;
   formSchema: z.ZodType<any, any>;
   lookupId: number;
   onSubmit: (data: any) => void;
