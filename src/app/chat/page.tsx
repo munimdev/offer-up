@@ -16,6 +16,12 @@ const Page = () => {
   const searchParams = useSearchParams();
   const chatId = searchParams.get('chatId');
   const userId = searchParams.get('userId');
+  const receiverName = searchParams.get('receiverName')
+  const receiverImage =searchParams.get('receiverImage')
+  console.log(chatId,'chatId ')
+  console.log(userId,'userId')
+  console.log(receiverName,'receiverName')
+  console.log(receiverImage,'receiverImage')
   const [inputValue, setInputValue] = useState<string>();
   // const[chatId,setChatId]=useState<string>(router.query.chatId);
   // const [userId,setUserId] = useState("550e8400-e29b-41d4-a716-446655440000")
@@ -31,7 +37,25 @@ const Page = () => {
     // Trigger the file input's click event
     fileInputRef.current.click();
   };
+  function formatTime(messageTime) {
+    const currentTimeInSeconds = Math.floor(Date.now() / 1000);
+const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
 
+
+    if (timeDifferenceInSeconds < 60) {
+      return `${timeDifferenceInSeconds} sec ago`;
+    } else if (timeDifferenceInSeconds < 3600) {
+      const minutes = Math.floor(timeDifferenceInSeconds / 60);
+      return `${minutes} min ago`;
+    } else if (timeDifferenceInSeconds < 86400) {
+      const hours = Math.floor(timeDifferenceInSeconds / 3600);
+      return `${hours} hours ago`;
+    } else {
+      const date = new Date(messageTime * 1000);
+      const options = { year: 'numeric', month: 'short', day: 'numeric' };
+      return date.toLocaleDateString(undefined, options);
+    }
+  }
   const handleFileChange = (e) => {
 
 
@@ -207,13 +231,13 @@ try {
             <div className="flex flex-row items-center gap-x-10">
               <Image
                 alt="Item Image"
-                src="/images/placeholder.png"
+                src={receiverImage}
                 width={60}
                 height={30}
                 className="rounded-full"
               />
               <div className="flex flex-col gap-x-2">
-                <p className="text-lg font-bold">Wesley Bennet</p>
+                <p className="text-lg font-bold">{receiverName}</p>
                 <p>Active last day</p>
               </div>
             </div>
@@ -230,11 +254,13 @@ try {
       <>
     
       <div className="flex flex-row justify-end" key={val.createdAt}>
-      {val.isImage&&<div style={{border:"4px solid #D1D5DB",borderRadius:"10px"}}><Image src={val.imageUrl} alt=""  width={180}
-              height={150} /></div>}
-      {!val.isImage&&  <div className="flex flex-col gap-y-1">
-          <p className="text-sm text-gray-600">12:00AM Aug 01</p>
-          <div className="flex flex-row gap-x-2">
+      {val.isImage&&<div sx={{display:"flex",justifyContent:"center"}}>   <p className="text-sm text-gray-600">{formatTime(val.time.seconds)}</p><div style={{border:"4px solid #D1D5DB",borderRadius:"10px"}}>
+   
+        <Image src={val.imageUrl} alt=""  width={180}
+              height={150} /></div></div>}
+        {!val.isImage&&<div className="flex flex-col gap-y-1">
+          <p className="text-sm text-gray-600">{formatTime(val.time.seconds)}</p>
+           <div className="flex flex-row gap-x-2">
             <div className="bg-primary text-white w-44 p-3 rounded flex items-center justify-between">
               
               {val.messages} <MoreVertical size={15} className="text-white" onClick={() => setIsOptionModalOpen(val.id)} style={{ cursor: 'pointer' }}/>
@@ -274,7 +300,7 @@ try {
       {val.isImage&&<div style={{border:"4px solid #D1D5DB",borderRadius:"10px"}}><Image src={val.imageUrl} alt=""  width={180}
               height={100} /></div> }
       {!val.isImage&&  <div className="flex flex-col gap-y-1">
-          <p className="text-sm text-gray-600">12:00AM Aug 01</p>
+          <p className="text-sm text-gray-600">{formatTime(val.time.seconds)}</p>
           <div className="flex flex-row gap-x-2">
             <div className="bg-gray-300 text-black w-44 p-3 rounded">
               {val.messages} 
