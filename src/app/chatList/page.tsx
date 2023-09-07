@@ -24,7 +24,7 @@ import Image from "next/image";
 
 const Page = () => {
   const [chats, setChats] = useState([]);
-  const [userId, setUserId] = useState("550e8400-e29b-41d4-a716-446655440000");
+  const [userId, setUserId] = useState("4296a045-deef-4b37-a09c-d22b3eb50cf4");
   const [selectedTab, setSelectedTab] = useState("All"); // Default tab is "All"
 
   function formatTime(messageTime) {

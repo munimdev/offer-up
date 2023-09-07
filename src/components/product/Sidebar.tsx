@@ -50,7 +50,7 @@ const formSchema = z.object({
 const Sidebar: React.FC<Props> = ({ data }) => {
   const router = useRouter();
   // chat info
-  const [userId,setUserId]= useState('550e8400-e29b-41d4-a716-446655440000')
+  const [userId,setUserId]= useState('4296a045-deef-4b37-a09c-d22b3eb50cf4')
   const [userName,setUserName]=useState('Abuzar')
   const [productOwnerName,setProductOwnerName] = useState("Ubaid")
   const [userImg,setUserImg] = useState('https://media.licdn.com/dms/image/D4D03AQFHcbL7RVWf-Q/profile-displayphoto-shrink_100_100/0/1678616243934?e=1699488000&v=beta&t=Y3KT5r1X5JaW_hfJbtdRsJBmeJQBvbnxY-mTalBJAx4')

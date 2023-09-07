@@ -7,6 +7,9 @@ import * as Queries from "@/utils/queries";
 import { useMutation } from "@tanstack/react-query";
 import placeholder from "@/components/item/placeholder.png";
 import Image from "next/image";
+import { addDoc, collection, serverTimestamp,getDocs, query,deleteDoc,
+  onSnapshot,doc,updateDoc,orderBy,where } from "firebase/firestore";
+import { db, storage} from "../../firebase/firebase";
 import { ChevronRight, Eye, PencilIcon, Trash2 } from "lucide-react";
 import {
   Select,
@@ -19,19 +22,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Message from "@/components/icons/Message";
-const chatData = [
-  {
-    id: 1,
-    user: 'User 1',
-    message: 'Hello!',
-  },
-  {
-    id: 2,
-    user: 'User 2',
-    message: 'Hi there!',
-  },
-  // Add more chat messages here
-];
+
 import {
   Sheet,
   SheetContent,
@@ -59,7 +50,8 @@ interface FileWithPreview extends File {
 
 const Listings = () => {
   const { user, isLoggedIn } = useSession();
-
+  const [chatData,setChatData]=useState([])
+  const [isLoading,setIsLoading]=useState(false)
   const { data: sellerItems, refetch: refetchItems } = useFetch({
     key: ["query-sellerItems"],
     fn: () => Queries.userItems({ id: user!.id }),
@@ -67,10 +59,32 @@ const Listings = () => {
       enabled: true,
     },
   });
-
-  console.log(user, isLoggedIn);
-
-  console.log(sellerItems);
+  const fetchChatsForItem = async (itemId,userId) => {
+    console.log(itemId,'itemID')
+    console.log(userId,'userId')
+    const chatsCollectionRef = collection(db, "Chats");
+    const q = query(
+      chatsCollectionRef,
+      where("itemId", "==", itemId), // Match item ID
+      where("SellerId", "==", userId) // Match user ID
+    );
+  
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const fetchedChats = [];
+      querySnapshot.forEach((doc) => {
+        fetchedChats.push({ ...doc.data(), id: doc.id });
+      });
+      console.log(fetchedChats)
+      setChatData(fetchedChats);
+      setIsLoading(true)
+    });
+  
+    return () => unsubscribe();
+  };
+  // useEffect(() => {
+  //   fetchChatsForItem();
+  // }, []); 
+  // console.log(user, isLoggedIn);
 
   useEffect(() => {
     const refetchAllItems = async () => {
@@ -161,9 +175,10 @@ const Listings = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="flex flex-col items-end justify-between">
+                    <div className="flex flex-col items-end justify-between" onClick={()=>{fetchChatsForItem(item.id,user.id)}}>
                       <p className="text-sm font-medium text-right">{`Posted 02/08/2023`}</p>
-                      <ItemDetails item={item} refetchItems={refetchItems} />
+                      <ItemDetails item={item} refetchItems={refetchItems} chats={chatData} />
+                      
                     </div>
                   </div>
                 </div>
@@ -185,10 +200,10 @@ interface ItemDetailsProps {
   item: Item;
 }
 
-const ItemDetails: React.FC<ItemDetailsProps> = ({ refetchItems, item }) => {
+const ItemDetails: React.FC<ItemDetailsProps> = ({ refetchItems, item,chats}) => {
   const { toast } = useToast();
   const router = useRouter();
-
+  // console.log(user,'user')
   const { mutateAsync: archiveItem } = useMutation(Queries.markItemArchived);
   const { mutateAsync: markItemAsSold } = useMutation(Queries.markItemSold);
   const { mutateAsync: unarchiveItem } = useMutation(
@@ -205,7 +220,7 @@ const ItemDetails: React.FC<ItemDetailsProps> = ({ refetchItems, item }) => {
       setCover(item.images[0]);
     }
   }, [item]);
-
+  
   const onDragEnd = (result: DropResult) => {
     if (!result.destination) {
       return;
@@ -439,25 +454,35 @@ const ItemDetails: React.FC<ItemDetailsProps> = ({ refetchItems, item }) => {
         </aside>
         <div className="flex flex-col mt-8 justify-stretch gap-y-4">
           <h2 className="text-primary">Chat Messages</h2>
-          {/* {Array.from(Array(5).keys()).map((i) => (
-            <div key={i} className="flex items-center space-x-4">
-              <Skeleton className="w-12 h-12 rounded-full" />
-              <div className="space-y-2">
-                <Skeleton className="h-4 w-[250px]" />
-                <Skeleton className="h-4 w-[200px]" />
-              </div>
-            </div>
-          ))} */}
-           { chatData.map((message) => (
-          <div key={message.id} className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-gray-300 rounded-full"></div>
-            <div>
-              <div className="font-semibold">{message.user}</div>
-              <div>{message.message}</div>
-            </div>
-          </div>
-        )
-      )}
+          {chats.length === 0 ? (
+
+    <div  className="flex items-center space-x-4">
+      <Skeleton className="w-12 h-12 rounded-full" />
+      <div className="space-y-2">
+        <Skeleton className="h-4 w-[250px]" />
+        <Skeleton className="h-4 w-[200px]" />
+      </div>
+    </div>
+  
+) : (
+  // Render your chats
+  chats.map((chat) => (
+    <div key={chat.buyerId} className="flex items-center space-x-4">
+      <div className="w-12 h-12">
+        <img
+          src={chat.BuyerProfileImage}
+          alt={chat.buyerName}
+          className="w-full h-full object-cover rounded-full"
+        />
+      </div>
+      <div>
+        <div className="font-semibold">{chat.buyerName}</div>
+        <div>{chat.lastMessage}</div>
+      </div>
+    </div>
+  ))
+)}
+
         </div>
       </SheetContent>
     </Sheet>
