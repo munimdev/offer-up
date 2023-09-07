@@ -1,5 +1,5 @@
 "use client";
-
+import Link from 'next/link';
 import { useFetch } from "@/hooks/useFetch";
 import { useSession } from "@/hooks/useSession";
 import React, { useEffect, useState } from "react";
@@ -467,6 +467,10 @@ const ItemDetails: React.FC<ItemDetailsProps> = ({ refetchItems, item,chats}) =>
 ) : (
   // Render your chats
   chats.map((chat) => (
+    <Link
+    href={`/chat?chatId=${chat.id}&userId=${chat.SellerId}`}
+    style={{ cursor: 'pointer' }}
+  >
     <div key={chat.buyerId} className="flex items-center space-x-4">
       <div className="w-12 h-12">
         <img
@@ -480,6 +484,7 @@ const ItemDetails: React.FC<ItemDetailsProps> = ({ refetchItems, item,chats}) =>
         <div>{chat.lastMessage}</div>
       </div>
     </div>
+    </Link>
   ))
 )}
 
