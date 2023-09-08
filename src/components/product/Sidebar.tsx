@@ -10,6 +10,8 @@ import * as Queries from "@/utils/queries";
 import { addDoc, collection, serverTimestamp,getDocs, query,deleteDoc,
   onSnapshot,doc,updateDoc,orderBy } from "firebase/firestore";
 import { db, storage} from "../../firebase/firebase";
+import { useSession } from "@/hooks";
+
 import { FavoriteList, Item, ReportItemDto } from "@/types/types";
 import { Result } from "@/utils/types";
 import * as z from "zod";
@@ -31,8 +33,17 @@ import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import Report from "@/components/report/report";
 
-import { Phone, Heart, Share2, MapPin, CalendarDays,DollarSign } from "lucide-react";
+import {
+  Phone,
+  Heart,
+  Share2,
+  MapPin,
+  CalendarDays,
+  Check,
+} from "lucide-react";
 import HeartIcon from "@/components/icons/HeartIcon";
+import { useSetAtom } from "jotai";
+import { isLoginDialogOpenAtom } from "@/utils/atoms";
 
 type Props = {
   data: Item;
@@ -55,6 +66,10 @@ const Sidebar: React.FC<Props> = ({ data }) => {
   const [productOwnerName,setProductOwnerName] = useState("Ubaid")
   const [userImg,setUserImg] = useState('https://media.licdn.com/dms/image/D4D03AQFHcbL7RVWf-Q/profile-displayphoto-shrink_100_100/0/1678616243934?e=1699488000&v=beta&t=Y3KT5r1X5JaW_hfJbtdRsJBmeJQBvbnxY-mTalBJAx4')
   const [productOwnerImg,setProductOwnerImg] = useState('https://media.licdn.com/dms/image/D4D03AQHVLfw_m49p-g/profile-displayphoto-shrink_100_100/0/1688121844857?e=1699488000&v=beta&t=t5LgZ7YQrYVcTo10TdGgCKUCh6XLFSk788RRDDvS0CE')
+  const setIsLoginDialogOpen = useSetAtom(isLoginDialogOpenAtom);
+  const { isLoggedIn } = useSession();
+  const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
+  const { toast } = useToast();
 
   // ----------------------------
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
@@ -167,21 +182,6 @@ try {
     <div className="flex flex-col gap-2 p-5">
       <h3 className="text-3xl font-bold text-black">{data?.name}</h3>
       <h3 className="text-3xl font-bold text-black">${data?.price}</h3>
-      {/* <div className="flex gap-2">
-        <div className="flex items-ceneter">
-          <Meter /> <span>32,764 Miles</span>
-        </div>
-        <div className="flex items-center">
-          <Fuel /> <span>17/25 MPG</span>
-        </div>
-      </div> */}
-      {/* <div className="flex flex-wrap">
-        <Badge className="mx-1 text-black bg-gray-300">Used</Badge>
-        <Badge className="mx-1 text-black bg-gray-300">Used</Badge>
-        <Badge className="mx-1 text-black bg-gray-300">Used</Badge>
-        <Badge className="mx-1 text-black bg-gray-300">Used</Badge>
-        <Badge className="mx-1 text-black bg-gray-300">Used</Badge>
-      </div> */}
       <p>
         <span className="font-semibold">VIN</span> {data?.id}
       </p>
@@ -200,10 +200,26 @@ try {
         <Message className="mr-2" /> Chat
       </Button>
       <div className="flex items-center justify-center gap-x-5 text-primary">
-        <Dialog open={isDialogOpen} onOpenChange={(e) => setIsDialogOpen(e)}>
+        <Dialog
+          open={isDialogOpen}
+          onOpenChange={(e) => {
+            if (isLoggedIn) {
+              setIsDialogOpen(e);
+            } else {
+              setIsLoginDialogOpen(true);
+            }
+          }}
+        >
           <DialogTrigger asChild>
             <button className="">
-              <Heart size={20} className="inline-block mr-2" />
+              <Heart
+                size={20}
+                className={`inline-block mr-2 ${
+                  data.lstAddedToFavoriteListIds.length > 0
+                    ? "fill-primary"
+                    : null
+                }`}
+              />
             </button>
           </DialogTrigger>
           <DialogContent className="max-w-[425px]">
@@ -217,44 +233,51 @@ try {
               {savedList?.dataObject?.map((list) => (
                 <div
                   key={list.id}
-                  className="flex flex-row items-center gap-3 py-1 transition-colors duration-300 ease-in-out border-b hover:bg-gray-200 bg-none"
+                  className="flex flex-row items-center justify-between gap-3 py-1 transition-colors duration-300 ease-in-out border-b hover:bg-gray-200 bg-none"
                 >
-                  <HeartIcon size={36} />
-                  <button
-                    className="w-full text-left"
-                    onClick={() => {
-                      addItemToList({
-                        favouriteListId: list.id,
-                        itemId: data.id,
-                      });
-                      toast({
-                        title: "Item Saved",
-                        description: "Item has been saved to your list",
-                        duration: 2000,
-                        action: (
-                          <ToastAction
-                            altText="View List"
-                            onClick={() => {
-                              console.log("View List");
-                            }}
-                          >
-                            <Link href={`/saved-list/${list.id}`} passHref>
-                              View List
-                            </Link>
-                          </ToastAction>
-                        ),
-                      });
-                      setIsDialogOpen(false);
-                    }}
-                  >
-                    {list.name}
-                  </button>
+                  <div className="flex flex-row items-center">
+                    <HeartIcon size={36} />
+                    <button
+                      className="w-full text-left"
+                      onClick={() => {
+                        addItemToList({
+                          favouriteListId: list.id,
+                          itemId: data.id,
+                        });
+                        toast({
+                          title: "Item Saved",
+                          description: "Item has been saved to your list",
+                          duration: 2000,
+                          action: (
+                            <ToastAction
+                              altText="View List"
+                              onClick={() => {
+                                console.log("View List");
+                              }}
+                            >
+                              <Link href={`/saved-list/${list.id}`} passHref>
+                                View List
+                              </Link>
+                            </ToastAction>
+                          ),
+                        });
+                        setIsDialogOpen(false);
+                      }}
+                    >
+                      {list.name}
+                    </button>
+                  </div>
+                  {data.lstAddedToFavoriteListIds.find((x) => x === list.id) !==
+                  undefined ? (
+                    <Check size={24} />
+                  ) : null}
                 </div>
               ))}
             </div>
           </DialogContent>
         </Dialog>
         <Report
+          isLoggedIn={isLoggedIn}
           lookupId={10004}
           formSchema={formSchema}
           onSubmit={onReportHandler}

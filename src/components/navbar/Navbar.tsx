@@ -76,7 +76,14 @@ import { useSession } from "@/hooks/useSession";
 
 // Jotai
 import { useSetAtom, useAtom } from "jotai/react";
-import { userAtom, zipCodeAtom, locationAtom, locationNameAtom, preferredDistanceAtom } from "@/utils/atoms";
+import {
+  userAtom,
+  zipCodeAtom,
+  locationAtom,
+  locationNameAtom,
+  preferredDistanceAtom,
+  isLoginDialogOpenAtom,
+} from "@/utils/atoms";
 import { Slider } from "@/components/ui/slider";
 import axios from "axios";
 
@@ -84,9 +91,24 @@ interface NavbarProps {}
 
 const navList = [
   {
+    title: "Post Item",
+    to: "/selling",
+    content: false,
+  },
+  {
     title: "About",
     to: "#",
     content: true,
+    children: [
+      {
+        title: "Privacy Policy",
+        to: "/privacy",
+      },
+      {
+        title: "Terms & Conditions",
+        to: "/terms",
+      },
+    ],
   },
   {
     title: "Help",
@@ -96,11 +118,13 @@ const navList = [
 ];
 
 export const Navbar = ({}: NavbarProps) => {
-
+  const [isLocationModalOpen, setIsLocationModalOpen] = React.useState(false);
   const [zipCode, setZipCode] = useAtom(zipCodeAtom);
   const [location, setLocation] = useAtom(locationAtom);
   const [locationName, setLocationName] = useAtom(locationNameAtom);
-  const [preferredDistance, setPreferredDistance] = useAtom(preferredDistanceAtom);
+  const [preferredDistance, setPreferredDistance] = useAtom(
+    preferredDistanceAtom
+  );
 
   const handleLocationByZipCode = async (code: string) => {
     try {
@@ -113,11 +137,10 @@ export const Navbar = ({}: NavbarProps) => {
       const locationName = data.results[0].address_components[3].long_name;
       setLocationName(locationName);
       setLocation({ lat, lng });
-    }
-    catch (error) {
+    } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   const handleGetLocation = () => {
     navigator.geolocation.getCurrentPosition(
@@ -132,10 +155,9 @@ export const Navbar = ({}: NavbarProps) => {
           const locationName = data.results[0].address_components[4].long_name;
           const zipCode = data.results[0].address_components[6].short_name;
           setLocationName(locationName);
-          setZipCode(zipCode);
+          // setZipCode(zipCode);
           setLocation({ lat, lng });
-        }
-        catch (error) {
+        } catch (error) {
           console.log(error);
         }
       },
@@ -145,6 +167,16 @@ export const Navbar = ({}: NavbarProps) => {
     );
   };
 
+  const router = useRouter();
+  const setUser = useSetAtom(userAtom);
+  const [isLoginDialog, setIsLoginDialog] = useAtom(isLoginDialogOpenAtom)
+  const { isLoggedIn, user } = useSession();
+  const onLogoutHandler = () => {
+    setUser(null);
+    localStorage.removeItem("accessToken");
+    router.push("/");
+  };
+
   return (
     <>
       <div className="flex items-center gap-4 p-4 mt-2">
@@ -152,72 +184,88 @@ export const Navbar = ({}: NavbarProps) => {
           <Logo />
         </Link>
         <Searchbar />
-        <Dialog>
+        <Dialog
+          onOpenChange={(e) => setIsLocationModalOpen(e)}
+          open={isLocationModalOpen}
+        >
           <DialogTrigger asChild>
             <span className="flex font-bold text-[#1BC3FF] items-center gap-2 cursor-pointer">
               <MapPin />{" "}
               <span className="hidden gap-2 lg:flex">
-                <p>{locationName ? `${locationName}: ${(preferredDistance[0] / 1000)} Miles` : "Set Location"}</p>
+                <p>
+                  {locationName
+                    ? `${locationName}: ${preferredDistance[0]} Miles`
+                    : "Set Location"}
+                </p>
               </span>
             </span>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <div className="flex flex-col p-4">
-              <h2 className="text-center font-bold text-black text-2xl -translate-y-8">Location</h2>
-              <div className="space-y-2">
-                <p className="text-black font-bold text-base">
-                  Delivery Method
-                </p>
-                <p className="text-xs">
-                  Shipping to continental 48 states, excluding Arkansas
-                </p>
-                <RadioGroup defaultValue="default">
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="default" id="r1" />
-                    <Label htmlFor="r1">Local + Shipping</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="local" id="r2" />
-                    <Label htmlFor="r2">Local</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="shipping" id="r3" />
-                    <Label htmlFor="r3">Shipping</Label>
-                  </div>
-                </RadioGroup>
-              </div>
-              <Separator className="my-4" />
+              <h2 className="text-2xl font-bold text-center text-black -translate-y-4">
+                Location
+              </h2>
+              <h3 className="text-center">
+                {locationName ? (
+                  <span>
+                    <span className="font-semibold text-primary">
+                      Current Location:{" "}
+                    </span>
+                    {locationName}
+                  </span>
+                ) : (
+                  "No Location Set"
+                )}
+              </h3>
+              <Separator className="my-2" />
               <div className="">
-                <p className="text-black font-bold text-base">ZIP Code</p>
-                <button 
+                <p className="text-base font-bold text-black">ZIP Code</p>
+                <button
                   onClick={handleGetLocation}
-                  className="border my-2 mx-auto border-primary text-primary flex rounded-full px-2 py-2 gap-x-2"
+                  className="flex px-2 py-2 mx-auto my-2 border rounded-full border-primary text-primary gap-x-2"
                 >
                   <MapPin />
                   <span className="flex-1 text-center">Get my location</span>
                 </button>
-                <p className="text-black text-center my-2 font-bold">Or</p>
-                <Input 
+                <p className="my-2 font-bold text-center text-black">Or</p>
+                <Input
                   value={zipCode}
                   onChange={(e) => {
                     setZipCode(e.target.value);
-                    if (e.target.value.length === 5) {
-                      handleLocationByZipCode(e.target.value);
+                  }}
+                  className="mx-auto border border-gray-100 w-44"
+                  placeholder="Enter ZIP Code"
+                />
+                <Button
+                  className="block mx-auto mt-3"
+                  type="button"
+                  onClick={() => {
+                    if (zipCode.length === 5) {
+                      handleLocationByZipCode(zipCode);
                     }
                   }}
-                  className="w-44 border border-gray-100 mx-auto" 
-                  placeholder="Enter ZIP Code" 
-                />
+                >
+                  Fetch Location
+                </Button>
               </div>
               <Separator className="my-4" />
-              <p>Distance</p>
-              <Slider onValueChange={
-                (e) => {
+              <div className="flex flex-row justify-between">
+                <p className="mb-3">Distance</p>
+                <p className="mb-3">{preferredDistance[0]}</p>
+              </div>
+              <Slider
+                onValueChange={(e) => {
                   setPreferredDistance(e);
-                }
-              } defaultValue={[1000]} max={50000} step={20} min={1000} />
+                }}
+                defaultValue={preferredDistance}
+                max={50}
+                step={1}
+                min={1}
+              />
             </div>
-            <Button type="submit">See listings</Button>
+            <Button type="button" onClick={() => setIsLocationModalOpen(false)}>
+              See listings
+            </Button>
           </DialogContent>
         </Dialog>
         <div className="ml-auto">
@@ -231,10 +279,15 @@ export const Navbar = ({}: NavbarProps) => {
                         {item.title}
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
-                          <li className="row-span-3">
-                            <NavigationMenuLink asChild></NavigationMenuLink>
-                          </li>
+                        <ul className="grid gap-3 p-6 w-[200px] grid-cols-1">
+                          {item?.children?.map((child) => (
+                            <li
+                              key={child.to}
+                              className="row-span-3 text-sm text-black"
+                            >
+                              <Link href={child.to}>{child.title}</Link>
+                            </li>
+                          ))}
                         </ul>
                       </NavigationMenuContent>
                     </>
@@ -250,7 +303,67 @@ export const Navbar = ({}: NavbarProps) => {
                 </NavigationMenuItem>
               ))}
               <NavigationMenuItem>
-                <LoginDialog />
+                {!isLoggedIn ? (
+                  <Dialog onOpenChange={(e) => setIsLoginDialog(e)} open={isLoginDialog}>
+                    <DialogTrigger asChild>
+                      <Button variant="outline">Login</Button>
+                    </DialogTrigger>
+                    <LoginDialog />
+                  </Dialog>
+                ) : (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Avatar className="cursor-pointer">
+                        <AvatarImage src="https://github.com/shadcn.png" />
+                        <AvatarFallback>CN</AvatarFallback>
+                      </Avatar>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="min-w-[325px]">
+                      <DropdownMenuGroup>
+                        <DropdownMenuItem>
+                          <Link
+                            href={`/seller/${user!.id}`}
+                            className="flex flex-row items-center gap-x-5"
+                          >
+                            <Image
+                              width={80}
+                              height={80}
+                              src={placholder}
+                              alt="User Image"
+                              className="rounded-full"
+                            />
+                            <div className="flex flex-col">
+                              <span className="text-lg font-bold">
+                                {user!.name.toUpperCase()}
+                              </span>
+                              <span className="text-md">View Profile</span>
+                            </div>
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <Link href="/listings">My Listings</Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <Link href="/account/setting">
+                            Account & Settings
+                          </Link>
+                        </DropdownMenuItem>
+                      </DropdownMenuGroup>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuGroup>
+                        <DropdownMenuItem>About</DropdownMenuItem>
+                        <DropdownMenuItem>Help</DropdownMenuItem>
+                      </DropdownMenuGroup>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        className="cursor-pointer"
+                        onClick={onLogoutHandler}
+                      >
+                        Logout
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )}
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
@@ -284,7 +397,7 @@ const LoginDialogScreens = {
   forgotPassword: "forgotPassword",
 };
 
-function LoginDialog() {
+export function LoginDialog() {
   const { mutateAsync } = useSignup();
   const [screen, setScreen] = React.useState(LoginDialogScreens.home);
   const setUser = useSetAtom(userAtom);
@@ -394,14 +507,14 @@ function LoginDialog() {
           onClick={handleGoogle}
           className="flex flex-row items-center rounded bg-[#4C8BF5]"
         >
-          <span className="bg-white rounded-full p-1">
+          <span className="p-1 bg-white rounded-full">
             <Google />
           </span>
           <span className="flex-1 text-center">Continue with Google</span>
         </Button>
         <Button
           // onClick={signUpWithApple}
-          className="flex flex-row rounded bg-white text-black border border-black hover:bg-gray-100"
+          className="flex flex-row text-black bg-white border border-black rounded hover:bg-gray-100"
         >
           <Apple />
           <span className="flex-1 text-center">Continue with Apple</span>
@@ -415,7 +528,7 @@ function LoginDialog() {
         </Button>
         <Button
           onClick={handleTwitter}
-          className="flex flex-row rounded bg-black text-white border hover:bg-gray-800"
+          className="flex flex-row text-white bg-black border rounded hover:bg-gray-800"
         >
           <Twitter />
           <span className="flex-1 text-center">Continue with Twitter</span>
@@ -703,74 +816,12 @@ function LoginDialog() {
     );
   };
 
-  const { isLoggedIn, user } = useSession();
-  const router = useRouter();
-  const onLogoutHandler = () => {
-    setUser(null);
-    localStorage.removeItem("accessToken");
-    router.push("/");
-  };
-  return !isLoggedIn ? (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="outline">Login</Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] text-primary dialog-container h-4/6 p-0">
-        <HomeScreen />
-        <AuthScreen />
-        <LoginScreen />
-        <SignupScreen />
-      </DialogContent>
-    </Dialog>
-  ) : (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Avatar className="cursor-pointer">
-          <AvatarImage src="https://github.com/shadcn.png" />
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="min-w-[325px]">
-        <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <Link
-              href={`/seller/${user!.id}`}
-              className="flex flex-row items-center gap-x-5"
-            >
-              <Image
-                width={80}
-                height={80}
-                src={placholder}
-                alt="User Image"
-                className="rounded-full"
-              />
-              <div className="flex flex-col">
-                <span className="text-lg font-bold">
-                  {user!.name.toUpperCase()}
-                </span>
-                <span className="text-md">View Profile</span>
-              </div>
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Link href="/listings">My Listings</Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Link href="/account/setting">Account & Settings</Link>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem>About</DropdownMenuItem>
-          <DropdownMenuItem>Help</DropdownMenuItem>
-          <DropdownMenuItem>Terms of Service</DropdownMenuItem>
-          <DropdownMenuItem>Privacy</DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem className="cursor-pointer" onClick={onLogoutHandler}>
-          Logout
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+  return (
+    <DialogContent className="sm:max-w-[425px] text-primary dialog-container h-4/6 p-0">
+      <HomeScreen />
+      <AuthScreen />
+      <LoginScreen />
+      <SignupScreen />
+    </DialogContent>
   );
 }

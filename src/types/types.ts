@@ -122,6 +122,7 @@ export type Item = {
   isArchived: boolean;
   fullAddress?: string;
   shortAddress?: string;
+  lstAddedToFavoriteListIds: number[],
   locationLat: number;
   locationLng: number;
   zipCode: string;
@@ -206,7 +207,7 @@ export type SearchQuery = {
   distance?: number;
   locationLat?: number;
   locationLng?: number;
-  conditionLookupId?: number;
+  conditionLookupId?: number[];
   priceFrom?: number;
   priceTo?: number;
   sortByLookupId?: number;

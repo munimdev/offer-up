@@ -43,14 +43,18 @@ import * as z from "zod";
 
 // Icons
 import { Flag } from "lucide-react";
+import { useSetAtom } from "jotai";
+import { isLoginDialogOpenAtom } from "@/utils/atoms";
 
 type Props = {
+  isLoggedIn?: boolean;
   formSchema: z.ZodType<any, any>;
   lookupId: number;
   onSubmit: (data: any) => void;
 };
 
-const Report: React.FC<Props> = ({ formSchema, lookupId, onSubmit }) => {
+const Report: React.FC<Props> = ({ isLoggedIn, formSchema, lookupId, onSubmit }) => {
+  const setIsLoginDialogOpen = useSetAtom(isLoginDialogOpenAtom)
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -71,7 +75,12 @@ const Report: React.FC<Props> = ({ formSchema, lookupId, onSubmit }) => {
   );
 
   return (
-    <Dialog open={isDialogOpen} onOpenChange={(e) => setIsDialogOpen(e)}>
+    <Dialog open={isDialogOpen} onOpenChange={(e) => {
+      if (isLoggedIn) setIsDialogOpen(e);
+      else {
+        setIsLoginDialogOpen(true)
+      }
+    }}>
       <DialogTrigger>
         <TooltipProvider>
           <Tooltip>

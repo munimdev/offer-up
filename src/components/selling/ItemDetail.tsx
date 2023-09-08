@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import FileUpload from "./FileUpload";
 import OptionsSelect from "./OptionsSelect";
+import { useEffect } from "react";
 
 const conditions = [
   {
@@ -36,6 +37,16 @@ const conditions = [
 
 const ItemDetail = () => {
   const [itemData, setItemData] = useAtom(itemFormDataAtom);
+
+
+  useEffect(() => {
+    setItemData({
+      ...itemData,
+      conditionLookUpId: conditions[3].id,
+    });
+  }
+  , [itemData, setItemData]);
+
   return (
     <>
       <div className="grid w-full max-w-md gap-1.5">
@@ -69,7 +80,7 @@ const ItemDetail = () => {
         <Textarea
           id="description"
           placeholder="Description"
-          className="placeholder:font-medium font-medium"
+          className="font-medium placeholder:font-medium"
           value={itemData.description}
           onChange={(e) =>
             setItemData({
@@ -82,7 +93,7 @@ const ItemDetail = () => {
       <div className="w-full max-w-md font-medium">
         <Label htmlFor="description">Condition</Label>
         <OptionsSelect
-          title="Select Condition"
+          title="Used"
           options={conditions}
           onChange={(conditon) =>
             setItemData({ ...itemData, conditionLookUpId: conditon.id })

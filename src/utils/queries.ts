@@ -32,6 +32,9 @@ export const signupUser = (data: SignupData): Promise<Result<User>> =>
 export const getCategories = (): Promise<Result<Category[]>> =>
   instance.get("/Category/getCategories");
 
+export const getChildCategories = (id: number): Promise<Result<any[]>> =>
+  instance.post(`/Category/getChildCategoriesByParent`, { id });
+
 export const getSubCategories = (id: number): Promise<Result<SubCategory[]>> =>
   instance.post("/Category/getSubCategories", { id });
 
@@ -41,7 +44,10 @@ export const getCategoryAttributes = (
   instance.post("/Category/getCategoryAttributesFiltered", data);
 
 // Products
-export const searchItems = (query: SearchQuery): Promise<Result<SearchResult>> => instance.post("/Item/searchItems", { ...query })
+export const searchItems = (
+  query: SearchQuery
+): Promise<Result<SearchResult>> =>
+  instance.post("/Item/searchItems", { ...query });
 
 export const saveItem = (data: SaveItemDto) =>
   instance.post("/Item/createitem", data);
