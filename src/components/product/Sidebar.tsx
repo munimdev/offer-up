@@ -40,6 +40,7 @@ import {
   MapPin,
   CalendarDays,
   Check,
+  DollarSign,
 } from "lucide-react";
 import HeartIcon from "@/components/icons/HeartIcon";
 import { useSetAtom } from "jotai";
@@ -72,10 +73,8 @@ const Sidebar: React.FC<Props> = ({ data }) => {
   const { toast } = useToast();
 
   // ----------------------------
-  const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
   const [isOfferDialogOpen, setIsOfferDialogOpen] = React.useState<boolean>(false);
   const [isChatDialogOpen, setIsChatDialogOpen] = React.useState<boolean>(false);
-  const { toast } = useToast();
 console.log(data,'data')
   const { mutateAsync: addItemToList } = useMutation(
     Queries.addItemToFavouriteList

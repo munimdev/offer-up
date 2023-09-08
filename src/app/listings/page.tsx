@@ -56,7 +56,7 @@ import { ItemImages } from "../../types/types";
 import { useSetAtom } from "jotai";
 import { itemFormDataAtom } from "@/utils/atoms";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
+
 
 interface FileWithPreview extends File {
   preview?: string;
