@@ -40,7 +40,7 @@ const Sidebar = () => {
   const [selectedChildCategory, setSelectedChildCategory] = useState<string>(
     searchParam.get("child") || ""
   );
-  const [selectedCondition, setSelectedCondition] = useState<string>();
+  const [selectedCondition, setSelectedCondition] = useState<string[]>();
   const [minPrice, setMinPrice] = useState<number>();
   const [maxPrice, setMaxPrice] = useState<number>();
 
@@ -55,9 +55,8 @@ const Sidebar = () => {
       <div className="flex flex-col gap-y-3">
         <p className="font-semibold">Categories</p>
 
-        {
-          subCategories?.length || 0 > 0 ? (
-            subCategories?.map((subCategory) => (
+        {subCategories?.length || 0 > 0
+          ? subCategories?.map((subCategory) => (
               <div
                 key={subCategory.id.toString()}
                 className="flex items-center gap-x-2 cursor-pointer"
@@ -75,8 +74,7 @@ const Sidebar = () => {
                 </Label>
               </div>
             ))
-          ) : (
-            childCategories?.map((childCategory) => (
+          : childCategories?.map((childCategory) => (
               <div
                 key={childCategory.id.toString()}
                 className="flex items-center gap-x-2 cursor-pointer"
@@ -93,9 +91,7 @@ const Sidebar = () => {
                   {childCategory.name}
                 </Label>
               </div>
-            ))
-          )
-        }
+            ))}
         <Button
           onClick={() => {
             let queryString = "?";
@@ -105,10 +101,10 @@ const Sidebar = () => {
               }
             });
             if (selectedChildCategory) {
-              queryString += `child=${selectedChildCategory}&`
+              queryString += `child=${selectedChildCategory}&`;
             }
             if (selectedSubCategory) {
-              queryString += `sub=${selectedSubCategory}`
+              queryString += `sub=${selectedSubCategory}`;
             }
             router.replace(`${pathname}${queryString}`);
           }}
@@ -191,13 +187,14 @@ const Sidebar = () => {
         <span
           className="underline my-2 cursor-pointer text-sm"
           onClick={() => {
-            setSelectedCondition(undefined);
+            setSelectedCondition(["10001","10002","10003","10004","10005","10006"]);
             let queryString = "?";
             searchParam.forEach((value, key) => {
               if (key != "condition") {
                 queryString += `${key}=${value}&`;
               }
             });
+            queryString += `condition=10001,10002,10003,10004,10005,10006`;
             router.replace(`${pathname}${queryString}`);
           }}
         >
@@ -213,9 +210,20 @@ const Sidebar = () => {
             <Checkbox
               id={condition.id.toString()}
               value={condition.id.toString()}
-              checked={selectedCondition == condition.id.toString()}
+              checked={
+                selectedCondition?.includes(condition.id.toString()) || false
+              }
               onCheckedChange={(e) =>
-                e && setSelectedCondition(condition.id.toString())
+                e
+                  ? setSelectedCondition([
+                      ...(selectedCondition || []),
+                      condition.id.toString(),
+                    ])
+                  : setSelectedCondition(
+                      selectedCondition?.filter(
+                        (id) => id != condition.id.toString()
+                      )
+                    )
               }
             />
             <Label htmlFor={condition.id.toString()}>
@@ -231,7 +239,7 @@ const Sidebar = () => {
                 queryString += `${key}=${value}&`;
               }
             });
-            queryString += `condition=${selectedCondition}`;
+            queryString += `condition=${selectedCondition?.join(",")}`;
             router.replace(`${pathname}${queryString}`);
           }}
         >

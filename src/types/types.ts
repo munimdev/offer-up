@@ -207,7 +207,7 @@ export type SearchQuery = {
   distance?: number;
   locationLat?: number;
   locationLng?: number;
-  conditionLookupId?: number;
+  conditionLookupId?: number[];
   priceFrom?: number;
   priceTo?: number;
   sortByLookupId?: number;

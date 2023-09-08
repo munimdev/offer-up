@@ -44,7 +44,7 @@ const Page = () => {
     distance: preferredDistance[0],
     locationLat: location.lat,
     locationLng: location.lng,
-    conditionLookupId: condition ? parseInt(condition) : 0,
+    conditionLookupId: condition ? condition.split(",").map(str => parseInt(str)) : [],
     priceFrom: priceFrom ? parseInt(priceFrom) : 0,
     priceTo: priceTo ? parseInt(priceTo) : 999999,
     // sortByLookupId: 0,
