@@ -62,13 +62,9 @@ const formSchema = z.object({
 const Sidebar: React.FC<Props> = ({ data }) => {
   const router = useRouter();
   // chat info
-  const [userId,setUserId]= useState('4296a045-deef-4b37-a09c-d22b3eb50cf4')
-  const [userName,setUserName]=useState('Abuzar')
-  const [productOwnerName,setProductOwnerName] = useState("Ubaid")
-  const [userImg,setUserImg] = useState('https://media.licdn.com/dms/image/D4D03AQFHcbL7RVWf-Q/profile-displayphoto-shrink_100_100/0/1678616243934?e=1699488000&v=beta&t=Y3KT5r1X5JaW_hfJbtdRsJBmeJQBvbnxY-mTalBJAx4')
-  const [productOwnerImg,setProductOwnerImg] = useState('https://media.licdn.com/dms/image/D4D03AQHVLfw_m49p-g/profile-displayphoto-shrink_100_100/0/1688121844857?e=1699488000&v=beta&t=t5LgZ7YQrYVcTo10TdGgCKUCh6XLFSk788RRDDvS0CE')
+  const { user, isLoggedIn } = useSession();
   const setIsLoginDialogOpen = useSetAtom(isLoginDialogOpenAtom);
-  const { isLoggedIn } = useSession();
+  // const { isLoggedIn } = useSession();
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
   const { toast } = useToast();
 
@@ -136,17 +132,21 @@ const startChatHandler = async(text) =>{
 try {
   const chatRef =  collection(db,'Chats')
   const chatRes = await addDoc(chatRef, {
-    BuyerProfileImage: userImg,
-    SellerId: data.userId,
-    SellerName: productOwnerName,
-    SellerProfileImage: productOwnerImg,
-    buyerId: userId,
-    buyerName: userName,
+    buyerId: user.id,
+    buyerName: user.name,
+    buyerProfileImage: user.imagePath,
+    buyerLastSeen:serverTimestamp(),
+    sellerId: data.customer.id,
+    sellerName: data.customer.name,
+    sellerProfileImage: data.customer.imagePath,
+    sellerLastSeen:serverTimestamp(),
     itemId: data.id,
-    itemImage: data.images[0].imagePath,
     itemName: data.name,
+    itemImage: data.images[0].imagePath,
     lastMessage: text,
-    lastMessageTime:  serverTimestamp(),
+    lastMessageTime: serverTimestamp(),
+    unreadBuyer:0,
+    unreadSeller:1,
     startDate: serverTimestamp(),
     // Add more fields as needed
   });
@@ -155,14 +155,12 @@ try {
   const messageRef = await addDoc(messagesCollectionRef,{
     imageUrl:"",
     isImage:false,
-    isSeen:false,
-    isSent:true,
     messages:text,
-    senderId:userId,
+    senderId:user.id,
     time:serverTimestamp(),
     
   });
-  router.replace('/chatList');
+  router.replace(`/chat?chatId=${chatRes.id}&userId=${user.id}`);
 } catch (error) {
   console.log(error)
 }

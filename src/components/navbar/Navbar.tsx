@@ -91,6 +91,11 @@ interface NavbarProps {}
 
 const navList = [
   {
+    title: "Chat Inbox",
+    to: "/chatList",
+    content: false,
+  },
+  {
     title: "Post Item",
     to: "/selling",
     content: false,

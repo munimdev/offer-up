@@ -80,7 +80,7 @@ const Listings = () => {
     const q = query(
       chatsCollectionRef,
       where("itemId", "==", itemId), // Match item ID
-      where("SellerId", "==", userId) // Match user ID
+      where("sellerId", "==", userId) // Match user ID
     );
   
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -203,7 +203,7 @@ const Listings = () => {
                     </div>
                     <div className="flex flex-col items-end justify-between" onClick={()=>{fetchChatsForItem(item.id,user.id)}}>
                       <p className="text-sm font-medium text-right">{`Posted 02/08/2023`}</p>
-                      <ItemDetails item={item} refetchItems={refetchItems} chats={chatData} />
+                      <ItemDetails item={item} refetchItems={refetchItems} chats={chatData} isLoading={isLoading}/>
                       
                     </div>
                   </div>
@@ -226,7 +226,7 @@ interface ItemDetailsProps {
   item: Item;
 }
 
-const ItemDetails: React.FC<ItemDetailsProps> = ({ refetchItems, item,chats}) => {
+const ItemDetails: React.FC<ItemDetailsProps> = ({ refetchItems, item,chats,isLoading}) => {
   const { toast } = useToast();
   const router = useRouter();
   // console.log(user,'user')
@@ -502,27 +502,30 @@ const ItemDetails: React.FC<ItemDetailsProps> = ({ refetchItems, item,chats}) =>
         </aside>
         <div className="flex flex-col mt-8 justify-stretch gap-y-4">
           <h2 className="text-primary">Chat Messages</h2>
-          {chats.length === 0 ? (
-
-    <div  className="flex items-center space-x-4">
-      <Skeleton className="w-12 h-12 rounded-full" />
-      <div className="space-y-2">
-        <Skeleton className="h-4 w-[250px]" />
-        <Skeleton className="h-4 w-[200px]" />
-      </div>
+          {isLoading ? (
+  // Loading state
+  <div className="flex items-center space-x-4">
+    <Skeleton className="w-12 h-12 rounded-full" />
+    <div className="space-y-2">
+      <Skeleton className="h-4 w-[250px]" />
+      <Skeleton className="h-4 w-[200px]" />
     </div>
-  
+  </div>
+) : chats.length === 0 ? (
+  // No chats found
+  <div>No chats found.</div>
 ) : (
-  // Render your chats
+  // Render chats
   chats.map((chat) => (
     <Link
-    href={`/chat?chatId=${chat.id}&userId=${chat.SellerId}`}
-    style={{ cursor: 'pointer' }}
-  >
-    <div key={chat.buyerId} className="flex items-center space-x-4">
+      href={`/chat?chatId=${chat.id}&userId=${chat.sellerId}`}
+      style={{ cursor: 'pointer' }}
+      key={chat.buyerId} // Use 'key' for React map iteration
+      className="flex items-center space-x-4"
+    >
       <div className="w-12 h-12">
         <img
-          src={chat.BuyerProfileImage}
+          src={chat.buyerProfileImage}
           alt={chat.buyerName}
           className="w-full h-full object-cover rounded-full"
         />
@@ -531,10 +534,28 @@ const ItemDetails: React.FC<ItemDetailsProps> = ({ refetchItems, item,chats}) =>
         <div className="font-semibold">{chat.buyerName}</div>
         <div>{chat.lastMessage}</div>
       </div>
-    </div>
+      {chat.unreadSeller > 0 && (
+        <div
+          style={{
+            width: '2rem',
+            height: '2rem',
+            backgroundColor: '#62C3FE',
+            color: 'white',
+            borderRadius: '50%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            fontSize: '0.7rem',
+            marginLeft: 'auto', // Use marginLeft: 'auto' to push it to the right
+          }}
+        >
+          {chat.unreadSeller}
+        </div>
+      )}
     </Link>
   ))
 )}
+
 
         </div>
       </SheetContent>

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from 'next/link';
+import { useSession } from "@/hooks/useSession";
 import { useSearchParams  } from 'next/router';
 import { CheckCheck, MoreHorizontal } from "lucide-react";
 import {
@@ -17,14 +18,17 @@ import {
   updateDoc,
   orderBy,
   where,
-  or
+  or,and
 } from "firebase/firestore";
+import {orWhere } from 'firebase/compat/firestore';
 import { db } from "../../firebase/firebase";
 import Image from "next/image";
 
 const Page = () => {
+  const { user, isLoggedIn } = useSession();
+  console.log(user)
   const [chats, setChats] = useState([]);
-  const [userId, setUserId] = useState("4296a045-deef-4b37-a09c-d22b3eb50cf4");
+  // const [userId, setUserId] = useState("4296a045-deef-4b37-a09c-d22b3eb50cf4");
   const [selectedTab, setSelectedTab] = useState("All"); // Default tab is "All"
 
   function formatTime(messageTime) {
@@ -48,31 +52,48 @@ const Page = () => {
 
   useEffect(() => {
     const chatRef = collection(db, "Chats");
-    let q;
-
+    let queryRef;
+  
     if (selectedTab === "Seller") {
       // Show chats where userId matches SellerId
-      q = query(chatRef, where("SellerId", "==", userId));
+      queryRef = query(chatRef, where("sellerId", "==", user.id));
     } else if (selectedTab === "Buyer") {
       // Show chats where userId matches buyerId
-      q = query(chatRef, where("buyerId", "==", userId));
+      queryRef = query(chatRef, where("buyerId", "==", user.id));
     } else {
-      // Show all chats
-      q = chatRef;
+      // Combine the results of both queries manually
+      queryRef = query(chatRef, where("sellerId", "==", user.id));
+      const buyerQuery = query(chatRef, where("buyerId", "==", user.id));
+  
+      // Fetch data from both queries and merge the results
+      Promise.all([getDocs(queryRef), getDocs(buyerQuery)])
+        .then((results) => {
+          const fetchedChats = [];
+          results.forEach((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              fetchedChats.push({ ...doc.data(), id: doc.id });
+            });
+          });
+          console.log(fetchedChats, 'fetchedChats');
+          setChats(fetchedChats);
+        })
+        .catch((error) => {
+          console.error("Error fetching chats:", error);
+        });
     }
-
-    const unsubscribe = onSnapshot(q, (QuerySnapshot) => {
+  
+    const unsubscribe = onSnapshot(queryRef, (querySnapshot) => {
       const fetchedChats = [];
-      QuerySnapshot.forEach((doc) => {
+      querySnapshot.forEach((doc) => {
         fetchedChats.push({ ...doc.data(), id: doc.id });
       });
-      console.log(fetchedChats,'fetchedChats')
+      console.log(fetchedChats, 'fetchedChats');
       setChats(fetchedChats);
     });
-
+  
     return () => unsubscribe();
-  }, [selectedTab]); // Add selectedTab to dependency array
-
+  }, [selectedTab, user.id]);
+    
   const handleTabClick = (tab) => {
     setSelectedTab(tab);
   };
@@ -119,13 +140,13 @@ const Page = () => {
           chats.map((val) => {
             return (
               <div className="flex flex-col py-4" key={val.itemId}>
-                <div className="p-4 flex flex-row items-center gap-x-10 border border-r-4 -mr-1 border-primary border-r-white z-10">
+                <div className="p-4 flex flex-row items-center gap-x-10 border border-r-4 -mr-1 border-primary border-r-white z-10" >
                   <Image
                     alt="Item Image"
                     src={
-                      userId === val.SellerId
-                        ? val.BuyerProfileImage
-                        : val.SellerProfileImage
+                      user.id === val.sellerId
+                        ? val.buyerProfileImage
+                        : val.sellerProfileImage
                     }
                     width={60}
                     height={30}
@@ -133,13 +154,13 @@ const Page = () => {
                   />
                   <div className="flex flex-col gap-x-2">
                     <Link
-                      href={`/chat?chatId=${val.id}&userId=${userId}`}
+                      href={`/chat?chatId=${val.id}&userId=${user.id}`}
                       style={{ cursor: 'pointer' }}
                     >
                       <p className="text-lg font-bold">
-                        {userId === val.SellerId
+                        {user.id === val.sellerId
                           ? val.buyerName
-                          : val.SellerName}
+                          : val.sellerName}
                       </p>
                     </Link>
                     <p>{val.lastMessage}</p>
@@ -147,6 +168,26 @@ const Page = () => {
                       about {formatTime(val.lastMessageTime.seconds)}
                     </p>
                   </div>
+                  {/* {((user.id === val.sellerId && val.unreadSeller !== 0) || (user.id === val.buyerId && val.unreadBuyer !== 0)) ? ( */}
+  <div
+    style={{
+      width: '2rem',
+      height: '2rem',
+      backgroundColor: '#62C3FE',
+      color: 'white',
+      borderRadius: '50%',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      fontSize: '0.7rem',
+      marginLeft: 'auto',
+    }}
+  >
+   {user.id === val.sellerId?val.unreadSeller:val.unreadBuyer}
+   {/* {user.id === val.sellerId?val.unreadBuyer:val.unreadSeller} */}
+  </div>
+{/* ) : null} */}
+
                 </div>
               </div>
             );

@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSearchParams } from 'next/navigation';
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { addDoc, collection, serverTimestamp,getDocs, query,deleteDoc,
+import { addDoc, collection, serverTimestamp,getDoc, query,deleteDoc,
   onSnapshot,doc,updateDoc,orderBy } from "firebase/firestore";
 import { db, storage} from "../../firebase/firebase";
 import { v4 as uuid } from "uuid";
@@ -67,8 +67,6 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
           const message = {
             imageUrl:downloadURL,
             isImage:true,
-            isSeen:true,
-            isSent:true,
             messages:"",
             senderId: userId,
             time: serverTimestamp(), 
@@ -85,33 +83,56 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
     console.log("Selected File:", selectedFile);
   };
 
- useEffect(() => {
-  const chatRef = doc(db, 'Chats', chatId);
-  const messagesCollectionRef = collection(chatRef, 'messages');
-  const q = query(messagesCollectionRef, orderBy('time', 'asc'));
-
-  const unsubscribeChat = onSnapshot(chatRef, (chatDoc) => {
-    if (chatDoc.exists()) {
-      const chatData = chatDoc.data();
-      setChatInfo(chatData); // Set the chat info here
-      console.log(chatData,'chatData')
-      const unsubscribeMessages = onSnapshot(q, (querySnapshot) => {
-        const fetchedMessages = [];
-        querySnapshot.forEach((doc) => {
-          fetchedMessages.push({ ...doc.data(), id: doc.id });
+  useEffect(() => {
+    const chatRef = doc(db, 'Chats', chatId);
+    const messagesCollectionRef = collection(chatRef, 'messages');
+    const q = query(messagesCollectionRef, orderBy('time', 'asc'));
+  
+    const unsubscribeChat = onSnapshot(chatRef, (chatDoc) => {
+      if (chatDoc.exists()) {
+        const chatData = chatDoc.data();
+        setChatInfo(chatData); // Set the chat info here
+        console.log(chatData, 'chatData');
+  
+        // Check if user.id matches sellerId or buyerId
+        const isUserSeller = userId === chatData.sellerId;
+        const isUserBuyer = userId === chatData.buyerId;
+  
+        // Update unreadSeller or unreadBuyer based on user role
+        if (isUserSeller) {
+          // User is the seller, update unreadSeller to 0
+          updateDoc(chatRef, { unreadSeller: 0 })
+            .then(() => {
+              console.log('unreadSeller updated to 0');
+            })
+            .catch((error) => {
+              console.error('Error updating unreadSeller:', error);
+            });
+        } else if (isUserBuyer) {
+          // User is the buyer, update unreadBuyer to 0
+          updateDoc(chatRef, { unreadBuyer: 0 })
+            .then(() => {
+              console.log('unreadBuyer updated to 0');
+            })
+            .catch((error) => {
+              console.error('Error updating unreadBuyer:', error);
+            });
+        }
+  
+        const unsubscribeMessages = onSnapshot(q, (querySnapshot) => {
+          const fetchedMessages = [];
+          querySnapshot.forEach((doc) => {
+            fetchedMessages.push({ ...doc.data(), id: doc.id });
+          });
+          console.log(fetchedMessages);
+          setMessages(fetchedMessages);
         });
-
-        setMessages(fetchedMessages);
-      });
-
-      // Return the unsubscribe function for messages
-      return () => unsubscribeMessages();
-    }
-  });
-
-  // Return the unsubscribe function for chat
-  return () => unsubscribeChat();
-}, [chatId]);
+  
+        // Return the unsubscribe function for messages
+        return () => unsubscribeMessages();
+      }
+    });
+  }, [chatId, userId]);
 
 
   useEffect(() => {
@@ -139,43 +160,74 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
       setIsOptionModalOpen('');
     }
   }
-  const handleSendMessage = async () =>{
-const message = {
-  imageUrl:"",
-  isImage:false,
-isSeen:true,
-isSent:true,
-messages:inputValue,
-  senderId: userId,
-  time: serverTimestamp(), 
-};
-setInputValue('')
-try {
-  if (isEditId) {
-    console.log(isEditId,'isEditId')
-    const messageDocRef = doc(
-      db,
-      'Chats',
-      chatId,
-      'messages',
-      isEditId
-    );
-    await updateDoc(messageDocRef, {
-      messages: inputValue,
-    });
-    setIsEditId(''); // Clear the edit state
-    console.log('Message edited successfully!');
-  } else {
-    const messagesCollectionRef = collection(db, 'Chats', chatId, 'messages');
-    const res = await addDoc(messagesCollectionRef, message);
-        console.log(res);
-        console.log('Message added successfully!');
-  }
-
-} catch (error) {
-  console.error("Error getting documents: ", error);
-}
-  }
+  const handleSendMessage = async () => {
+    let userMessage=inputValue
+    const message = {
+      imageUrl: "",
+      isImage: false,
+      messages: userMessage,
+      senderId: userId,
+      time: serverTimestamp(),
+    };
+    setInputValue("");
+  
+    try {
+      if (isEditId) {
+        const messageDocRef = doc(db, "Chats", chatId, "messages", isEditId);
+        await updateDoc(messageDocRef, {
+          messages: inputValue,
+        });
+        setIsEditId(""); // Clear the edit state
+        console.log("Message edited successfully!");
+      } else {
+        // Fetch chat data
+        const messagesCollectionRef = collection(db, "Chats", chatId, "messages");
+          const res = await addDoc(messagesCollectionRef, message);
+          console.log(res);
+          console.log("Message added successfully!");
+        const chatRef = doc(db, "Chats", chatId);
+        const chatDoc = await getDoc(chatRef);
+        if (chatDoc.exists()) {
+          const chatData = chatDoc.data();
+  console.log(chatData,'chatData')
+          
+  
+          // Update unreadSeller and unreadBuyer based on senderId
+          const isUserSeller = userId === chatData.sellerId;
+          const isUserBuyer = userId === chatData.buyerId;
+  console.log(isUserSeller,'isUserSeller')
+  console.log(isUserBuyer,'isUserBuyer')
+          // Update unreadSeller or unreadBuyer based on user role
+          if (isUserSeller) {
+            console.log('isUserSeller')
+            // User is the seller, update unreadSeller to 0
+            updateDoc(chatRef, { unreadBuyer: chatData.unreadBuyer+1,lastMessage:userMessage,lastMessageTime:serverTimestamp() })
+              .then(() => {
+                console.log('unreadSeller updated to 0');
+              })
+              .catch((error) => {
+                console.error('Error updating unreadSeller:', error);
+              });
+          } else if (isUserBuyer) {
+            console.log(chatData.unreadBuyer+1,'isUserBuyer')
+            // User is the buyer, update unreadBuyer to 0
+            updateDoc(chatRef, { unreadSeller: chatData.unreadSeller+1,lastMessage:userMessage,lastMessageTime:serverTimestamp() })
+              .then(() => {
+                console.log('unreadBuyer updated to 0');
+              })
+              .catch((error) => {
+                console.error('Error updating unreadBuyer:', error);
+              });
+          }
+        } else {
+          console.error("Chat data not found");
+        }
+      }
+    } catch (error) {
+      console.error("Error sending message: ", error);
+    }
+  };
+   
   return (
     <div className="min-h-[600px] m-5 md:m-10 lg:m-20 border border-gray-300 flex flex-row">
       {/* Sidebar */}
@@ -237,13 +289,13 @@ try {
             <div className="flex flex-row items-center gap-x-10">
               <Image
                 alt="Item Image"
-                src={chatInfo&&userId===chatInfo.buyerId?chatInfo.SellerProfileImage:chatInfo.BuyerProfileImage}
+                src={chatInfo&&userId===chatInfo.buyerId?chatInfo.sellerProfileImage:chatInfo.buyerProfileImage}
                 width={60}
                 height={30}
                 className="rounded-full"
               />
               <div className="flex flex-col gap-x-2">
-                <p className="text-lg font-bold">{chatInfo&&userId===chatInfo.buyerId?chatInfo.SellerName:chatInfo.buyerName}</p>
+                <p className="text-lg font-bold">{chatInfo&&userId===chatInfo.buyerId?chatInfo.sellerName:chatInfo.buyerName}</p>
                 <p>Active last day</p>
               </div>
             </div>
@@ -265,7 +317,7 @@ try {
         <Image src={val.imageUrl} alt=""  width={180}
               height={150} /></div></div>}
         {!val.isImage&&<div className="flex flex-col gap-y-1">
-          <p className="text-sm text-gray-600">{formatTime(val.time.seconds)}</p>
+          {/* <p className="text-sm text-gray-600">{formatTime(val.time.seconds)}</p> */}
            <div className="flex flex-row gap-x-2">
             <div className="bg-primary text-white w-44 p-3 rounded flex items-center justify-between">
               
@@ -291,9 +343,9 @@ try {
                 <button style={{fontSize:"20px",padding:"10px"}} onClick={()=>{setIsEditId(val.id);setInputValue(val.messages);setIsOptionModalOpen('');}}>Edit</button>
               </div>}
         
-              {val.isSeen&&<div className="self-end p-1 bg-primary rounded-full">
+              {/* {val.isSeen&&<div className="self-end p-1 bg-primary rounded-full">
               <CheckCheck size={15} className="text-white" />
-            </div>}
+            </div>} */}
           </div>
           {/* <p className="text-end text-sm text-gray-600">Seen</p> */}
         </div>}
@@ -306,14 +358,14 @@ try {
       {val.isImage&&<div style={{border:"4px solid #D1D5DB",borderRadius:"10px"}}><Image src={val.imageUrl} alt=""  width={180}
               height={100} /></div> }
       {!val.isImage&&  <div className="flex flex-col gap-y-1">
-          <p className="text-sm text-gray-600">{formatTime(val.time.seconds)}</p>
+          {/* <p className="text-sm text-gray-600">{formatTime(val.time.seconds)}</p> */}
           <div className="flex flex-row gap-x-2">
             <div className="bg-gray-300 text-black w-44 p-3 rounded">
               {val.messages} 
             </div>
-            {val.isSeen&&<div className="self-end p-1 bg-primary rounded-full">
+            {/* {val.isSeen&&<div className="self-end p-1 bg-primary rounded-full">
               <CheckCheck size={15} className="text-white" />
-            </div>}
+            </div>} */}
           </div>
           {/* <p className="text-end text-sm text-gray-600">Seen</p> */}
         </div>}
