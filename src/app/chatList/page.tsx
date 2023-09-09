@@ -20,7 +20,6 @@ import {
   where,
   or,and
 } from "firebase/firestore";
-import {orWhere } from 'firebase/compat/firestore';
 import { db } from "../../firebase/firebase";
 import Image from "next/image";
 
@@ -184,7 +183,6 @@ const Page = () => {
     }}
   >
    {user.id === val.sellerId?val.unreadSeller:val.unreadBuyer}
-   {/* {user.id === val.sellerId?val.unreadBuyer:val.unreadSeller} */}
   </div>
 {/* ) : null} */}
 

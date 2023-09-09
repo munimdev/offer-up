@@ -88,19 +88,19 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
     const messagesCollectionRef = collection(chatRef, 'messages');
     const q = query(messagesCollectionRef, orderBy('time', 'asc'));
   
-    const unsubscribeChat = onSnapshot(chatRef, (chatDoc) => {
+    let unsubscribeChat;
+    let unsubscribeMessages;
+  
+    unsubscribeChat = onSnapshot(chatRef, (chatDoc) => {
       if (chatDoc.exists()) {
         const chatData = chatDoc.data();
-        setChatInfo(chatData); // Set the chat info here
+        setChatInfo(chatData);
         console.log(chatData, 'chatData');
   
-        // Check if user.id matches sellerId or buyerId
         const isUserSeller = userId === chatData.sellerId;
         const isUserBuyer = userId === chatData.buyerId;
   
-        // Update unreadSeller or unreadBuyer based on user role
         if (isUserSeller) {
-          // User is the seller, update unreadSeller to 0
           updateDoc(chatRef, { unreadSeller: 0 })
             .then(() => {
               console.log('unreadSeller updated to 0');
@@ -109,7 +109,6 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
               console.error('Error updating unreadSeller:', error);
             });
         } else if (isUserBuyer) {
-          // User is the buyer, update unreadBuyer to 0
           updateDoc(chatRef, { unreadBuyer: 0 })
             .then(() => {
               console.log('unreadBuyer updated to 0');
@@ -119,7 +118,7 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
             });
         }
   
-        const unsubscribeMessages = onSnapshot(q, (querySnapshot) => {
+        unsubscribeMessages = onSnapshot(q, (querySnapshot) => {
           const fetchedMessages = [];
           querySnapshot.forEach((doc) => {
             fetchedMessages.push({ ...doc.data(), id: doc.id });
@@ -127,13 +126,19 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
           console.log(fetchedMessages);
           setMessages(fetchedMessages);
         });
-  
-        // Return the unsubscribe function for messages
-        return () => unsubscribeMessages();
       }
     });
+  
+    // Return a cleanup function to unsubscribe when the component unmounts
+    return () => {
+      if (unsubscribeChat) {
+        unsubscribeChat(); // Unsubscribe from chat updates
+      }
+      if (unsubscribeMessages) {
+        unsubscribeMessages(); // Unsubscribe from messages updates
+      }
+    };
   }, [chatId, userId]);
-
 
   useEffect(() => {
     function handleClickOutside(event) {
