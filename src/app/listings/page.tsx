@@ -74,6 +74,7 @@ const Listings = () => {
     },
   });
   const fetchChatsForItem = async (itemId,userId) => {
+    setIsLoading(true)
     console.log(itemId,'itemID')
     console.log(userId,'userId')
     const chatsCollectionRef = collection(db, "Chats");
@@ -90,7 +91,7 @@ const Listings = () => {
       });
       console.log(fetchedChats)
       setChatData(fetchedChats);
-      setIsLoading(true)
+      setIsLoading(false)
     });
   
     return () => unsubscribe();
@@ -203,7 +204,7 @@ const Listings = () => {
                     </div>
                     <div className="flex flex-col items-end justify-between" onClick={()=>{fetchChatsForItem(item.id,user.id)}}>
                       <p className="text-sm font-medium text-right">{`Posted 02/08/2023`}</p>
-                      <ItemDetails item={item} refetchItems={refetchItems} chats={chatData} isLoading={isLoading}/>
+                      <ItemDetails item={item} refetchItems={refetchItems} chats={chatData} isLoading={isLoading} userId={user.id}/>
                       
                     </div>
                   </div>
@@ -226,7 +227,7 @@ interface ItemDetailsProps {
   item: Item;
 }
 
-const ItemDetails: React.FC<ItemDetailsProps> = ({ refetchItems, item,chats,isLoading}) => {
+const ItemDetails: React.FC<ItemDetailsProps> = ({ refetchItems, item,chats,isLoading,userId}) => {
   const { toast } = useToast();
   const router = useRouter();
   // console.log(user,'user')
@@ -240,7 +241,12 @@ const ItemDetails: React.FC<ItemDetailsProps> = ({ refetchItems, item,chats,isLo
   const [cover, setCover] = useState<ItemImages>();
   const [files, setFiles] = useState<ItemImages[]>([]);
   const [isHovered, setIsHovered] = useState<string | null>(null);
-
+const redirectHandler=(chatId)=>{
+  console.log('redirect')
+  console.log(chatId,'chatId')
+  console.log(userId,'userId')
+  router.replace(`/chat?chatId=${chatId}&userId=${userId}`);
+}
   useEffect(() => {
     if (item.images.length === 1) {
       setCover(item.images[0]);
@@ -517,13 +523,10 @@ const ItemDetails: React.FC<ItemDetailsProps> = ({ refetchItems, item,chats,isLo
 ) : (
   // Render chats
   chats.map((chat) => (
-    <Link
-      href={`/chat?chatId=${chat.id}&userId=${chat.sellerId}`}
-      style={{ cursor: 'pointer' }}
-      key={chat.buyerId} // Use 'key' for React map iteration
-      className="flex items-center space-x-4"
-    >
-      <div className="w-12 h-12">
+    // onclick={()=>{redirectHandler(chat.id)}}
+    // `/chat?chatId=${chatId}&userId=${userId}`
+    <Link href={`/chat?chatId=${chat.id}&userId=${userId}`}  className="flex items-center space-x-4" key={chat.buyerId}  style={{cursor:"pointer"}}>
+      <div className="w-12 h-12" >
         <img
           src={chat.buyerProfileImage}
           alt={chat.buyerName}
@@ -552,7 +555,7 @@ const ItemDetails: React.FC<ItemDetailsProps> = ({ refetchItems, item,chats,isLo
           {chat.unreadSeller}
         </div>
       )}
-    </Link>
+       </Link>
   ))
 )}
 
