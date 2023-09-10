@@ -42,7 +42,6 @@ const Page = () => {
     let unsubscribeMessages;
     const chatRef = doc(db, 'Chats', chatId);
     const messagesCollectionRef = collection(chatRef, 'messages');
-    console.log(lastLoadedMessageTime,'lastLoadedMessageTime')
     if (lastLoadedMessageTime) {
       const additionalMessagesQuery = query(
         messagesCollectionRef,
@@ -60,7 +59,6 @@ const Page = () => {
         if (fetchedMessages.length > 0) {
           setLastLoadedMessageTime(fetchedMessages[0].time);
         }
-console.log(fetchedMessages,'fetchedMessages-scrol')
 const currentScrollPosition = chatContainerRef.current.scrollHeight - chatContainerRef.current.scrollTop;
 
         setMessages((prevMessages) => [ ...fetchedMessages,...prevMessages]);
@@ -151,7 +149,6 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
       if (chatDoc.exists()) {
         const chatData = chatDoc.data();
         setChatInfo(chatData);
-        console.log(chatData, 'chatData');
   
         const isUserSeller = userId === chatData.sellerId;
         const isUserBuyer = userId === chatData.buyerId;
@@ -182,7 +179,7 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
           if (fetchedMessages.length > 0) {
             setLastLoadedMessageTime(fetchedMessages[0].time);
           }
-          console.log(fetchedMessages,'fetch');
+
           setMessages(fetchedMessages);
           setTimeout(() => {
             chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
@@ -249,23 +246,20 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
         // Fetch chat data
         const messagesCollectionRef = collection(db, "Chats", chatId, "messages");
           const res = await addDoc(messagesCollectionRef, message);
-          console.log(res);
-          console.log("Message added successfully!");
         const chatRef = doc(db, "Chats", chatId);
         const chatDoc = await getDoc(chatRef);
         if (chatDoc.exists()) {
           const chatData = chatDoc.data();
-  console.log(chatData,'chatData')
+
           
   
           // Update unreadSeller and unreadBuyer based on senderId
           const isUserSeller = userId === chatData.sellerId;
           const isUserBuyer = userId === chatData.buyerId;
-  console.log(isUserSeller,'isUserSeller')
-  console.log(isUserBuyer,'isUserBuyer')
+
           // Update unreadSeller or unreadBuyer based on user role
           if (isUserSeller) {
-            console.log('isUserSeller')
+    
             // User is the seller, update unreadSeller to 0
             updateDoc(chatRef, { unreadBuyer: chatData.unreadBuyer+1,lastMessage:userMessage,lastMessageTime:serverTimestamp() })
               .then(() => {
@@ -275,7 +269,7 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
                 console.error('Error updating unreadSeller:', error);
               });
           } else if (isUserBuyer) {
-            console.log(chatData.unreadBuyer+1,'isUserBuyer')
+            
             // User is the buyer, update unreadBuyer to 0
             updateDoc(chatRef, { unreadSeller: chatData.unreadSeller+1,lastMessage:userMessage,lastMessageTime:serverTimestamp() })
               .then(() => {

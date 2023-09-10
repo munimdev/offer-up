@@ -8,7 +8,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useFetch } from "@/hooks";
 import * as Queries from "@/utils/queries";
 import { addDoc, collection, serverTimestamp,getDocs, query,deleteDoc,
-  onSnapshot,doc,updateDoc,orderBy } from "firebase/firestore";
+  onSnapshot,doc,updateDoc,orderBy,where } from "firebase/firestore";
 import { db, storage} from "../../firebase/firebase";
 import { useSession } from "@/hooks";
 
@@ -128,43 +128,65 @@ console.log(data,'data')
     startChatHandler(chat)
     setIsChatDialogOpen(false);
   }
-const startChatHandler = async(text) =>{
-try {
-  const chatRef =  collection(db,'Chats')
-  const chatRes = await addDoc(chatRef, {
-    buyerId: user.id,
-    buyerName: user.name,
-    buyerProfileImage: user.imagePath,
-    buyerLastSeen:serverTimestamp(),
-    sellerId: data.customer.id,
-    sellerName: data.customer.name,
-    sellerProfileImage: data.customer.imagePath,
-    sellerLastSeen:serverTimestamp(),
-    itemId: data.id,
-    itemName: data.name,
-    itemImage: data.images[0].imagePath,
-    lastMessage: text,
-    lastMessageTime: serverTimestamp(),
-    unreadBuyer:0,
-    unreadSeller:1,
-    startDate: serverTimestamp(),
-    // Add more fields as needed
-  });
-  console.log(chatRes,'chatRes')
-  const messagesCollectionRef = collection(db, 'Chats', chatRes.id, 'messages');
-  const messageRef = await addDoc(messagesCollectionRef,{
-    imageUrl:"",
-    isImage:false,
-    messages:text,
-    senderId:user.id,
-    time:serverTimestamp(),
-    
-  });
-  router.replace(`/chat?chatId=${chatRes.id}&userId=${user.id}`);
-} catch (error) {
-  console.log(error)
-}
-}
+  const startChatHandler = async (text) => {
+    try {
+      // Check if a chat already exists for the same buyer, seller, and product
+      const chatQuery = query(
+        collection(db, 'Chats'),
+        where('buyerId', '==', user.id),
+        where('sellerId', '==', data.customer.id),
+        where('itemId', '==', data.id)
+      );
+  
+      const chatQuerySnapshot = await getDocs(chatQuery);
+      let chatId = null;
+  
+      // If a chat already exists, use its ID; otherwise, create a new chat
+      if (!chatQuerySnapshot.empty) {
+        chatQuerySnapshot.forEach((doc) => {
+          chatId = doc.id;
+        });
+      } else {
+        const chatRef = collection(db, 'Chats');
+        const chatRes = await addDoc(chatRef, {
+          buyerId: user.id,
+          buyerName: user.name,
+          buyerProfileImage: user.imagePath,
+          buyerLastSeen: serverTimestamp(),
+          sellerId: data.customer.id,
+          sellerName: data.customer.name,
+          sellerProfileImage: data.customer.imagePath,
+          sellerLastSeen: serverTimestamp(),
+          itemId: data.id,
+          itemName: data.name,
+          itemImage: data.images[0].imagePath,
+          lastMessage: text,
+          lastMessageTime: serverTimestamp(),
+          unreadBuyer: 0,
+          unreadSeller: 1,
+          startDate: serverTimestamp(),
+          // Add more fields as needed
+        });
+  
+        chatId = chatRes.id;
+      }
+  
+      // Add the message to the chat
+      const messagesCollectionRef = collection(db, 'Chats', chatId, 'messages');
+      const messageRef = await addDoc(messagesCollectionRef, {
+        imageUrl: '',
+        isImage: false,
+        messages: text,
+        senderId: user.id,
+        time: serverTimestamp(),
+      });
+  
+      router.replace(`/chat?chatId=${chatId}&userId=${user.id}`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
   return (
     <>
      

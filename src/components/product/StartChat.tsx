@@ -7,12 +7,16 @@ const StartChat = ({ onClose, onSubmit }) => {
   const handleInputChange = (e) => {
     setMessage(e.target.value);
   };
-
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && message.trim() !== '') {
+      handleStartChat();
+    }
+  };
   const handleStartChat = () => {
     onSubmit(message);
     setMessage('');
   };
-
+  const disabledButtonStyle = message.trim() === '' ? { backgroundColor: 'lightgray', color: 'white', cursor: 'not-allowed' } : {};
   return (
     <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50 ">
       <div className="bg-white p-12 rounded-lg shadow-lg relative w-180"> {/* Adjust width here */}
@@ -29,9 +33,11 @@ const StartChat = ({ onClose, onSubmit }) => {
             placeholder="Type your message..."
             value={message}
             onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
             className="flex-grow border border-gray-300 rounded-lg px-32 py-3 mr-2" // Use flex-grow and adjust margin
           />
           <button
+          style={disabledButtonStyle}
             className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark flex items-center justify-center"
             onClick={handleStartChat}
           >

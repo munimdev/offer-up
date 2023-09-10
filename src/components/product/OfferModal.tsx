@@ -6,12 +6,19 @@ const OfferModal = ({ onClose, onSubmit }) => {
   const handlePriceChange = (e) => {
     setPrice(e.target.value);
   };
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && price.trim() !== '') {
+      handleSubmit();
+    }
+  };
 
   const handleSubmit = () => {
     onSubmit(price);
     setPrice('');
     onClose();
   };
+  const disabledButtonStyle = price.trim() === '' ? { backgroundColor: 'lightgray', color: 'white', cursor: 'not-allowed' } : {};
+
 
   return (
     <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center z-50">
@@ -26,14 +33,17 @@ const OfferModal = ({ onClose, onSubmit }) => {
           value={price}
           min={0}
           onChange={handlePriceChange}
+          onKeyDown={handleKeyDown}
           className="border border-gray-300 rounded-lg p-6 w-full mb-4"
           /* Increased padding and rounded corners */
         />
         <div className="flex justify-center">
           {/* Centered the buttons */}
           <button
+            style={disabledButtonStyle} // Apply inline styles for the disabled button
             className="px-12 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark mr-2"
             onClick={handleSubmit}
+            disabled={price.trim() === ''}
           >
             Send
           </button>
