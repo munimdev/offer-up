@@ -167,7 +167,7 @@ const Page = () => {
                       about {formatTime(val.lastMessageTime.seconds)}
                     </p>
                   </div>
-                  {/* {((user.id === val.sellerId && val.unreadSeller !== 0) || (user.id === val.buyerId && val.unreadBuyer !== 0)) ? (
+                  {((user.id === val.sellerId && val.unreadSeller !== 0) || (user.id === val.buyerId && val.unreadBuyer !== 0)) ? (
   <div
     style={{
       width: '2rem',
@@ -184,23 +184,8 @@ const Page = () => {
   >
    {user.id === val.sellerId?val.unreadSeller:val.unreadBuyer}
   </div>
-) :null} */}
- <div
-    style={{
-      width: '2rem',
-      height: '2rem',
-      backgroundColor: '#62C3FE',
-      color: 'white',
-      borderRadius: '50%',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      fontSize: '0.7rem',
-      marginLeft: 'auto',
-    }}
-  >
-   {user.id === val.sellerId?val.unreadSeller:val.unreadBuyer}
-  </div>
+) :null}
+
 
                 </div>
               </div>
