@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useSearchParams } from 'next/navigation';
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { addDoc, collection, serverTimestamp,getDoc, query,deleteDoc,
-  onSnapshot,doc,updateDoc,orderBy } from "firebase/firestore";
+  onSnapshot,doc,updateDoc,orderBy,limit,startAfter } from "firebase/firestore";
 import { db, storage} from "../../firebase/firebase";
 import { v4 as uuid } from "uuid";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,9 @@ import { CheckCheck, MoreHorizontal, MoreVertical,ImageIcon } from "lucide-react
 import Image from "next/image";
 
 const Page = () => {
+  const chatContainerRef = useRef(null);
+  const [lastLoadedMessageTime, setLastLoadedMessageTime] = useState(null);
+  const [messageLimit, setMessageLimit] = useState(10);
   const searchParams = useSearchParams();
   const chatId = searchParams.get('chatId');
   const userId = searchParams.get('userId');
@@ -27,9 +30,50 @@ const Page = () => {
     setInputValue(event.target.value);
   };
   const handleIconClick = () => {
-    // Trigger the file input's click event
+
     fileInputRef.current.click();
   };
+ 
+  const handleScroll = () => {
+    if (
+      chatContainerRef.current.scrollTop === 0 
+    ) {
+      let unsubscribeChat;
+    let unsubscribeMessages;
+    const chatRef = doc(db, 'Chats', chatId);
+    const messagesCollectionRef = collection(chatRef, 'messages');
+    console.log(lastLoadedMessageTime,'lastLoadedMessageTime')
+    if (lastLoadedMessageTime) {
+      const additionalMessagesQuery = query(
+        messagesCollectionRef,
+        orderBy('time', 'desc'),
+        startAfter(lastLoadedMessageTime), 
+        limit(10)
+      );
+
+      unsubscribeMessages = onSnapshot(additionalMessagesQuery, (querySnapshot) => {
+        const fetchedMessages = [];
+        querySnapshot.forEach((doc) => {
+          fetchedMessages.unshift({ ...doc.data(), id: doc.id });
+        });
+
+        if (fetchedMessages.length > 0) {
+          setLastLoadedMessageTime(fetchedMessages[0].time);
+        }
+console.log(fetchedMessages,'fetchedMessages-scrol')
+        setMessages((prevMessages) => [ ...fetchedMessages,...prevMessages]);
+       
+      });
+    } 
+    }
+  };
+  useEffect(() => {
+    chatContainerRef.current.addEventListener("scroll", handleScroll);
+    return () => {
+      chatContainerRef.current.removeEventListener("scroll", handleScroll);
+    };
+  }, [messages]);
+
   function formatTime(messageTime) {
     const currentTimeInSeconds = Math.floor(Date.now() / 1000);
 const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
@@ -60,7 +104,7 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
 
     uploadTask.on(
       (error) => {
-        //TODO:Handle Error
+
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
@@ -75,7 +119,7 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
           const messagesCollectionRef = collection(db, 'Chats', chatId, 'messages');
           
           const res = await addDoc(messagesCollectionRef, message);
-    // console.log(res);
+  
     console.log('Message added successfully!');
         });
       }
@@ -86,7 +130,7 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
   useEffect(() => {
     const chatRef = doc(db, 'Chats', chatId);
     const messagesCollectionRef = collection(chatRef, 'messages');
-    const q = query(messagesCollectionRef, orderBy('time', 'asc'));
+    const q = query(messagesCollectionRef, orderBy('time', 'desc'),limit(10));
   
     let unsubscribeChat;
     let unsubscribeMessages;
@@ -121,24 +165,29 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
         unsubscribeMessages = onSnapshot(q, (querySnapshot) => {
           const fetchedMessages = [];
           querySnapshot.forEach((doc) => {
-            fetchedMessages.push({ ...doc.data(), id: doc.id });
+            fetchedMessages.unshift({ ...doc.data(), id: doc.id });
           });
-          console.log(fetchedMessages);
+          if (fetchedMessages.length > 0) {
+            setLastLoadedMessageTime(fetchedMessages[0].time);
+          }
+          console.log(fetchedMessages,'fetch');
           setMessages(fetchedMessages);
+          setTimeout(() => {
+            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+          }, 100);
         });
       }
     });
-  
-    // Return a cleanup function to unsubscribe when the component unmounts
+
     return () => {
       if (unsubscribeChat) {
-        unsubscribeChat(); // Unsubscribe from chat updates
+        unsubscribeChat(); 
       }
       if (unsubscribeMessages) {
-        unsubscribeMessages(); // Unsubscribe from messages updates
+        unsubscribeMessages(); 
       }
     };
-  }, [chatId, userId]);
+  }, []);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -234,58 +283,8 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
   };
    
   return (
-    <div className="min-h-[600px] m-5 md:m-10 lg:m-20 border border-gray-300 flex flex-row">
-      {/* Sidebar */}
-      {/* <div className="flex flex-col border-r border-gray-300"> */}
-        {/* Item Display */}
-        {/* <div className="p-5 flex flex-col gap-y-5">
-          <div className="flex flex-row gap-x-3">
-            <Image
-              alt="Item Image"
-              src="/images/placeholder.png"
-              width={80}
-              height={50}
-              className="rounded"
-            />
-            <div className="flex flex-col">
-              <p>Monitor</p>
-              <p>$200</p>
-              <p>34 Views</p>
-            </div>
-          </div>
-          <div className="flex flex-row gap-x-5">
-            <Button>Mark Sold</Button>
-            <Button className="border border-primary bg-white text-primary hover:bg-primary hover:text-white">
-              Sell Faster
-            </Button>
-          </div>
-        </div> */}
-
-        {/* Chat List */}
-        {/* <div className="border-t border-gray-300 pt-4">
-          <p className="px-2 font-semibold text-lg">Messages</p> */}
-
-          {/* Chat Entry */}
-          {/* <div className="flex flex-col py-4">
-            <div className="p-4 flex flex-row items-center gap-x-10 border border-r-4 -mr-1 border-primary border-r-white z-10">
-              <Image
-                alt="Item Image"
-                src="/images/placeholder.png"
-                width={60}
-                height={30}
-                className="rounded-full"
-              />
-              <div className="flex flex-col gap-x-2">
-                <p className="text-lg font-bold">Wesley Bennet</p>
-                <p>You: This is a message</p>
-                <p className="text-sm text-gray-600">about 1 day ago</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> */}
-      {/* Sidebar End */}
-
+    <div className=" m-5 md:m-10 lg:m-20 border border-gray-300 flex flex-row">
+      
       {/* Message Window */}
       <div className="flex-1 flex flex-col p-5 border border-primary">
         {/* Window Top Bar */}
@@ -309,7 +308,9 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
         </div>
 
         {/* Messages List */}
-        <div className="flex-1 flex flex-col gap-y-5 justify-end py-4">
+        <div  id="chat-container"
+          ref={chatContainerRef}style={{ maxHeight: '400px', overflowY: 'scroll' }}>
+        <div className="flex-1 flex flex-col gap-y-5 justify-end py-4"  >
 
           {/* Message Bubble */}
           {userId&&messages&&messages.map((val, ind) => {
@@ -317,27 +318,24 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
       <>
     
       <div className="flex flex-row justify-end" key={val.createdAt}>
-      {val.isImage&&<div sx={{display:"flex",justifyContent:"center"}}>   <p className="text-sm text-gray-600">{formatTime(val.time.seconds)}</p><div style={{border:"4px solid #D1D5DB",borderRadius:"10px"}}>
-   
+      {val.isImage&&<div style={{display:"flex",justifyContent:"center"}}> 
+
+       {/* <p className="text-sm text-gray-600">{formatTime(val.time.seconds)}</p> */}
+       <div style={{border:"4px solid #D1D5DB",borderRadius:"10px"}}>
+      
         <Image src={val.imageUrl} alt=""  width={180}
               height={150} /></div></div>}
         {!val.isImage&&<div className="flex flex-col gap-y-1">
-          {/* <p className="text-sm text-gray-600">{formatTime(val.time.seconds)}</p> */}
-           <div className="flex flex-row gap-x-2">
-            <div className="bg-primary text-white w-44 p-3 rounded flex items-center justify-between">
-              
-              {val.messages} <MoreVertical size={15} className="text-white" onClick={() => setIsOptionModalOpen(val.id)} style={{ cursor: 'pointer' }}/>
-            </div>
-            {isOptionModaOpen===val.id&&  <div
+        {isOptionModaOpen===val.id&&  <div
             ref={modalRef}
                 className="bg-white p-3 rounded"
                 style={{
-                  position: 'absolute',
-                  marginTop:"30px",
+                  position: 'relative',
+                  // marginTop:"-100px",
                   display:"flex",
                   flexDirection:"column",
                   justifyContent:"center",
-                  right: 50,
+                  // right: 450,
                   zIndex: 1000,
                   // top: 0,
                   boxShadow: '0 2px 5px rgba(0, 0, 0, 0.2)',
@@ -347,11 +345,19 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
                 <hr />
                 <button style={{fontSize:"20px",padding:"10px"}} onClick={()=>{setIsEditId(val.id);setInputValue(val.messages);setIsOptionModalOpen('');}}>Edit</button>
               </div>}
-        
+          {/* <p className="text-sm text-gray-600">{formatTime(val.time.seconds)}</p> */}
+           <div className="flex flex-row gap-x-2">
+            <div className="bg-primary text-white w-44 p-3 rounded flex items-center justify-between">
+              
+              {val.messages} <MoreVertical size={15} className="text-white" onClick={() => setIsOptionModalOpen(val.id)} style={{ cursor: 'pointer' }}/>
+            </div>
+            
               {/* {val.isSeen&&<div className="self-end p-1 bg-primary rounded-full">
               <CheckCheck size={15} className="text-white" />
             </div>} */}
           </div>
+          
+        
           {/* <p className="text-end text-sm text-gray-600">Seen</p> */}
         </div>}
       </div>
@@ -379,37 +385,9 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
     );
   })}
 
-          {/* <div className="flex flex-row justify-end">
-            <div className="flex flex-col gap-y-1">
-              <p className="text-sm text-gray-600">12:00AM Aug 01</p>
-              <div className="flex flex-row gap-x-2">
-                <div className="bg-primary text-white w-44 p-3 rounded">
-                  Sorry it was 200, still interested?
-                </div>
-                <div className="self-end p-1 bg-primary rounded-full">
-                    <CheckCheck size={15} className="text-white"/>
-                </div>
-              </div>
-              <p className="text-end text-sm text-gray-600">Seen</p>
-            </div>
-          </div>
 
-          <div className="flex flex-row justify-start">
-            <div className="flex flex-col gap-y-1">
-              <p className="text-sm text-gray-600">12:00AM Aug 01</p>
-              <div className="flex flex-row gap-x-2">
-                <div className="bg-gray-300 text-black w-44 p-3 rounded">
-                  Sorry it was 200, still interested?
-                </div>
-                <div className="self-end p-1 bg-primary rounded-full">
-                    <CheckCheck size={15} className="text-white"/>
-                </div>
-              </div>
-              <p className="text-end text-sm text-gray-600">Seen</p>
-            </div>
-          </div> */}
 
-        </div>
+</div> </div>
 
         {/* Message Input */}
         <form className="flex flex-row border-t border-gray-300 p-3 pb-1 items-center">
