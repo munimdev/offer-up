@@ -24,7 +24,7 @@ const Page = () => {
   const [isEditId,setIsEditId]=useState<string>();
   const [messages, setMessages] = useState<any[]>([]);
   const modalRef = useRef(null);
-  const fileInputRef = useRef(null);
+  const fileInputRef = useRef('');
   const [isOptionModaOpen, setIsOptionModalOpen] = useState<string>();
   const handleInputChange = (event:any) => {
     setInputValue(event.target.value);
@@ -332,9 +332,9 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
       <>
     
       <div className="flex flex-row justify-end" key={val.id}>
-      {val.isImage&&<div style={{display:"flex",justifyContent:"center"}}> 
+      {val.isImage&&<div style={{display:"flex",justifyContent:"center",flexDirection:"column"}}> 
 
-       {/* <p className="text-sm text-gray-600">{formatTime(val.time.seconds)}</p> */}
+      <p className="text-sm text-gray-600">{val.time ? formatTime(val.time.seconds) : ''}</p>
        <div style={{border:"4px solid #D1D5DB",borderRadius:"10px"}}>
       
         <Image src={val.imageUrl} alt=""  width={180}
@@ -359,7 +359,7 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
                 <hr />
                 <button style={{fontSize:"20px",padding:"10px"}} onClick={()=>{setIsEditId(val.id);setInputValue(val.messages);setIsOptionModalOpen('');}}>Edit</button>
               </div>}
-          {/* <p className="text-sm text-gray-600">{formatTime(val.time.seconds)}</p> */}
+          <p className="text-sm text-gray-600">{val.time ? formatTime(val.time.seconds) : ''}</p>
            <div className="flex flex-row gap-x-2">
             <div className="bg-primary text-white w-44 p-3 rounded flex items-center justify-between">
               
@@ -380,10 +380,15 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
       <>
    
       <div className="flex flex-row justify-start" key={val.id}>
-      {val.isImage&&<div style={{border:"4px solid #D1D5DB",borderRadius:"10px"}}><Image src={val.imageUrl} alt=""  width={180}
-              height={100} /></div> }
+      {val.isImage&&<div style={{display:"flex",justifyContent:"center",flexDirection:"column"}}> 
+
+<p className="text-sm text-gray-600">{formatTime(val.time.seconds)}</p>
+<div style={{border:"4px solid #D1D5DB",borderRadius:"10px"}}>
+
+ <Image src={val.imageUrl} alt=""  width={180}
+       height={150} /></div></div>}
       {!val.isImage&&  <div className="flex flex-col gap-y-1">
-          {/* <p className="text-sm text-gray-600">{formatTime(val.time.seconds)}</p> */}
+          <p className="text-sm text-gray-600">{val.time ? formatTime(val.time.seconds) : ''}</p>
           <div className="flex flex-row gap-x-2">
             <div className="bg-gray-300 text-black w-44 p-3 rounded">
               {val.messages} 
