@@ -61,11 +61,19 @@ const Page = () => {
           setLastLoadedMessageTime(fetchedMessages[0].time);
         }
 console.log(fetchedMessages,'fetchedMessages-scrol')
+const currentScrollPosition = chatContainerRef.current.scrollHeight - chatContainerRef.current.scrollTop;
+
         setMessages((prevMessages) => [ ...fetchedMessages,...prevMessages]);
+        setTimeout(() => {
+          chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight - currentScrollPosition;
+        }, 100);
        
       });
     } 
+    
     }
+     // Remember the current scroll position
+
   };
   useEffect(() => {
     chatContainerRef.current.addEventListener("scroll", handleScroll);
