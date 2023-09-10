@@ -182,7 +182,10 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
 
           setMessages(fetchedMessages);
           setTimeout(() => {
-            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+            if(chatContainerRef){
+              chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+            }
+
           }, 100);
         });
       }

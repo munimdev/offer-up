@@ -167,7 +167,7 @@ const Page = () => {
                       about {formatTime(val.lastMessageTime.seconds)}
                     </p>
                   </div>
-                  {/* {((user.id === val.sellerId && val.unreadSeller !== 0) || (user.id === val.buyerId && val.unreadBuyer !== 0)) ? ( */}
+                  {((user.id === val.sellerId && val.unreadSeller !== 0) || (user.id === val.buyerId && val.unreadBuyer !== 0)) ? (
   <div
     style={{
       width: '2rem',
@@ -184,7 +184,7 @@ const Page = () => {
   >
    {user.id === val.sellerId?val.unreadSeller:val.unreadBuyer}
   </div>
-{/* ) : null} */}
+) :null}
 
                 </div>
               </div>
