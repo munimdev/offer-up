@@ -20,7 +20,7 @@ const Page = () => {
   const userId = searchParams.get('userId');
  const [chatInfo,setChatInfo]= useState({})
 
-  const [inputValue, setInputValue] = useState<string>();
+  const [inputValue, setInputValue] = useState<string>('');
   const [isEditId,setIsEditId]=useState<string>();
   const [messages, setMessages] = useState<any[]>([]);
   const modalRef = useRef(null);
@@ -28,6 +28,11 @@ const Page = () => {
   const [isOptionModaOpen, setIsOptionModalOpen] = useState<string>();
   const handleInputChange = (event:any) => {
     setInputValue(event.target.value);
+  };
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && inputValue.trim() !== '') {
+      handleSendMessage();
+    }
   };
   const handleIconClick = () => {
 
@@ -290,7 +295,7 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
       console.error("Error sending message: ", error);
     }
   };
-   
+  const disabledButtonStyle = inputValue.trim() === '' ? { backgroundColor: 'lightgray', color: 'white', cursor: 'not-allowed' } : {};
   return (
     <div className=" m-5 md:m-10 lg:m-20 border border-gray-300 flex flex-row">
       
@@ -405,6 +410,7 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
          value={inputValue}
             className="flex-1 border-none outline-none"
             placeholder="Message..."
+            onKeyDown={handleKeyDown}
           />
            <input
         type="file"
@@ -412,6 +418,7 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
         style={{ display: "none" }} // Hide the input element
         ref={fileInputRef}
         onChange={handleFileChange}
+        
       />
       <ImageIcon
         size={40}
@@ -421,6 +428,7 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
       />
           {/* <ImageIcon size={40} className="bg-white text-primary mr-2"  /> */}
           <Button
+          style={disabledButtonStyle}
             type="button"
             onClick ={handleSendMessage}
             className="border border-primary bg-white text-primary rounded-full"
