@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState } from 'react';
 import { Send, X } from 'lucide-react'; // Import the Send and X icons from lucide-react
 

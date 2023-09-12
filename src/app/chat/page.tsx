@@ -12,40 +12,42 @@ import { CheckCheck, MoreHorizontal, MoreVertical,ImageIcon } from "lucide-react
 import Image from "next/image";
 
 const Page = () => {
-  const chatContainerRef = useRef(null);
-  const [lastLoadedMessageTime, setLastLoadedMessageTime] = useState(null);
+  const chatContainerRef = useRef<HTMLDivElement | null>(null);
+  const [lastLoadedMessageTime, setLastLoadedMessageTime] = useState<number | null>(null);
   const [messageLimit, setMessageLimit] = useState(10);
   const searchParams = useSearchParams();
   const chatId = searchParams.get('chatId');
   const userId = searchParams.get('userId');
- const [chatInfo,setChatInfo]= useState({})
+  const [chatInfo, setChatInfo] = useState<any>({});
 
   const [inputValue, setInputValue] = useState<string>('');
   const [isEditId,setIsEditId]=useState<string>();
   const [messages, setMessages] = useState<any[]>([]);
   const modalRef = useRef(null);
-  const fileInputRef = useRef('');
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [isOptionModaOpen, setIsOptionModalOpen] = useState<string>();
   const handleInputChange = (event:any) => {
     setInputValue(event.target.value);
   };
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e:any) => {
     if (e.key === 'Enter' && inputValue.trim() !== '') {
       handleSendMessage();
     }
   };
   const handleIconClick = () => {
 
-    fileInputRef.current.click();
+    // fileInputRef.current.click();
+    fileInputRef.current?.click();
   };
  
   const handleScroll = () => {
     if (
-      chatContainerRef.current.scrollTop === 0 
+      chatContainerRef.current?.scrollTop === 0 
     ) {
       let unsubscribeChat;
     let unsubscribeMessages;
-    const chatRef = doc(db, 'Chats', chatId);
+    let currentScrollPosition: number = 0;
+    const chatRef = doc(db, 'Chats', chatId!);
     const messagesCollectionRef = collection(chatRef, 'messages');
     if (lastLoadedMessageTime) {
       const additionalMessagesQuery = query(
@@ -56,7 +58,7 @@ const Page = () => {
       );
 
       unsubscribeMessages = onSnapshot(additionalMessagesQuery, (querySnapshot) => {
-        const fetchedMessages = [];
+        const fetchedMessages: Record<string, any>[] = [];
         querySnapshot.forEach((doc) => {
           fetchedMessages.unshift({ ...doc.data(), id: doc.id });
         });
@@ -64,11 +66,18 @@ const Page = () => {
         if (fetchedMessages.length > 0) {
           setLastLoadedMessageTime(fetchedMessages[0].time);
         }
-const currentScrollPosition = chatContainerRef.current.scrollHeight - chatContainerRef.current.scrollTop;
+        if(chatContainerRef.current){
+          currentScrollPosition =
+          chatContainerRef.current?.scrollHeight - chatContainerRef.current?.scrollTop
+        }
+        
+          
 
         setMessages((prevMessages) => [ ...fetchedMessages,...prevMessages]);
         setTimeout(() => {
-          chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight - currentScrollPosition;
+          if (chatContainerRef.current) {
+            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight - currentScrollPosition;
+          }
         }, 100);
        
       });
@@ -89,7 +98,7 @@ const currentScrollPosition = chatContainerRef.current.scrollHeight - chatContai
   }, [messages]);
   
 
-  function formatTime(messageTime) {
+  function formatTime(messageTime:any) {
     const currentTimeInSeconds = Math.floor(Date.now() / 1000);
 const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
 
@@ -104,11 +113,12 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
       return `${hours} hours ago`;
     } else {
       const date = new Date(messageTime * 1000);
-      const options = { year: 'numeric', month: 'short', day: 'numeric' };
+      const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric' };
+
       return date.toLocaleDateString(undefined, options);
     }
   }
-  const handleFileChange = (e) => {
+  const handleFileChange = (e:any) => {
 
 
 
@@ -117,21 +127,27 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
 
     const uploadTask = uploadBytesResumable(storageRef, selectedFile);
 
-    uploadTask.on(
-      (error) => {
-
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-          const message = {
-            imageUrl:downloadURL,
-            isImage:true,
-            messages:"",
-            senderId: userId,
-            time: serverTimestamp(), 
-          };
+  
+uploadTask.on(
+  'state_changed',
+  (snapshot) => {
+    // Handle upload progress here (if needed)
+  },
+  (error) => {
+    console.error(error);
+  },
+  () => {
+    // Upload completed successfully, get download URL and handle it
+    getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+      const message = {
+        imageUrl: downloadURL,
+        isImage: true,
+        messages: "",
+        senderId: userId,
+        time: serverTimestamp(),
+      };
           
-          const messagesCollectionRef = collection(db, 'Chats', chatId, 'messages');
+          const messagesCollectionRef = collection(db, 'Chats', chatId!, 'messages');
           
           const res = await addDoc(messagesCollectionRef, message);
   
@@ -143,12 +159,12 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
   };
 
   useEffect(() => {
-    const chatRef = doc(db, 'Chats', chatId);
+    const chatRef = doc(db, 'Chats', chatId!);
     const messagesCollectionRef = collection(chatRef, 'messages');
     const q = query(messagesCollectionRef, orderBy('time', 'desc'),limit(10));
   
-    let unsubscribeChat;
-    let unsubscribeMessages;
+    let unsubscribeChat: (() => void) | undefined;
+    let unsubscribeMessages: (() => void) | undefined;
   
     unsubscribeChat = onSnapshot(chatRef, (chatDoc) => {
       if (chatDoc.exists()) {
@@ -177,7 +193,7 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
         }
   
         unsubscribeMessages = onSnapshot(q, (querySnapshot) => {
-          const fetchedMessages = [];
+          const fetchedMessages: Record<string, any>[] = [];
           querySnapshot.forEach((doc) => {
             fetchedMessages.unshift({ ...doc.data(), id: doc.id });
           });
@@ -187,7 +203,7 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
 
           setMessages(fetchedMessages);
           setTimeout(() => {
-            if(chatContainerRef){
+            if(chatContainerRef?.current){
               chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
             }
 
@@ -207,9 +223,9 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
   }, []);
 
   useEffect(() => {
-    function handleClickOutside(event) {
-      if (modalRef.current && !modalRef.current.contains(event.target)) {
-        setIsOptionModalOpen(null);
+    function handleClickOutside(event: any) {
+      if (modalRef.current && !(modalRef.current as HTMLElement).contains(event.target)) {
+        setIsOptionModalOpen("");
       }
     }
 
@@ -220,7 +236,7 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
   }, []);
   const deleteChatHandler = async (messageId:string) => {
  
-    const messageDocRef = doc(db, 'Chats', chatId, 'messages', messageId);
+    const messageDocRef = doc(db, 'Chats', chatId!, 'messages', messageId!);
     try {
       await deleteDoc(messageDocRef);
       console.log('Message deleted successfully!');
@@ -244,7 +260,7 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
   
     try {
       if (isEditId) {
-        const messageDocRef = doc(db, "Chats", chatId, "messages", isEditId);
+        const messageDocRef = doc(db, "Chats", chatId!, "messages", isEditId!);
         await updateDoc(messageDocRef, {
           messages: inputValue,
         });
@@ -252,9 +268,9 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
         console.log("Message edited successfully!");
       } else {
         // Fetch chat data
-        const messagesCollectionRef = collection(db, "Chats", chatId, "messages");
+        const messagesCollectionRef = collection(db, "Chats", chatId!, "messages");
           const res = await addDoc(messagesCollectionRef, message);
-        const chatRef = doc(db, "Chats", chatId);
+        const chatRef = doc(db, "Chats", chatId!);
         const chatDoc = await getDoc(chatRef);
         if (chatDoc.exists()) {
           const chatData = chatDoc.data();

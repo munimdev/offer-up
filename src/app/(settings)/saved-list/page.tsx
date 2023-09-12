@@ -56,7 +56,10 @@ const SaveList = () => {
   });
 
   function onSubmit(values: z.infer<typeof collectionNameSchema>) {
-    createList(values);
+    // createList(values);
+    if ('name' in values && typeof values.name === 'string') {
+      createList(values as { name: string });
+    }
   }
 
   const collectionNameForm = useForm<z.infer<typeof collectionNameSchema>>({
