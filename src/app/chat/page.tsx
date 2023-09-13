@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { useSearchParams } from 'next/navigation';
+import { RotatingLines } from  'react-loader-spinner'
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { addDoc, collection, serverTimestamp,getDoc, query,deleteDoc,
   onSnapshot,doc,updateDoc,orderBy,limit,startAfter } from "firebase/firestore";
@@ -10,16 +11,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CheckCheck, MoreHorizontal, MoreVertical,ImageIcon } from "lucide-react";
 import Image from "next/image";
-
+import { Skeleton } from "@/components/ui/skeleton";
 const Page = () => {
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
   const [lastLoadedMessageTime, setLastLoadedMessageTime] = useState<number | null>(null);
   const [messageLimit, setMessageLimit] = useState(10);
   const searchParams = useSearchParams();
+  const [loader,setLoader] = useState(true);
   const chatId = searchParams.get('chatId');
   const userId = searchParams.get('userId');
   const [chatInfo, setChatInfo] = useState<any>({});
-
+const [profileImageLoader,setProfileImageLoader]=useState(true)
   const [inputValue, setInputValue] = useState<string>('');
   const [isEditId,setIsEditId]=useState<string>();
   const [messages, setMessages] = useState<any[]>([]);
@@ -56,7 +58,7 @@ const Page = () => {
         startAfter(lastLoadedMessageTime), 
         limit(10)
       );
-
+      setLoader(true)
       unsubscribeMessages = onSnapshot(additionalMessagesQuery, (querySnapshot) => {
         const fetchedMessages: Record<string, any>[] = [];
         querySnapshot.forEach((doc) => {
@@ -74,6 +76,7 @@ const Page = () => {
           
 
         setMessages((prevMessages) => [ ...fetchedMessages,...prevMessages]);
+        setLoader(false)
         setTimeout(() => {
           if (chatContainerRef.current) {
             chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight - currentScrollPosition;
@@ -165,7 +168,7 @@ uploadTask.on(
   
     let unsubscribeChat: (() => void) | undefined;
     let unsubscribeMessages: (() => void) | undefined;
-  
+    setLoader(true)
     unsubscribeChat = onSnapshot(chatRef, (chatDoc) => {
       if (chatDoc.exists()) {
         const chatData = chatDoc.data();
@@ -202,6 +205,8 @@ uploadTask.on(
           }
 
           setMessages(fetchedMessages);
+          setProfileImageLoader(false)
+          setLoader(false)
           setTimeout(() => {
             if(chatContainerRef?.current){
               chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
@@ -321,13 +326,14 @@ uploadTask.on(
         <div className="border-b border-gray-300">
           <div className="p-4 flex flex-row items-center justify-between">
             <div className="flex flex-row items-center gap-x-10">
-              <Image
+              {profileImageLoader===true? <Skeleton className="w-12 h-12 rounded-full" />: <Image
                 alt="Item Image"
                 src={chatInfo&&userId===chatInfo.buyerId?chatInfo.sellerProfileImage:chatInfo.buyerProfileImage}
                 width={60}
                 height={30}
                 className="rounded-full"
-              />
+              />}
+             
               <div className="flex flex-col gap-x-2">
                 <p className="text-lg font-bold">{chatInfo&&userId===chatInfo.buyerId?chatInfo.sellerName:chatInfo.buyerName}</p>
                 <p>Active last day</p>
@@ -338,8 +344,19 @@ uploadTask.on(
         </div>
 
         {/* Messages List */}
+        {loader&&<div className="flex justify-center">
+        <RotatingLines
+  strokeColor="grey"
+  strokeWidth="5"
+  animationDuration="0.75"
+  width="56"
+  visible={true}
+/>
+        </div >} 
+       
         <div  id="chat-container"
-          ref={chatContainerRef}style={{ maxHeight: '400px', overflowY: 'scroll' }}>
+          ref={chatContainerRef}style={{ maxHeight: '400px',minHeight:'400px', overflowY: 'scroll' }}>
+          
         <div className="flex-1 flex flex-col gap-y-5 justify-end py-4"  >
 
           {/* Message Bubble */}

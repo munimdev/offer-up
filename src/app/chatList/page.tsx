@@ -1,6 +1,7 @@
 // @ts-nocheck
 "use client";
 import React, { useState, useEffect } from "react";
+import { RotatingLines } from  'react-loader-spinner'
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from 'next/link';
@@ -25,6 +26,7 @@ import Image from "next/image";
 
 const Page = () => {
   const { user, isLoggedIn } = useSession();
+  const [loader,setLoader] = useState(true);
   console.log(user)
   const [chats, setChats] = useState([]);
   // const [userId, setUserId] = useState("4296a045-deef-4b37-a09c-d22b3eb50cf4");
@@ -63,7 +65,7 @@ const Page = () => {
       // Combine the results of both queries manually
       queryRef = query(chatRef, where("sellerId", "==", user?.id));
       const buyerQuery = query(chatRef, where("buyerId", "==", user?.id));
-  
+      setLoader(true)
       // Fetch data from both queries and merge the results
       Promise.all([getDocs(queryRef), getDocs(buyerQuery)])
         .then((results) => {
@@ -90,6 +92,7 @@ const Page = () => {
       });
       console.log(fetchedChats, 'fetchedChats');
       setChats(fetchedChats);
+      setLoader(false)
     });
   
     return () => unsubscribe();
@@ -104,6 +107,7 @@ const Page = () => {
       className="flex flex-col border-r border-gray-300"
       style={{ width: "80%", margin: "0 auto" }}
     >
+   
       {/* Tabs */}
       <div className="flex border-t border-gray-300 pt-4">
         <p
@@ -133,10 +137,21 @@ const Page = () => {
       </div>
 
       {/* Chat List */}
+    
       <div className="border-t border-gray-300 pt-4">
         <p className="px-2 font-semibold text-lg">Messages</p>
 
         {/* Chat Entry */}
+       {loader&&<div className="flex justify-center">
+        <RotatingLines
+  strokeColor="grey"
+  strokeWidth="5"
+  animationDuration="0.75"
+  width="56"
+  visible={true}
+/>
+        </div >} 
+     
         {chats &&
           chats.map((val) => {
             return (
