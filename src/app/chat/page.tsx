@@ -123,7 +123,7 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
       return date.toLocaleDateString(undefined, options);
     }
   }
-  const handleFileChange = (e) => {
+  const handleFileChange = (e:any) => {
     const selectedFiles = e.target.files; // Get an array of selected files
   
     // Loop through each selected file and upload it
