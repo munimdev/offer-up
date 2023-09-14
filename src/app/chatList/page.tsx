@@ -76,9 +76,14 @@ const Page = () => {
               fetchedChats.push({ ...doc.data(), id: doc.id });
             });
           });
-          
-          console.log(fetchedChats, 'fetchedChats');
-          setChats(fetchedChats);
+          const sortedChats = fetchedChats.sort((a, b) => {
+            // Assuming 'time' is the field containing serverTimestamp
+            const timestampA = a.lastMessageTime ? a.lastMessageTime.seconds: 0;
+            const timestampB = b.lastMessageTime ? b.lastMessageTime.seconds: 0;
+            return timestampB - timestampA;
+          });
+          console.log(sortedChats, 'sortedChats');
+          setChats(sortedChats);
         })
         .catch((error) => {
           console.error("Error fetching chats:", error);
