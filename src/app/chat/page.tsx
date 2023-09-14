@@ -123,45 +123,48 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
       return date.toLocaleDateString(undefined, options);
     }
   }
-  const handleFileChange = (e:any) => {
-
-
-
-    const selectedFile = e.target.files[0];
-    const storageRef = ref(storage, uuid());
-
-    const uploadTask = uploadBytesResumable(storageRef, selectedFile);
-
+  const handleFileChange = (e) => {
+    const selectedFiles = e.target.files; // Get an array of selected files
   
-uploadTask.on(
-  'state_changed',
-  (snapshot) => {
-    // Handle upload progress here (if needed)
-  },
-  (error) => {
-    console.error(error);
-  },
-  () => {
-    // Upload completed successfully, get download URL and handle it
-    getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-      const message = {
-        imageUrl: downloadURL,
-        isImage: true,
-        messages: "",
-        senderId: userId,
-        time: serverTimestamp(),
-      };
-          
-          const messagesCollectionRef = collection(db, 'Chats', chatId!, 'messages');
-          
-          const res = await addDoc(messagesCollectionRef, message);
+    // Loop through each selected file and upload it
+    for (let i = 0; i < selectedFiles.length; i++) {
+      const selectedFile = selectedFiles[i];
+      const storageRef = ref(storage, uuid());
   
-    console.log('Message added successfully!');
-        });
-      }
-    );
-    console.log("Selected File:", selectedFile);
+      const uploadTask = uploadBytesResumable(storageRef, selectedFile);
+  
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          // Handle upload progress here (if needed)
+        },
+        (error) => {
+          console.error(error);
+        },
+        () => {
+          // Upload completed successfully, get download URL and handle it
+          getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+            const message = {
+              imageUrl: downloadURL,
+              isImage: true,
+              messages: '',
+              senderId: userId,
+              time: serverTimestamp(),
+            };
+  
+            const messagesCollectionRef = collection(db, 'Chats', chatId!, 'messages');
+  
+            const res = await addDoc(messagesCollectionRef, message);
+  
+            console.log('Message added successfully!');
+          });
+        }
+      );
+    }
+  
+    console.log('Selected Files:', selectedFiles);
   };
+  
 
   useEffect(() => {
     const chatRef = doc(db, 'Chats', chatId!);
@@ -459,7 +462,7 @@ uploadTask.on(
         style={{ display: "none" }} // Hide the input element
         ref={fileInputRef}
         onChange={handleFileChange}
-        
+        multiple
       />
       <ImageIcon
         size={40}
