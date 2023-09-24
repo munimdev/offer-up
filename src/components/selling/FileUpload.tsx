@@ -156,11 +156,15 @@ const FileUpload: React.FC<Props> = ({
                             onMouseEnter={() => setIsHovered(file.name)}
                             onMouseLeave={() => setIsHovered(null)}
                           >
-                            <img
-                              src={file.preview}
-                              alt={file.name}
-                              className="object-cover w-full h-full"
-                            />
+                           {file.preview ? (
+  <Image
+    src={file.preview}
+    alt={file.name}
+    className="object-cover w-full h-full"
+  />
+) : (
+  <span>Image preview not available</span>
+)}
                             {isHovered === file.name && (
                               <div className="absolute top-0 left-0 flex flex-col items-stretch justify-between text-white">
                                 <button
@@ -187,11 +191,16 @@ const FileUpload: React.FC<Props> = ({
                                     className="w-5/12 h-5/12"
                                     onClick={() => alert(file.preview)}
                                   >
-                                    <img
+                                            {file.preview ? (
+                                              <Image
                                       src={file.preview}
                                       alt="selected"
                                       className="object-cover w-full h-full"
                                     />
+) : (
+  <span>Image preview not available</span>
+)}
+                                   
                                   </DialogContent>
                                 </Dialog>
                               </div>

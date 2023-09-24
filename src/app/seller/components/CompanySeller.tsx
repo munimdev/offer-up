@@ -2,7 +2,7 @@ import React from "react";
 import { SellerCompanyProps } from "@/types/types";
 import { ItemList } from "@/components/item-list/ItemList";
 import Review from "@/components/review/Review";
-
+import Image from "next/image";
 const CompanySeller = (props: SellerCompanyProps) => {
   const {
     displayName,
@@ -20,7 +20,7 @@ const CompanySeller = (props: SellerCompanyProps) => {
   return (
     <div>
       <h2>{displayName}</h2>
-      <img src={imageUrl} alt={displayName} />
+      <Image src={imageUrl} alt={displayName} />
       <p>Rating: {rating}</p>
       {reviews.map(({ comment, userImage }, index) => (
         <Review comment={comment} userImage={userImage} key={index} />

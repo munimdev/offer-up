@@ -452,7 +452,7 @@ const redirectHandler=(chatId)=>{
                 key={index}
               >
                 <div className="relative w-20 h-20">
-                  <img
+                  <Image
                     src={image.imagePath250}
                     alt={image.itemId}
                     className="object-cover w-full h-full"
@@ -528,7 +528,7 @@ const redirectHandler=(chatId)=>{
     // `/chat?chatId=${chatId}&userId=${userId}`
     <Link href={`/chat?chatId=${chat.id}&userId=${userId}`}  className="flex items-center space-x-4" key={chat.buyerId}  style={{cursor:"pointer"}}>
       <div className="w-12 h-12" >
-        <img
+        <Image
           src={chat.buyerProfileImage}
           alt={chat.buyerName}
           className="w-full h-full object-cover rounded-full"

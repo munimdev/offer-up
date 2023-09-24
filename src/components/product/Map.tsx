@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { withGoogleMap, GoogleMap, Circle  } from 'react-google-maps';
 

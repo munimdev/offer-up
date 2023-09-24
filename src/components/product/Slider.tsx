@@ -6,7 +6,7 @@ import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import "./swiper.css";
 import { FreeMode, Navigation, Thumbs } from "swiper/modules";
-
+import Image from "next/image";
 type Props = {
   imagesMain: string[];
   imagesSub: string[];
