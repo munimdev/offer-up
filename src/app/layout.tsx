@@ -23,11 +23,12 @@ export default function RootLayout({
       <body className={`${inter.className} min-h-screen flex flex-col`}>
         <QueryProvider>
           <Navbar />
-          <div className="flex-1">{children}</div>
+          <div className="flex-1" style={{ minHeight: "calc(100vh - 100px)" }}>{children}</div>
           <Toaster />
           <Footer />
         </QueryProvider>
       </body>
+      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAC1zTJy_NTO4dbq253Pv1VOSz_MB8YRTI" async></script>
     </html>
   );
 }

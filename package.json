@@ -59,6 +59,7 @@
     "react-dropzone": "^14.2.3",
     "react-firebaseui": "^6.0.0",
     "react-google-map-picker": "^1.2.3",
+    "react-google-maps": "^9.4.5",
     "react-hook-form": "^7.45.2",
     "react-infinite-scroll-component": "^6.1.0",
     "react-loader-spinner": "^5.4.5",

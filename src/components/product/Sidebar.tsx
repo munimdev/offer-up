@@ -12,7 +12,7 @@ import { addDoc, collection, serverTimestamp,getDocs, query,deleteDoc,
   onSnapshot,doc,updateDoc,orderBy,where } from "firebase/firestore";
 import { db, storage} from "../../firebase/firebase";
 import { useSession } from "@/hooks";
-
+import Map from "./Map";
 import { FavoriteList, Item, ReportItemDto } from "@/types/types";
 import { Result } from "@/utils/types";
 import * as z from "zod";
@@ -332,10 +332,11 @@ console.log(data,'data')
         <p className="text-primary">
           <MapPin className="inline" size={24} /> Islamabad, PK
         </p>
+        <Map lat={data.locationLat} lng={data.locationLng}/>
         {/* <p className="mt-2 text-primary">
           <Globe className="inline" size={24} /> https://www.uniqueautomall.com/
         </p> */}
-        <p className="mt-2">
+        {/* <p className="mt-2">
           <Phone className="inline" />
           (732) 707-3223
         </p>
@@ -346,7 +347,7 @@ console.log(data,'data')
             <p>Hours 9:00 AM – 8:00 PM</p>
             <p className="font-semibold text-primary">See hours of operation</p>
           </span>
-        </div>
+        </div> */}
       </div>
     </div>
     </>
