@@ -329,9 +329,10 @@ console.log(data,'data')
         </div>
       </div>
       <div>
-        <p className="text-primary">
-          <MapPin className="inline" size={24} /> Islamabad, PK
-        </p>
+      {data.fullAddress&& <p className="text-primary my-4">
+         <MapPin className="inline" size={24} />{data.fullAddress}
+        </p>} 
+       
         <Map lat={data.locationLat} lng={data.locationLng}/>
         {/* <p className="mt-2 text-primary">
           <Globe className="inline" size={24} /> https://www.uniqueautomall.com/
