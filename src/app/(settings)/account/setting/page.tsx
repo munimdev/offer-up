@@ -22,7 +22,7 @@ import { Slider } from "@/components/ui/slider";
 import { Tabs } from "@/components/ui/tabs";
 import AvatarEditor from "react-avatar-editor";
 
-import { Camera, Mail, Phone } from "lucide-react";
+import { Camera, Mail, Phone,ShieldCheck,ShieldAlert } from "lucide-react";
 import { TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 
 const Setting = () => {
@@ -32,7 +32,7 @@ const Setting = () => {
   // Hooks
   const { user } = useSession();
   const { toast } = useToast();
-
+console.log(user,'user')
   // States
   const [error, setError] = useState<string>();
   const [image, setImage] = useState<File>();
@@ -111,13 +111,13 @@ const Setting = () => {
     setCurrentTab("otp");
   };
 
-  // const { data, refetch } = useFetch({
-  //   key: ["query-favoriteListData"],
-  //   fn: () => Queries.getCustomerProfile(user?.id!),
-  //   options: { enabled: !!user?.id! },
-  // });
+  const { data, refetch } = useFetch({
+    key: ["query-getMyProfile"],
+    fn: () => Queries.getMyProfile({}),
+    options: { enabled: !!user?.id! },
+  });
 
-  // console.log(data)
+  console.log(data,'getMyProfile')
 
   return (
     <div className="w-8/12 py-4 mx-auto">
@@ -185,23 +185,26 @@ const Setting = () => {
           </Dialog>
         </div>
         <div>
-          <span className="text-lg font-bold">{user?.name.toUpperCase()}</span>
+          <span className="text-lg font-bold">{data?.dataObject?.name.toUpperCase()}</span>
           <div className="flex flex-row mt-2 gap-x-5">
             <Mail strokeWidth={1.2} />
             <Phone strokeWidth={1.2} />
           </div>
         </div>
       </div>
-      <div className="flex flex-col w-4/12 mt-10 gap-y-5">
+      <div className="flex flex-col w-5/12 mt-10 gap-y-5">
         <span className="text-4xl font-bold">Account</span>
         {/* Name */}
         <div className="flex flex-row justify-between p-3 font-semibold border-b border-gray-300 cursor-pointer">
-          <span>{user?.name}</span>
+
+          <span>
+          Name:  {data?.dataObject?.name.toUpperCase()}
+          </span>
           <span className="text-primary">Edit</span>
         </div>
         {/* Email */}
-        <div className="flex flex-row justify-between p-3 font-semibold border-b border-gray-300 cursor-pointer">
-          <span>{user?.email}</span>
+        <div className="flex flex-row justify-between p-3 font-semibold border-b border-gray-300">
+          <span>Email: {user?.email} </span> {data?.dataObject?.isEmailVerified?<span ><ShieldCheck strokeWidth={1.2}/></span>:<span className="cursor-pointer"><ShieldAlert strokeWidth={1.2}/></span>}
         </div>
         {/* Location */}
         <div className="flex flex-row justify-between p-3 font-semibold border-b border-gray-300 cursor-pointer">

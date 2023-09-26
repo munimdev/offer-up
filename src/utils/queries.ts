@@ -78,7 +78,6 @@ export const userItems = (data: { id: string }): Promise<Result<Item>> =>
 // Favorite List
 export const getFavoriteList = (): Promise<Result<FavoriteList[]>> =>
   instance.post("/FavouriteList/getFavouriteList");
-
 export const getFavoriteListById = (
   id: number
 ): Promise<Result<FavoriteList>> =>
@@ -105,6 +104,12 @@ export const removeItemFromFavouriteList = (data: {
 export const getCustomerProfile = (id: string): Promise<Result<Customer>> =>
   instance.post("/customer/getcustomerProfile", { id: id });
 
+// export const getMyProfile = (): Promise<Result<UserProfile>> =>
+  // instance.post("/customer/getMyProfile");
+  export const getMyProfile = (data: {
+    id: string;
+  }): Promise<Result<UserProfile>> =>
+    instance.post("/customer/getMyProfile", data);
 export const updateProfileImage = (
   id: string,
   imagePath: string
