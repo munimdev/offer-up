@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 
 import { useState, useRef } from "react";
@@ -32,7 +33,8 @@ const Setting = () => {
   // Hooks
   const { user } = useSession();
   const { toast } = useToast();
-console.log(user,'user')
+  const [applyEmailVerify, setApplyEmailVerify] = useState<boolean>(false);
+
   // States
   const [error, setError] = useState<string>();
   const [image, setImage] = useState<File>();
@@ -54,6 +56,11 @@ console.log(user,'user')
     mutationKey: ["mutation-changePassword"],
     mutationFn: (data: { oldPassword: string; newPassword: string }) =>
       Queries.changePassword(data),
+  });
+  const { mutateAsync: resendEmail } = useMutation({
+    mutationKey: ["mutation-resendEmailVerificationEmail"],
+    mutationFn: () =>
+      Queries.resendEmailVerificationEmail(),
   });
 
   const onImageHandler = async () => {
@@ -116,9 +123,24 @@ console.log(user,'user')
     fn: () => Queries.getMyProfile({}),
     options: { enabled: !!user?.id! },
   });
-
-  console.log(data,'getMyProfile')
-
+  const emailVerificationHandler = async () => {
+    
+    try {
+      setApplyEmailVerify(true);
+    const response = await resendEmail()
+    console.log(response)
+      if (response.statusCode === "111") {
+        toast({
+          title: "Email Verification",
+          description: "Please check you email for verification!",
+        });
+      } else {
+        setError(response.message);
+      }
+    } catch (error) {
+      
+    }
+  }
   return (
     <div className="w-8/12 py-4 mx-auto">
       <div className="flex flex-row items-center gap-x-5">
@@ -192,7 +214,7 @@ console.log(user,'user')
           </div>
         </div>
       </div>
-      <div className="flex flex-col w-5/12 mt-10 gap-y-5">
+      <div className="flex flex-col w-8/12 mt-10 gap-y-5">
         <span className="text-4xl font-bold">Account</span>
         {/* Name */}
         <div className="flex flex-row justify-between p-3 font-semibold border-b border-gray-300 cursor-pointer">
@@ -204,8 +226,20 @@ console.log(user,'user')
         </div>
         {/* Email */}
         <div className="flex flex-row justify-between p-3 font-semibold border-b border-gray-300">
-          <span>Email: {user?.email} </span> {data?.dataObject?.isEmailVerified?<span ><ShieldCheck strokeWidth={1.2}/></span>:<span className="cursor-pointer"><ShieldAlert strokeWidth={1.2}/></span>}
+          <span>Email: {user?.email} </span> {data?.dataObject?.isEmailVerified?<span ><ShieldCheck strokeWidth={1.2}/></span>:<button
+  className="bg-blue-300 hover:bg-blue-700 text-white text-primary py-1 px-1 rounded w-[140px] flex items-center justify-center"
+  style={{ backgroundColor: applyEmailVerify ? '#DDDDDD' : '#63C3FE' }}
+  onClick={emailVerificationHandler}
+  disabled={applyEmailVerify} // Disable the button if applyEmailVerify is true
+>
+  <div className="mr-2">
+    <ShieldAlert strokeWidth={1.2} />
+  </div>
+  Verify Now
+</button>
+}
         </div>
+       
         {/* Location */}
         <div className="flex flex-row justify-between p-3 font-semibold border-b border-gray-300 cursor-pointer">
           <span>Location</span>

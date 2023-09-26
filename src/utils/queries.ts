@@ -22,13 +22,17 @@ import {
   SearchQuery,
   SearchResult,
 } from "@/types/types";
-
+// auth
 export const loginUser = (data: LoginData): Promise<Result<User>> =>
   instance.post("/auth/login", data);
 
 export const signupUser = (data: SignupData): Promise<Result<User>> =>
   instance.post("/auth/signup", data);
-
+ export const verifyEmailCode = (code:string): Promise<Result<any>> =>
+   instance.post("/Auth/verifyEmailCode",{code:code})
+ export const resendEmailVerificationEmail = (): Promise<Result<any>> =>
+   instance.post("/Auth/resendEmailVerificationEmail",{})
+// Categories
 export const getCategories = (): Promise<Result<Category[]>> =>
   instance.get("/Category/getCategories");
 
