@@ -33,14 +33,16 @@ const Setting = () => {
   // Hooks
   const { user } = useSession();
   const { toast } = useToast();
-  const [applyEmailVerify, setApplyEmailVerify] = useState<boolean>(false);
+
 
   // States
   const [error, setError] = useState<string>();
   const [image, setImage] = useState<File>();
   const [zoomLevel, setZoomLevel] = useState<number>(1.2);
   const [currentTab, setCurrentTab] = useState<"phone" | "otp">("phone");
-
+  const [applyEmailVerify, setApplyEmailVerify] = useState<boolean>(false);
+  const [phoneNumber,setPhoneNumber]= useState<string>()
+  const [otp,setOtp]= useState<string>()
   // Dialogs
   const [isImageDialogOpen, setIsImageDialogOpen] = useState(false);
   const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false);
@@ -61,6 +63,16 @@ const Setting = () => {
     mutationKey: ["mutation-resendEmailVerificationEmail"],
     mutationFn: () =>
       Queries.resendEmailVerificationEmail(),
+  });
+  const { mutateAsync: sendOtp } = useMutation({
+    mutationKey: ["mutation-sendOtpForNumberChange"],
+    mutationFn: () =>
+      Queries.sendOtpForNumberChange(),
+  });
+  const { mutateAsync: verifyOtp } = useMutation({
+    mutationKey: ["mutation-verifyOtpForNumberChange"],
+    mutationFn: () =>
+      Queries.verifyOtpForNumberChange(),
   });
 
   const onImageHandler = async () => {
@@ -115,8 +127,23 @@ const Setting = () => {
     e: React.ChangeEvent<HTMLFormElement>
   ) => {
     e.preventDefault();
+   const response= await sendOtp({phoneNumber:phoneNumber,otp:"",userId:""})
+   if(response.statusCode=== "111"){
     setCurrentTab("otp");
+   }
+    
   };
+  const onOtpSubmitHandler = async( e: React.ChangeEvent<HTMLFormElement>) =>{
+    e.preventDefault();
+   const response = await verifyOtp({phoneNumber:phoneNumber,otp:otp,userId:""})
+   if(response.statusCode=== "111"){
+    toast({
+      title: "Number Verification",
+      description: "Your Number verify successfully!",
+    });
+    setCurrentTab("phone");
+   }
+  }
 
   const { data, refetch } = useFetch({
     key: ["query-getMyProfile"],
@@ -270,18 +297,21 @@ const Setting = () => {
                     pattern="^(\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
                     placeholder="(555) 555-1234"
                     required
+                    onChange={(e)=>setPhoneNumber(e.target.value)}
                   />
                   <Button type="submit">Send OTP</Button>
                 </form>
               </TabsContent>
               <TabsContent value="otp">
-                <form className="flex flex-col gap-y-5">
+                <form className="flex flex-col gap-y-5"
+                 onSubmit={onOtpSubmitHandler}>
                   <Label htmlFor="otp">OTP</Label>
                   <Input
                     type="text"
                     name="otp"
                     placeholder="111-111-111"
                     required
+                    onChange={(e)=>setOtp(e.target.value)}
                   />
                   <Button type="submit">Save</Button>
                 </form>
