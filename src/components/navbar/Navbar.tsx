@@ -407,8 +407,29 @@ export function LoginDialog() {
   const [screen, setScreen] = React.useState(LoginDialogScreens.home);
   const setUser = useSetAtom(userAtom);
 
-  const handleFacebook = () => {
-    signUpWithFacebook();
+  const handleFacebook = async () => {
+    // signUpWithFacebook();
+    try {
+      const firebase = await signUpWithFacebook();
+      const response = await mutateAsync({
+        email: firebase.user.email!,
+        password: "",
+        firstName: firebase.user.displayName!.split(" ")[0],
+        lastName: firebase.user.displayName!.split(" ")[1],
+        accTypeLookupId: 10062,
+        registeredFromPlatformLookupId: 10051,
+        gmailId: firebase.user.uid,
+      });
+
+      if (response.dataObject !== null) {
+        const { token, ...userData } = response.dataObject;
+        setUser(userData);
+        localStorage.setItem("accessToken", token as string);
+      }
+    } catch (error) {
+      // Error Functionality Here
+      console.log(error);
+    }
   };
 
   const handleGoogle = async () => {
@@ -517,27 +538,27 @@ export function LoginDialog() {
           </span>
           <span className="flex-1 text-center">Continue with Google</span>
         </Button>
-        <Button
+        {/* <Button
           // onClick={signUpWithApple}
           className="flex flex-row text-black bg-white border border-black rounded hover:bg-gray-100"
         >
           <Apple />
           <span className="flex-1 text-center">Continue with Apple</span>
-        </Button>
-        <Button
+        </Button> */}
+        {/* <Button
           onClick={handleMicrosoft}
           className="flex flex-row rounded bg-[#1480d8] text-white hover:opacity-95"
         >
           <Microsoft />
           <span className="flex-1 text-center">Continue with Microsoft</span>
-        </Button>
-        <Button
+        </Button> */}
+        {/* <Button
           onClick={handleTwitter}
           className="flex flex-row text-white bg-black border rounded hover:bg-gray-800"
         >
           <Twitter />
           <span className="flex-1 text-center">Continue with Twitter</span>
-        </Button>
+        </Button> */}
         <Button
           className="flex flex-row items-center rounded"
           onClick={() => setScreen(LoginDialogScreens.auth)}
