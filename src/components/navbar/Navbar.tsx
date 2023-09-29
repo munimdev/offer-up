@@ -428,10 +428,11 @@ export function LoginDialog() {
         password: "",
         firstName: firebase.user.displayName!.split(" ")[0],
         lastName: firebase.user.displayName!.split(" ")[1],
-        accTypeLookupId: 10062,
+        accTypeLookupId: 10064,
         registeredFromPlatformLookupId: 10051,
-        gmailId: firebase.user.uid,
+        facebookId: firebase.user.uid,
       });
+console.log(response,'facebook response')
 
       if (response.dataObject !== null) {
         const { token, ...userData } = response.dataObject;
@@ -447,6 +448,7 @@ export function LoginDialog() {
   const handleGoogle = async () => {
     try {
       const firebase = await signUpWithGoogle();
+      console.log(firebase,'google')
       const response = await mutateAsync({
         email: firebase.user.email!,
         password: "",
