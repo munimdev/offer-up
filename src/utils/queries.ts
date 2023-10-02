@@ -32,6 +32,8 @@ export const signupUser = (data: SignupData): Promise<Result<User>> =>
    instance.post("/Auth/verifyEmailCode",{code:code})
  export const resendEmailVerificationEmail = (): Promise<Result<any>> =>
    instance.post("/Auth/resendEmailVerificationEmail",{})
+   export const deleteaccount = (): Promise<Result<any>> =>
+   instance.post("/auth/deleteaccount",{})
  export const sendOtpForNumberChange = (data:any): Promise<Result<any>> =>
    instance.post("/auth/sendOtpForNumberChange",data)
  export const verifyOtpForNumberChange = (data:any): Promise<Result<any>> =>

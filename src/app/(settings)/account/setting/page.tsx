@@ -3,12 +3,15 @@
 
 import { useState, useRef } from "react";
 import Image from "next/image";
-
+import { useRouter } from "next/navigation";
 import { useFetch } from "@/hooks";
 import { useMutation } from "@tanstack/react-query";
 import { useSession } from "@/hooks/useSession";
 import * as Queries from "@/utils/queries";
-
+import {
+  userAtom
+} from "@/utils/atoms";
+import { useSetAtom, useAtom } from "jotai/react";
 import {
   Dialog,
   DialogTrigger,
@@ -23,7 +26,7 @@ import { Slider } from "@/components/ui/slider";
 import { Tabs } from "@/components/ui/tabs";
 import AvatarEditor from "react-avatar-editor";
 
-import { Camera, Mail, Phone,ShieldCheck,ShieldAlert } from "lucide-react";
+import { Camera, Mail, Phone,ShieldCheck,ShieldAlert, Trash2 } from "lucide-react";
 import { TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 
 const Setting = () => {
@@ -33,7 +36,7 @@ const Setting = () => {
   // Hooks
   const { user } = useSession();
   const { toast } = useToast();
-
+  const router = useRouter();
 
   // States
   const [error, setError] = useState<string>();
@@ -43,11 +46,12 @@ const Setting = () => {
   const [applyEmailVerify, setApplyEmailVerify] = useState<boolean>(false);
   const [phoneNumber,setPhoneNumber]= useState<string>()
   const [otp,setOtp]= useState<string>()
+  const setUser = useSetAtom(userAtom);
   // Dialogs
   const [isImageDialogOpen, setIsImageDialogOpen] = useState(false);
   const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false);
   const [isPhoneDialogOpen, setIsPhoneDialogOpen] = useState(false);
-
+  const [isDeleteDialogOpen,setIsDeleteDialogOpen] = useState(false);
   const { mutateAsync: uploadPhoto } = useMutation({
     mutationKey: ["mutation-updateProfileImage"],
     mutationFn: (imagePath: string) =>
@@ -63,6 +67,11 @@ const Setting = () => {
     mutationKey: ["mutation-resendEmailVerificationEmail"],
     mutationFn: () =>
       Queries.resendEmailVerificationEmail(),
+  });
+  const { mutateAsync: deleteaccount } = useMutation({
+    mutationKey: ["mutation-deleteaccount"],
+    mutationFn: () =>
+      Queries.deleteaccount(),
   });
   const { mutateAsync: sendOtp } = useMutation({
     mutationKey: ["mutation-sendOtpForNumberChange"],
@@ -167,6 +176,20 @@ const Setting = () => {
     } catch (error) {
       
     }
+  }
+  const onDeleteHandler = async (e: React.ChangeEvent<HTMLFormElement>) => {
+    e.preventDefault();
+try {
+  const response = await deleteaccount()
+  console.log(response,'response delete handler')
+  if(response.statusCode === '111'){
+    setUser(null);
+    localStorage.removeItem("accessToken");
+    router.push("/");
+  }
+} catch (error) {
+  console.log(error)
+}
   }
   return (
     <div className="w-8/12 py-4 mx-auto">
@@ -357,6 +380,44 @@ const Setting = () => {
               </div>
               {error && <p className="text-center text-red-500">{error}</p>}
               <Button type="submit">Submit</Button>
+            </form>
+          </DialogContent>
+        </Dialog>
+
+
+             {/* Delete Account */}
+             <Dialog
+          onOpenChange={(e) => setIsDeleteDialogOpen(e)}
+          open={isDeleteDialogOpen}
+        >
+          <DialogTrigger>
+            <div className="flex flex-row justify-between p-3 font-semibold border-b border-gray-300 cursor-pointer">
+              <span>Delete Account</span>
+              <button
+  className="bg-red-500 hover:bg-red-700 text-white  py-1 px-1 rounded w-[140px] flex items-center justify-center"
+>
+  <div className="mr-2">
+    <Trash2 strokeWidth={1.2} />
+  </div>
+Delete
+</button>
+
+            </div>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <p className="text-center font-semibold text-2xl">
+                Delete Account
+              </p>
+            </DialogHeader>
+            <form
+              className="flex flex-col gap-y-5"
+              onSubmit={onDeleteHandler}
+            >
+              <p className="text-center font-semibold text-md">
+              Are you sure you want to delete your account? This action cannot be undone. All your data will be permanently removed.
+              </p>
+              <Button type="submit" className="bg-red-500 hover:bg-red-700 text-white">Delete</Button>
             </form>
           </DialogContent>
         </Dialog>

@@ -1,6 +1,7 @@
 import axios from "axios";
 
-export const API_URL = "https://webapi.titandeve.info/api";
+// export const API_URL = "https://webapi.titandeve.info/api";
+export const API_URL = "https://webapi.bargainex.com/api";
 
 const instance = axios.create({
   baseURL: API_URL,
