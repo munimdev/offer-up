@@ -46,7 +46,7 @@ const Setting = () => {
   const [applyEmailVerify, setApplyEmailVerify] = useState<boolean>(false);
   const [phoneNumber,setPhoneNumber]= useState<string>()
   const [otp,setOtp]= useState<string>()
-  const setUser = useSetAtom(userAtom);
+  
   // Dialogs
   const [isImageDialogOpen, setIsImageDialogOpen] = useState(false);
   const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false);
@@ -68,11 +68,7 @@ const Setting = () => {
     mutationFn: () =>
       Queries.resendEmailVerificationEmail(),
   });
-  const { mutateAsync: deleteaccount } = useMutation({
-    mutationKey: ["mutation-deleteaccount"],
-    mutationFn: () =>
-      Queries.deleteaccount(),
-  });
+
   const { mutateAsync: sendOtp } = useMutation({
     mutationKey: ["mutation-sendOtpForNumberChange"],
     mutationFn: () =>
@@ -177,20 +173,7 @@ const Setting = () => {
       
     }
   }
-  const onDeleteHandler = async (e: React.ChangeEvent<HTMLFormElement>) => {
-    e.preventDefault();
-try {
-  const response = await deleteaccount()
-  console.log(response,'response delete handler')
-  if(response.statusCode === '111'){
-    setUser(null);
-    localStorage.removeItem("accessToken");
-    router.push("/");
-  }
-} catch (error) {
-  console.log(error)
-}
-  }
+
   return (
     <div className="w-8/12 py-4 mx-auto">
       <div className="flex flex-row items-center gap-x-5">
@@ -387,14 +370,15 @@ try {
 
              {/* Delete Account */}
              <Dialog
-          onOpenChange={(e) => setIsDeleteDialogOpen(e)}
-          open={isDeleteDialogOpen}
+          // onOpenChange={(e) => setIsDeleteDialogOpen(e)}
+          // open={isDeleteDialogOpen}
         >
-          <DialogTrigger>
+          
             <div className="flex flex-row justify-between p-3 font-semibold border-b border-gray-300 cursor-pointer">
               <span>Delete Account</span>
               <button
   className="bg-red-500 hover:bg-red-700 text-white  py-1 px-1 rounded w-[140px] flex items-center justify-center"
+  onClick={()=>router.push("/account/deleteAccount")}
 >
   <div className="mr-2">
     <Trash2 strokeWidth={1.2} />
@@ -403,23 +387,8 @@ Delete
 </button>
 
             </div>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <p className="text-center font-semibold text-2xl">
-                Delete Account
-              </p>
-            </DialogHeader>
-            <form
-              className="flex flex-col gap-y-5"
-              onSubmit={onDeleteHandler}
-            >
-              <p className="text-center font-semibold text-md">
-              Are you sure you want to delete your account? This action cannot be undone. All your data will be permanently removed.
-              </p>
-              <Button type="submit" className="bg-red-500 hover:bg-red-700 text-white">Delete</Button>
-            </form>
-          </DialogContent>
+          
+         
         </Dialog>
       </div>
     </div>
