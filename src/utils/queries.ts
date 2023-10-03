@@ -30,6 +30,12 @@ export const signupUser = (data: SignupData): Promise<Result<User>> =>
   instance.post("/auth/signup", data);
  export const verifyEmailCode = (code:string): Promise<Result<any>> =>
    instance.post("/Auth/verifyEmailCode",{code:code})
+ export const forgetPassword = (email:string): Promise<Result<any>> =>
+   instance.post("/auth/ForgetPassword",{email:email})
+export const resetPassword = (data: {
+  key: string;
+  password: string;
+}): Promise<Result<any>> => instance.post("/auth/changePassword", data);
  export const resendEmailVerificationEmail = (): Promise<Result<any>> =>
    instance.post("/Auth/resendEmailVerificationEmail",{})
    export const deleteaccount = (): Promise<Result<any>> =>
