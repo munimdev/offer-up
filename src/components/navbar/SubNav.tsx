@@ -104,6 +104,7 @@ const SubNav = () => {
                 <NavigationMenuItem
                   key={item.id}
                   className="navigation-menu-item "
+                  style={{width:"100%"}}
                 >
                   {item.children.length > 0 ? (
                     <div
@@ -118,6 +119,7 @@ const SubNav = () => {
                             ? "opacity-100"
                             : "opacity-75"
                         } `}
+                        style={{width:"100%"}}
                       >
                         <Link href={`/search/?category=${item.id}`}  >
                           {item.name}
@@ -158,6 +160,7 @@ const SubNav = () => {
               key={999}
               className="navigation-menu-item"
               onMouseLeave={() => setHoveredItemId(null)}
+              style={{width:"100%"}}
             >
               <div
                 className="relative group"
