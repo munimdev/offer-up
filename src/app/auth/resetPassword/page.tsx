@@ -39,7 +39,7 @@ const ResetPassword = ({ params }: { params: { key: string } }) => {
       };
     return (
 <div className="flex flex-col items-center justify-center h-screen  mb-4">
-{error && <p className="text-center text-red-500">Password don't match</p>}
+{error && <p className="text-center text-red-500">Password don&apos;t match</p>}
   <div className="flex flex-col gap-y-4 w-[350px]  mb-4">
     <Label htmlFor="npass">New Password</Label>
     <Input onClick={()=>setError(false)} id="password" name="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)}/>
