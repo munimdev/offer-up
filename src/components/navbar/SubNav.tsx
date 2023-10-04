@@ -103,22 +103,23 @@ const SubNav = () => {
             : visibleOptions?.map((item: any, idx) => (
                 <NavigationMenuItem
                   key={item.id}
-                  className="navigation-menu-item"
+                  className="navigation-menu-item "
                 >
                   {item.children.length > 0 ? (
                     <div
-                      className="relative group z-50"
+                      className="relative group z-50 "
                       onMouseEnter={() => setHoveredItemId(item.id)}
                       onMouseLeave={() => setHoveredItemId(null)}
+                      
                     >
                       <NavigationMenuTrigger
                         className={`${navigationMenuTriggerStyle()} ${
                           hoveredItemId === item.id
                             ? "opacity-100"
                             : "opacity-75"
-                        }`}
+                        } `}
                       >
-                        <Link href={`/search/?category=${item.id}`}>
+                        <Link href={`/search/?category=${item.id}`}  >
                           {item.name}
                         </Link>
                       </NavigationMenuTrigger>
@@ -127,7 +128,7 @@ const SubNav = () => {
                           hoveredItemId === item.id
                             ? "opacity-100"
                             : "opacity-0 invisible"
-                        } bg-white border border-gray-200 shadow rounded`}
+                        } bg-white border border-gray-200 shadow rounded `}
                       >
                         {item.children.map((child: any, index: number) => (
                           <ListItem
@@ -140,7 +141,7 @@ const SubNav = () => {
                       </ul>
                     </div>
                   ) : (
-                    <Link href="#" legacyBehavior passHref>
+                    <Link href="#" legacyBehavior passHref  className="w-1/2">
                       <NavigationMenuLink
                         className={`
                           ${navigationMenuTriggerStyle()} opacity-75
