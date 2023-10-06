@@ -2,7 +2,7 @@
 
 import "./Modal.css";
 
-import React from "react";
+import React, {useState} from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -126,6 +126,7 @@ export const Navbar = ({}: NavbarProps) => {
   const [isLocationModalOpen, setIsLocationModalOpen] = React.useState(false);
   const [zipCode, setZipCode] = useAtom(zipCodeAtom);
   const [location, setLocation] = useAtom(locationAtom);
+  const [zipError,setZipError] = useState(false)
   const [locationName, setLocationName] = useAtom(locationNameAtom);
   const [preferredDistance, setPreferredDistance] = useAtom(
     preferredDistanceAtom
@@ -136,12 +137,20 @@ export const Navbar = ({}: NavbarProps) => {
       const response = await axios.get(
         `https://maps.googleapis.com/maps/api/geocode/json?address=${code}&key=AIzaSyAC1zTJy_NTO4dbq253Pv1VOSz_MB8YRTI`
       );
-      const data = response.data;
-      const lat = data.results[0].geometry.location.lat;
-      const lng = data.results[0].geometry.location.lng;
-      const locationName = data.results[0].address_components[3].long_name;
-      setLocationName(locationName);
-      setLocation({ lat, lng });
+      console.log(response,'response')
+      if(response.data.status==='OK'){
+        const data = response.data;
+        const lat = data.results[0].geometry.location.lat;
+        const lng = data.results[0].geometry.location.lng;
+        const formatted_address = data.results[0].formatted_address;
+        const modifiedAddress = formatted_address.slice(0, formatted_address.lastIndexOf(','));
+        const locationName = data.results[0].address_components[3].long_name;
+        setLocationName(locationName);
+        localStorage.setItem("formatted_address", modifiedAddress as string);
+        setLocation({ lat, lng });
+      }else{
+        setZipError(true)
+      }
     } catch (error) {
       console.log(error);
     }
@@ -222,7 +231,9 @@ export const Navbar = ({}: NavbarProps) => {
                   "No Location Set"
                 )}
               </h3>
+             
               <Separator className="my-2" />
+              {zipError&&<h4 className="text-center"><span className="font-semibold text-red-500">Please enter correct Zip code</span></h4>} 
               <div className="">
                 <p className="text-base font-bold text-black">ZIP Code</p>
                 <button
@@ -235,6 +246,7 @@ export const Navbar = ({}: NavbarProps) => {
                 <p className="my-2 font-bold text-center text-black">Or</p>
                 <Input
                   value={zipCode}
+                  onClick={()=>{zipError&&setZipError(false)}}
                   onChange={(e) => {
                     setZipCode(e.target.value);
                   }}
@@ -407,13 +419,36 @@ export function LoginDialog() {
   const [screen, setScreen] = React.useState(LoginDialogScreens.home);
   const setUser = useSetAtom(userAtom);
 
-  const handleFacebook = () => {
-    signUpWithFacebook();
+  const handleFacebook = async () => {
+    // signUpWithFacebook();
+    try {
+      const firebase = await signUpWithFacebook();
+      const response = await mutateAsync({
+        email: firebase.user.email!,
+        password: "",
+        firstName: firebase.user.displayName!.split(" ")[0],
+        lastName: firebase.user.displayName!.split(" ")[1],
+        accTypeLookupId: 10064,
+        registeredFromPlatformLookupId: 10051,
+        facebookId: firebase.user.uid,
+      });
+console.log(response,'facebook response')
+
+      if (response.dataObject !== null) {
+        const { token, ...userData } = response.dataObject;
+        setUser(userData);
+        localStorage.setItem("accessToken", token as string);
+      }
+    } catch (error) {
+      // Error Functionality Here
+      console.log(error);
+    }
   };
 
   const handleGoogle = async () => {
     try {
       const firebase = await signUpWithGoogle();
+      console.log(firebase,'google')
       const response = await mutateAsync({
         email: firebase.user.email!,
         password: "",
@@ -517,27 +552,27 @@ export function LoginDialog() {
           </span>
           <span className="flex-1 text-center">Continue with Google</span>
         </Button>
-        <Button
+        {/* <Button
           // onClick={signUpWithApple}
           className="flex flex-row text-black bg-white border border-black rounded hover:bg-gray-100"
         >
           <Apple />
           <span className="flex-1 text-center">Continue with Apple</span>
-        </Button>
-        <Button
+        </Button> */}
+        {/* <Button
           onClick={handleMicrosoft}
           className="flex flex-row rounded bg-[#1480d8] text-white hover:opacity-95"
         >
           <Microsoft />
           <span className="flex-1 text-center">Continue with Microsoft</span>
-        </Button>
-        <Button
+        </Button> */}
+        {/* <Button
           onClick={handleTwitter}
           className="flex flex-row text-white bg-black border rounded hover:bg-gray-800"
         >
           <Twitter />
           <span className="flex-1 text-center">Continue with Twitter</span>
-        </Button>
+        </Button> */}
         <Button
           className="flex flex-row items-center rounded"
           onClick={() => setScreen(LoginDialogScreens.auth)}

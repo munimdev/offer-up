@@ -187,7 +187,9 @@ console.log(data,'data')
       console.log(error);
     }
   };
-  
+  const sellerPageHandler = async (id)=>{
+    router.replace(`/seller/${id}`);
+  }
   return (
     <>
      
@@ -306,8 +308,8 @@ console.log(data,'data')
           <Share2 className="inline-block mr-2" />
         </span>
       </div>
-      <div className="flex gap-4 py-4 my-4 border-y">
-        <div>
+      <div className="flex gap-4 py-4 my-4 border-y cursor-pointer">
+        <div onClick={()=>sellerPageHandler(data.customer.id)}>
           <Image
             src={data.customer.imagePath || "/images/placeholder.png"}
             className="rounded-full"
@@ -317,7 +319,7 @@ console.log(data,'data')
           />
         </div>
         <div>
-          <p className="font-bold text-black">
+          <p className="font-bold text-black cursor-pointer" onClick={()=>sellerPageHandler(data.customer.id)}>
             {data.customer.name.toUpperCase()}
           </p>
           <div className="flex gap-1 text-xs">

@@ -22,13 +22,29 @@ import {
   SearchQuery,
   SearchResult,
 } from "@/types/types";
-
+// auth
 export const loginUser = (data: LoginData): Promise<Result<User>> =>
   instance.post("/auth/login", data);
 
 export const signupUser = (data: SignupData): Promise<Result<User>> =>
   instance.post("/auth/signup", data);
-
+ export const verifyEmailCode = (code:string): Promise<Result<any>> =>
+   instance.post("/Auth/verifyEmailCode",{code:code})
+ export const forgetPassword = (email:string): Promise<Result<any>> =>
+   instance.post("/auth/ForgetPassword",{email:email})
+export const resetPassword = (data: {
+  key: string;
+  password: string;
+}): Promise<Result<any>> => instance.post("/auth/changePassword", data);
+ export const resendEmailVerificationEmail = (): Promise<Result<any>> =>
+   instance.post("/Auth/resendEmailVerificationEmail",{})
+   export const deleteaccount = (): Promise<Result<any>> =>
+   instance.post("/auth/deleteaccount",{})
+ export const sendOtpForNumberChange = (data:any): Promise<Result<any>> =>
+   instance.post("/auth/sendOtpForNumberChange",data)
+ export const verifyOtpForNumberChange = (data:any): Promise<Result<any>> =>
+   instance.post("/auth/verifyOtpForNumberChange",data)
+// Categories
 export const getCategories = (): Promise<Result<Category[]>> =>
   instance.get("/Category/getCategories");
 
@@ -78,7 +94,6 @@ export const userItems = (data: { id: string }): Promise<Result<Item>> =>
 // Favorite List
 export const getFavoriteList = (): Promise<Result<FavoriteList[]>> =>
   instance.post("/FavouriteList/getFavouriteList");
-
 export const getFavoriteListById = (
   id: number
 ): Promise<Result<FavoriteList>> =>
@@ -105,6 +120,12 @@ export const removeItemFromFavouriteList = (data: {
 export const getCustomerProfile = (id: string): Promise<Result<Customer>> =>
   instance.post("/customer/getcustomerProfile", { id: id });
 
+// export const getMyProfile = (): Promise<Result<UserProfile>> =>
+  // instance.post("/customer/getMyProfile");
+  export const getMyProfile = (data: {
+    id: string;
+  }): Promise<Result<UserProfile>> =>
+    instance.post("/customer/getMyProfile", data);
 export const updateProfileImage = (
   id: string,
   imagePath: string

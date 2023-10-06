@@ -69,6 +69,8 @@ export type TItem = {
   id: string;
   name: string;
   description: string;
+  oldPrice: number;
+  shortAddress: string;
   totalMessages: number;
   totalViews: number;
   totalFavorite: number;

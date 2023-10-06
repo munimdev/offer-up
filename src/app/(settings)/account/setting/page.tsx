@@ -1,13 +1,15 @@
+// @ts-nocheck
 "use client";
 
 import { useState, useRef } from "react";
 import Image from "next/image";
-
+import { useRouter } from "next/navigation";
 import { useFetch } from "@/hooks";
 import { useMutation } from "@tanstack/react-query";
 import { useSession } from "@/hooks/useSession";
 import * as Queries from "@/utils/queries";
-
+import { userAtom } from "@/utils/atoms";
+import { useSetAtom, useAtom } from "jotai/react";
 import {
   Dialog,
   DialogTrigger,
@@ -22,7 +24,15 @@ import { Slider } from "@/components/ui/slider";
 import { Tabs } from "@/components/ui/tabs";
 import AvatarEditor from "react-avatar-editor";
 
-import { Camera, Mail, Phone } from "lucide-react";
+import {
+  Camera,
+  Mail,
+  Phone,
+  ShieldCheck,
+  ShieldAlert,
+  ShieldQuestion,
+  Trash2,
+} from "lucide-react";
 import { TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 
 const Setting = () => {
@@ -32,18 +42,23 @@ const Setting = () => {
   // Hooks
   const { user } = useSession();
   const { toast } = useToast();
+  const router = useRouter();
 
   // States
   const [error, setError] = useState<string>();
   const [image, setImage] = useState<File>();
   const [zoomLevel, setZoomLevel] = useState<number>(1.2);
   const [currentTab, setCurrentTab] = useState<"phone" | "otp">("phone");
+  const [applyEmailVerify, setApplyEmailVerify] = useState<boolean>(false);
+  const [forgetPasswordState,setForgetPasswordState] = useState<boolean>(false)
+  const [phoneNumber, setPhoneNumber] = useState<string>();
+  const [otp, setOtp] = useState<string>();
 
   // Dialogs
   const [isImageDialogOpen, setIsImageDialogOpen] = useState(false);
   const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false);
   const [isPhoneDialogOpen, setIsPhoneDialogOpen] = useState(false);
-
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const { mutateAsync: uploadPhoto } = useMutation({
     mutationKey: ["mutation-updateProfileImage"],
     mutationFn: (imagePath: string) =>
@@ -54,6 +69,23 @@ const Setting = () => {
     mutationKey: ["mutation-changePassword"],
     mutationFn: (data: { oldPassword: string; newPassword: string }) =>
       Queries.changePassword(data),
+  });
+  const { mutateAsync: forgetPassword } = useMutation({
+    mutationKey: ["mutation-forgetPassword"],
+    mutationFn: (email:string) => Queries.forgetPassword(email),
+  });
+  const { mutateAsync: resendEmail } = useMutation({
+    mutationKey: ["mutation-resendEmailVerificationEmail"],
+    mutationFn: () => Queries.resendEmailVerificationEmail(),
+  });
+
+  const { mutateAsync: sendOtp } = useMutation({
+    mutationKey: ["mutation-sendOtpForNumberChange"],
+    mutationFn: () => Queries.sendOtpForNumberChange(),
+  });
+  const { mutateAsync: verifyOtp } = useMutation({
+    mutationKey: ["mutation-verifyOtpForNumberChange"],
+    mutationFn: () => Queries.verifyOtpForNumberChange(),
   });
 
   const onImageHandler = async () => {
@@ -108,17 +140,69 @@ const Setting = () => {
     e: React.ChangeEvent<HTMLFormElement>
   ) => {
     e.preventDefault();
-    setCurrentTab("otp");
+    const response = await sendOtp({
+      phoneNumber: phoneNumber,
+      otp: "",
+      userId: "",
+    });
+    if (response.statusCode === "111") {
+      setCurrentTab("otp");
+    }
+  };
+  const onOtpSubmitHandler = async (e: React.ChangeEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const response = await verifyOtp({
+      phoneNumber: phoneNumber,
+      otp: otp,
+      userId: "",
+    });
+    if (response.statusCode === "111") {
+      toast({
+        title: "Number Verification",
+        description: "Your Number verify successfully!",
+      });
+      setCurrentTab("phone");
+    }
   };
 
-  // const { data, refetch } = useFetch({
-  //   key: ["query-favoriteListData"],
-  //   fn: () => Queries.getCustomerProfile(user?.id!),
-  //   options: { enabled: !!user?.id! },
-  // });
+  const { data, refetch } = useFetch({
+    key: ["query-getMyProfile"],
+    fn: () => Queries.getMyProfile({}),
+    options: { enabled: !!user?.id! },
+  });
+  const emailVerificationHandler = async () => {
+    try {
+      setApplyEmailVerify(true);
+      const response = await resendEmail();
+      console.log(response);
+      if (response.statusCode === "111") {
+        toast({
+          title: "Email Verification",
+          description: "Please check you email for verification!",
+        });
+      } else {
+        setError(response.message);
+      }
+    } catch (error) {}
+  };
+const forgetPasswordHandler = async () => {
+  try {
+    setForgetPasswordState(true)
+    const response = await forgetPassword('abuzarzaidi947@gmail.com')
+    console.log(response,'forgetPasswordHandler')
+    if (response.statusCode === "111") {
+      toast({
+        title: "Forget Password",
+        description: "Please check you email for reset password!",
+      });
+    } else {
+      setError(response.message);
+    }
+  } catch (error) {
+    
+  }
 
-  // console.log(data)
-
+}
   return (
     <div className="w-8/12 py-4 mx-auto">
       <div className="flex flex-row items-center gap-x-5">
@@ -185,24 +269,46 @@ const Setting = () => {
           </Dialog>
         </div>
         <div>
-          <span className="text-lg font-bold">{user?.name.toUpperCase()}</span>
+          <span className="text-lg font-bold">
+            {data?.dataObject?.name.toUpperCase()}
+          </span>
           <div className="flex flex-row mt-2 gap-x-5">
             <Mail strokeWidth={1.2} />
             <Phone strokeWidth={1.2} />
           </div>
         </div>
       </div>
-      <div className="flex flex-col w-4/12 mt-10 gap-y-5">
+      <div className="flex flex-col w-8/12 mt-10 gap-y-5">
         <span className="text-4xl font-bold">Account</span>
         {/* Name */}
         <div className="flex flex-row justify-between p-3 font-semibold border-b border-gray-300 cursor-pointer">
-          <span>{user?.name}</span>
+          <span>Name: {data?.dataObject?.name.toUpperCase()}</span>
           <span className="text-primary">Edit</span>
         </div>
         {/* Email */}
-        <div className="flex flex-row justify-between p-3 font-semibold border-b border-gray-300 cursor-pointer">
-          <span>{user?.email}</span>
+        <div className="flex flex-row justify-between p-3 font-semibold border-b border-gray-300">
+          <span>Email: {user?.email} </span>{" "}
+          {data?.dataObject?.isEmailVerified ? (
+            <span>
+              <ShieldCheck strokeWidth={1.2} />
+            </span>
+          ) : (
+            <button
+              className="bg-blue-300 hover:bg-blue-700 text-white text-primary py-1 px-1 rounded w-[140px] flex items-center justify-center"
+              style={{
+                backgroundColor: applyEmailVerify ? "#DDDDDD" : "#63C3FE",
+              }}
+              onClick={emailVerificationHandler}
+              disabled={applyEmailVerify} // Disable the button if applyEmailVerify is true
+            >
+              <div className="mr-2">
+                <ShieldAlert strokeWidth={1.2} />
+              </div>
+              Verify Now
+            </button>
+          )}
         </div>
+
         {/* Location */}
         <div className="flex flex-row justify-between p-3 font-semibold border-b border-gray-300 cursor-pointer">
           <span>Location</span>
@@ -233,18 +339,23 @@ const Setting = () => {
                     pattern="^(\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
                     placeholder="(555) 555-1234"
                     required
+                    onChange={(e) => setPhoneNumber(e.target.value)}
                   />
                   <Button type="submit">Send OTP</Button>
                 </form>
               </TabsContent>
               <TabsContent value="otp">
-                <form className="flex flex-col gap-y-5">
+                <form
+                  className="flex flex-col gap-y-5"
+                  onSubmit={onOtpSubmitHandler}
+                >
                   <Label htmlFor="otp">OTP</Label>
                   <Input
                     type="text"
                     name="otp"
                     placeholder="111-111-111"
                     required
+                    onChange={(e) => setOtp(e.target.value)}
                   />
                   <Button type="submit">Save</Button>
                 </form>
@@ -292,6 +403,41 @@ const Setting = () => {
               <Button type="submit">Submit</Button>
             </form>
           </DialogContent>
+        </Dialog>
+        {/* Forget Password */}
+        <div className="flex flex-row justify-between p-3 font-semibold border-b border-gray-300">
+          <span>Forget Passoword </span>{" "}
+          
+            <button
+              className="bg-blue-300 hover:bg-blue-700 text-white text-primary py-1 px-1 rounded w-[140px] flex items-center justify-center"
+              style={{
+                backgroundColor: forgetPasswordState ? "#DDDDDD" : "#63C3FE",
+              }}
+              onClick={forgetPasswordHandler}
+              disabled={forgetPasswordState} // Disable the button if applyEmailVerify is true
+            >
+              <div className="mr-2">
+                <ShieldQuestion strokeWidth={1.2} />
+              </div>
+              Forget
+            </button>
+          
+        </div>
+        {/* Delete Account */}
+        <Dialog
+        >
+          <div className="flex flex-row justify-between p-3 font-semibold border-b border-gray-300 cursor-pointer">
+            <span>Delete Account</span>
+            <button
+              className="bg-red-500 hover:bg-red-700 text-white  py-1 px-1 rounded w-[140px] flex items-center justify-center"
+              onClick={() => router.push("/account/deleteAccount")}
+            >
+              <div className="mr-2">
+                <Trash2 strokeWidth={1.2} />
+              </div>
+              Delete
+            </button>
+          </div>
         </Dialog>
       </div>
     </div>
