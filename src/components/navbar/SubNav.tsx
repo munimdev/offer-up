@@ -85,7 +85,7 @@ useEffect(() => {
          onMouseLeave={handleMouseLeave}
         >
           
-          <Link  style={{ fontSize: "0.8rem",fontWeight:"600",color:"#5A6367" }}>
+          <Link  style={{ fontSize: "0.8rem",fontWeight:"600",color:"#5A6367" }} href={`/`}>
             <p >More</p>
           </Link>
           {hoveredItemId === 199 && (
