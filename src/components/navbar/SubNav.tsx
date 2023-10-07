@@ -51,7 +51,7 @@ useEffect(() => {
       onMouseLeave={handleMouseLeave}
       style={{ margin: "0.7rem", position: "relative" }}
     >
-      <Link href={`/category/${category.id}`}>
+      <Link href={`/search?category=${category.id}`}>
         <p className={hoveredItemId === category.id ? "active" : ""} style={{ fontSize: "0.8rem", fontWeight: "600", color: "#5A6367" }}>
           {category.name}
         </p>
@@ -69,7 +69,7 @@ useEffect(() => {
           border: "1px solid #ccc", // Add a border
         }}>
           {category.children.map((subCategory) => (
-            <Link key={subCategory.id} href={`/subcategory/${subCategory.id}`} style={{ padding: "10px" }}>
+            <Link key={subCategory.id}href={`/search?category=${category.id}&child=${subCategory.id}`}  style={{ padding: "10px" }}>
               <p>{subCategory.name}</p>
             </Link>
           ))}
@@ -85,7 +85,7 @@ useEffect(() => {
          onMouseLeave={handleMouseLeave}
         >
           
-          <Link href={`/category/`} style={{ fontSize: "0.8rem",fontWeight:"600",color:"#5A6367" }}>
+          <Link  style={{ fontSize: "0.8rem",fontWeight:"600",color:"#5A6367" }}>
             <p >More</p>
           </Link>
           {hoveredItemId === 199 && (
@@ -103,7 +103,7 @@ useEffect(() => {
                  {data&&data
   .filter((category) => category.children.length== 0)
   .map((category) => (
-                  <Link key={category.id} href={`/subcategory/${category.id}`} style={{ padding: "10px", }}>
+                  <Link key={category.id} href={`/search?category=${category.id}`} style={{ padding: "10px", }}>
                     <p>{category.name}</p>
                   </Link>
                 ))}
