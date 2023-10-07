@@ -145,8 +145,9 @@ export const Navbar = ({}: NavbarProps) => {
         const formatted_address = data.results[0].formatted_address;
         const modifiedAddress = formatted_address.slice(0, formatted_address.lastIndexOf(','));
         const locationName = data.results[0].address_components[3].long_name;
-        setLocationName(locationName);
-        localStorage.setItem("formatted_address", modifiedAddress as string);
+        // setLocationName(locationName);
+        setLocationName(modifiedAddress);
+        // localStorage.setItem("formatted_address", modifiedAddress as string);
         setLocation({ lat, lng });
       }else{
         setZipError(true)
