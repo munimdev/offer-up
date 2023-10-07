@@ -13,7 +13,6 @@ const SubNav = () => {
 
   // Function to show/hide options based on hover
   const handleMouseEnter = useCallback((id: number) => {
-    console.log(id)
     setHoveredItemId(id);
   }, [setHoveredItemId]);
   const handleMouseLeave = useCallback(() => {
@@ -22,21 +21,21 @@ const SubNav = () => {
 
   // useEffect to update visible and hidden options on data change
  // useEffect to update visible and hidden options on data change
-useEffect(() => {
+// useEffect(() => {
 
 
-  if (!data) {
-    setVisibleOptions([]);
-    setHiddenOptions([]);
-    return;
-  }
+//   if (!data) {
+//     setVisibleOptions([]);
+//     setHiddenOptions([]);
+//     return;
+//   }
 
-  // Assuming data is an array of objects with a 'children' property
-  const visible = data.filter((category) => category.children.length > 0);
-  const hidden = data.filter((category) => category.children.length === 0);
-  // setVisibleOptions(visible);
-  // setHiddenOptions(hidden);
-}, [data]);
+//   // Assuming data is an array of objects with a 'children' property
+//   const visible = data.filter((category) => category.children.length > 0);
+//   const hidden = data.filter((category) => category.children.length === 0);
+//   // setVisibleOptions(visible);
+//   // setHiddenOptions(hidden);
+// }, [data]);
 
 
   return (
@@ -69,7 +68,7 @@ useEffect(() => {
           border: "1px solid #ccc", // Add a border
         }}>
           {category.children.map((subCategory) => (
-            <Link key={subCategory.id}href={`/search?category=${category.id}&child=${subCategory.id}`}  style={{ padding: "10px" }}>
+            <Link key={subCategory.id}href={`/search?category=${category.id}&child=${subCategory.id}`}  style={{ padding: "10px" }} className="p-3 hover:bg-gray-100">
               <p>{subCategory.name}</p>
             </Link>
           ))}
