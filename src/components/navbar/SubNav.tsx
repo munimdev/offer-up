@@ -1,52 +1,9 @@
-import React, { useState, useEffect } from "react";
+// @ts-nocheck
+// "use client";
+import React, { useState, useEffect, useCallback } from 'react';
 
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuItem,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-} from "@/components/ui/dropdown-menu";
-
-import { cn } from "@/utils";
 import Link from "next/link";
 import { useFetchCategories } from "@/hooks";
-import { Skeleton } from "@/components/ui/skeleton";
-import { getElementWidth } from "@/utils";
-import { ChevronDown } from "lucide-react";
-
-const ListItem = React.forwardRef<
-  React.ElementRef<"a">,
-  React.ComponentPropsWithoutRef<"a">
->(({ className, title, children, ...props }, ref) => {
-  return (
-    <li>
-      <NavigationMenuLink asChild>
-        <a
-          ref={ref}
-          className={cn(
-            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-            className
-          )}
-          {...props}
-        >
-          <div className="text-sm font-medium leading-none">{title}</div>
-          <p className="text-sm leading-snug line-clamp-2 text-muted-foreground">
-            {children}
-          </p>
-        </a>
-      </NavigationMenuLink>
-    </li>
-  );
-});
-ListItem.displayName = "ListItem";
 
 const SubNav = () => {
   const { data, isLoading } = useFetchCategories();
@@ -54,147 +11,107 @@ const SubNav = () => {
   const [hiddenOptions, setHiddenOptions] = useState<typeof data>([]);
   const [hoveredItemId, setHoveredItemId] = useState<number | null>(null);
 
-  useEffect(() => {
-    const handleMoreToggler = () => {
-      const menuList = document.getElementById("navigation-menu-list");
-      const menuItems = menuList?.getElementsByClassName(
-        "navigation-menu-item"
-      ) as HTMLCollectionOf<HTMLElement>;
-      let totalWidth = 0;
-      let moreIndex = Number(window.innerWidth / 175);
+  // Function to show/hide options based on hover
+  const handleMouseEnter = useCallback((id: number) => {
+    console.log(id)
+    setHoveredItemId(id);
+  }, [setHoveredItemId]);
+  const handleMouseLeave = useCallback(() => {
+    setHoveredItemId(null);
+  }, [setHoveredItemId]);
 
-      for (let i = 0; i < menuItems.length; i++) {
-        const itemWidth = getElementWidth(menuItems[i]);
-        totalWidth += itemWidth;
-        if (totalWidth >= window.innerWidth) {
-          moreIndex = i - 1;
-          break;
-        }
-      }
+  // useEffect to update visible and hidden options on data change
+ // useEffect to update visible and hidden options on data change
+useEffect(() => {
 
-      if (data) {
-        setVisibleOptions(data?.slice(0, moreIndex));
-        setHiddenOptions(data?.slice(moreIndex));
-      }
-    };
 
-    handleMoreToggler();
+  if (!data) {
+    setVisibleOptions([]);
+    setHiddenOptions([]);
+    return;
+  }
 
-    window.addEventListener("resize", handleMoreToggler);
+  // Assuming data is an array of objects with a 'children' property
+  const visible = data.filter((category) => category.children.length > 0);
+  const hidden = data.filter((category) => category.children.length === 0);
+  // setVisibleOptions(visible);
+  // setHiddenOptions(hidden);
+}, [data]);
 
-    return () => {
-      window.removeEventListener("resize", handleMoreToggler);
-    };
-  }, [isLoading]);
 
   return (
-    <div className="border-b">
-      <NavigationMenu className="z-0">
-        <NavigationMenuList id="navigation-menu-list">
-          {isLoading
-            ? Array.from({ length: 14 }).map((_, index) => (
-                <NavigationMenuItem
-                  key={index}
-                  className={`${navigationMenuTriggerStyle()}`}
-                >
-                  <Skeleton className="block w-24 h-5" />
-                </NavigationMenuItem>
-              ))
-            : visibleOptions?.map((item: any, idx) => (
-                <NavigationMenuItem
-                  key={item.id}
-                  className="navigation-menu-item "
-                  style={{width:"100%"}}
-                >
-                  {item.children.length > 0 ? (
-                    <div
-                      className="relative group z-50 "
-                      onMouseEnter={() => setHoveredItemId(item.id)}
-                      onMouseLeave={() => setHoveredItemId(null)}
-                      
-                    >
-                      <NavigationMenuTrigger
-                        className={`${navigationMenuTriggerStyle()} ${
-                          hoveredItemId === item.id
-                            ? "opacity-100"
-                            : "opacity-75"
-                        } `}
-                        style={{width:"100%"}}
-                      >
-                        <Link href={`/search/?category=${item.id}`}  >
-                          {item.name}
-                        </Link>
-                      </NavigationMenuTrigger>
-                      <ul
-                        className={`w-fit grid p-2 grid-cols-1 absolute left-0 mt-0 ${
-                          hoveredItemId === item.id
-                            ? "opacity-100"
-                            : "opacity-0 invisible"
-                        } bg-white border border-gray-200 shadow rounded `}
-                      >
-                        {item.children.map((child: any, index: number) => (
-                          <ListItem
-                            key={index}
-                            href={`/search/?category=${item.id}&child=${child.id}`}
-                            title={child.name}
-                            className="w-full"
-                          />
-                        ))}
-                      </ul>
-                    </div>
-                  ) : (
-                    <Link href="#" legacyBehavior passHref  className="w-1/2">
-                      <NavigationMenuLink
-                        className={`
-                          ${navigationMenuTriggerStyle()} opacity-75
-                        `}
-                      >
-                        {item.name}
-                      </NavigationMenuLink>
-                    </Link>
-                  )}
-                </NavigationMenuItem>
-              ))}
-          {hiddenOptions?.length! > 0 && (
-            <NavigationMenuItem
-              key={999}
-              className="navigation-menu-item"
-              onMouseLeave={() => setHoveredItemId(null)}
-              style={{width:"100%"}}
-            >
-              <div
-                className="relative group"
-                onMouseEnter={() => setHoveredItemId(999)}
-              >
-                <NavigationMenuTrigger
-                  className={`${navigationMenuTriggerStyle()} ${
-                    hoveredItemId === 999 ? "opacity-100" : "opacity-75"
-                  }`}
-                >
-                  More
-                </NavigationMenuTrigger>
-                <ul
-                  className={`w-fit absolute left-0 ${
-                    hoveredItemId === 999
-                      ? "opacity-100"
-                      : "opacity-0 invisible"
-                  } bg-white border border-gray-200 shadow rounded`}
-                >
-                  {hiddenOptions?.map((child: any, idx) => (
-                    <ListItem
-                      key={idx}
-                      href={`/categories/${child.id}`}
-                      title={child.name}
-                      className="w-full"
-                    />
-                  ))}
-                </ul>
+    <nav style={{ display: "flex", flexDirection: "row", justifyContent: "center", flexWrap: "wrap" }}>
+      <ul style={{ listStyle: "none", padding: 0, display: "flex", flexDirection: "row" }}>
+      {data&&data
+  .filter((category) => category.children.length > 0)
+  .map((category) => (
+    <li
+      key={category.id}
+      onMouseEnter={() => handleMouseEnter(category.id)}
+      onMouseLeave={handleMouseLeave}
+      style={{ margin: "0.7rem", position: "relative" }}
+    >
+      <Link href={`/category/${category.id}`}>
+        <p className={hoveredItemId === category.id ? "active" : ""} style={{ fontSize: "0.8rem", fontWeight: "600", color: "#5A6367" }}>
+          {category.name}
+        </p>
+      </Link>
+      {hoveredItemId === category.id && (
+        <div style={{
+          position: "absolute",
+          top: "100%",
+          left: -60,
+          display: "flex",
+          flexDirection: "column",
+          backgroundColor: "#ffffff",
+          minWidth: "250px", // Set a minimum width
+          boxShadow: "0 0 5px rgba(0,0,0,0.5)", // Add a box shadow for a better visual separation
+          border: "1px solid #ccc", // Add a border
+        }}>
+          {category.children.map((subCategory) => (
+            <Link key={subCategory.id} href={`/subcategory/${subCategory.id}`} style={{ padding: "10px" }}>
+              <p>{subCategory.name}</p>
+            </Link>
+          ))}
+        </div>
+      )}
+    </li>
+  ))}
+
+
+       {data&& <li  style={{ margin: "0.7rem", position: "relative" }}
+         key={199}
+         onMouseEnter={() => handleMouseEnter(199)}
+         onMouseLeave={handleMouseLeave}
+        >
+          
+          <Link href={`/category/`} style={{ fontSize: "0.8rem",fontWeight:"600",color:"#5A6367" }}>
+            <p >More</p>
+          </Link>
+          {hoveredItemId === 199 && (
+              <div style={{
+                position: "absolute",
+                top: "100%",
+                left: -160,
+                display: "flex",
+                flexDirection: "column",
+                backgroundColor: "#ffffff",
+                minWidth: "250px", // Set a minimum width
+                boxShadow: "0 0 5px rgba(0,0,0,0.5)", // Add a box shadow for a better visual separation
+                border: "1px solid #ccc", // Add a border
+              }}>
+                 {data&&data
+  .filter((category) => category.children.length== 0)
+  .map((category) => (
+                  <Link key={category.id} href={`/subcategory/${category.id}`} style={{ padding: "10px", }}>
+                    <p>{category.name}</p>
+                  </Link>
+                ))}
               </div>
-            </NavigationMenuItem>
-          )}
-        </NavigationMenuList>
-      </NavigationMenu>
-    </div>
+            )}
+        </li>}
+      </ul>
+    </nav>
   );
 };
 
