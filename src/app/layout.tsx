@@ -20,6 +20,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+       <head>
+        {/* Other head elements go here */}
+      </head>
       <body className={`${inter.className} min-h-screen flex flex-col`}>
         <QueryProvider>
           <Navbar />

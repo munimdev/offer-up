@@ -195,9 +195,10 @@ export const Navbar = ({}: NavbarProps) => {
   return (
     <>
       <div className="flex items-center gap-4 p-4 mt-2">
-        <Link href="/">
-          <Logo />
-        </Link>
+      <Link href="/" className="flex items-center">
+  <Logo/> 
+  <span className=" text-2xl font-bold text-[#1BC3FF]">Bargain Ex</span>
+</Link>
         <Searchbar />
         <Dialog
           onOpenChange={(e) => setIsLocationModalOpen(e)}
@@ -533,7 +534,7 @@ console.log(response,'facebook response')
           Sign Up / Login
         </DialogTitle>
         <DialogDescription className="text-3xl font-bold text-primary">
-          {"Offer Up"}
+          {"Bargain Ex"}
         </DialogDescription>
       </DialogHeader>
       <div className="flex flex-col flex-wrap items-stretch justify-center flex-1 gap-4 mt-4">
@@ -597,7 +598,7 @@ console.log(response,'facebook response')
           Sign Up / Login
         </DialogTitle>
         <DialogDescription className="text-3xl font-bold text-primary">
-          {"Offer Up"}
+          {"Bargain Ex"}
         </DialogDescription>
       </DialogHeader>
       <div className="flex flex-col flex-wrap items-stretch justify-center flex-1 gap-4">
@@ -657,7 +658,7 @@ console.log(response,'facebook response')
             Sign Up / Login
           </DialogTitle>
           <DialogDescription className="text-3xl font-bold text-primary">
-            {"Offer Up"}
+            {"Bargain Ex"}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -773,7 +774,7 @@ console.log(response,'facebook response')
             Sign Up / Login
           </DialogTitle>
           <DialogDescription className="text-3xl font-bold text-primary">
-            {"Offer Up"}
+            {"Bargain Ex"}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>

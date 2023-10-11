@@ -60,8 +60,8 @@ const Logo = () => (
     xmlns="http://www.w3.org/2000/svg"
     xmlSpace="preserve"
     id="Layer_1"
-          width="120"
-      height="60"
+          width="60"
+      height="50"
     x={0}
     y={0}
     style={{

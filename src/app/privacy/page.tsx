@@ -539,7 +539,7 @@ const Privacy = () => {
             us:
           </p>
           <ul className="list-disc list-outside">
-            <li>By email: support@bargainex.com</li>
+            <li>By email: Admin@bargainex.clm</li>
           </ul>
         </div>
       </div>
