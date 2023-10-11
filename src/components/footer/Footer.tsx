@@ -65,7 +65,7 @@ export const Footer: React.FC<FooterProps> = ({}) => {
         </div>
       </div>
       <div className="flex flex-row justify-between mt-5 text-white">
-        <span>© 2023 OfferUp Inc.</span>
+        <span>© 2023 Bargain Ex Inc.</span>
         <span>Privacy Policy</span>
       </div>
     </div>
