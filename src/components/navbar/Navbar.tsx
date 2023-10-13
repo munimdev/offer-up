@@ -288,7 +288,7 @@ export const Navbar = ({}: NavbarProps) => {
           </DialogContent>
         </Dialog>
         <div className="ml-auto">
-          <NavigationMenu className="hidden md:block">
+          <NavigationMenu className="hidden md:block z-20">
             <NavigationMenuList>
               {navList.map((item, index) => (
                 <NavigationMenuItem key={item.title}>
@@ -298,7 +298,7 @@ export const Navbar = ({}: NavbarProps) => {
                         {item.title}
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <ul className="grid gap-3 p-6 w-[200px] grid-cols-1">
+                        <ul className="grid gap-3 p-6 w-[200px] grid-cols-1 ">
                           {item?.children?.map((child) => (
                             <li
                               key={child.to}
