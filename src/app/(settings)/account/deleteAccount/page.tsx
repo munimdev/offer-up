@@ -22,7 +22,6 @@ const DeleteAccount = () => {
         e.preventDefault();
     try {
       const response = await deleteaccount()
-      console.log(response,'response delete handler')
       if(response.statusCode === '111'){
         setUser(null);
         localStorage.removeItem("accessToken");

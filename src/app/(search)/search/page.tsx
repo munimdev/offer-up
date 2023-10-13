@@ -34,8 +34,6 @@ const Page = () => {
 
   const preferredDistance = useAtomValue(preferredDistanceAtom);
   const [location] = useAtom(locationAtom);
- 
-console.log(searchKeyword)
   const [paginatedItems, setPaginatedItems] = useState<any>();
   const query = {
     searchKeyword: searchKeyword?searchKeyword:"",

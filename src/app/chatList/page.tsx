@@ -82,7 +82,6 @@ const Page = () => {
             const timestampB = b.lastMessageTime ? b.lastMessageTime.seconds: 0;
             return timestampB - timestampA;
           });
-          console.log(sortedChats, 'sortedChats');
           setChats(sortedChats);
         })
         .catch((error) => {

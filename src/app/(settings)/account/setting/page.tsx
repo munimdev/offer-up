@@ -174,7 +174,6 @@ const Setting = () => {
     try {
       setApplyEmailVerify(true);
       const response = await resendEmail();
-      console.log(response);
       if (response.statusCode === "111") {
         toast({
           title: "Email Verification",
@@ -189,7 +188,6 @@ const forgetPasswordHandler = async () => {
   try {
     setForgetPasswordState(true)
     const response = await forgetPassword('abuzarzaidi947@gmail.com')
-    console.log(response,'forgetPasswordHandler')
     if (response.statusCode === "111") {
       toast({
         title: "Forget Password",
