@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["placehold.co",'firebasestorage.googleapis.com','media.licdn.com','https://images.unsplash.com'],
+    domains: ["placehold.co",'firebasestorage.googleapis.com','media.licdn.com','https://images.unsplash.com', 'images.offerup.com'],
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {
