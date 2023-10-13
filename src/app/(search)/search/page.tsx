@@ -18,13 +18,6 @@ const Loader = () => (
   <div className="grid grid-cols-2 mx-auto gap-x-6 gap-y-10 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-8 ">
     {Array.from({ length: 16 }).map((_, index) => (
       <Skeleton key={index} className="w-full h-[130px]" />
-    //   <div className="flex justify-center">
-    // <RotatingLines strokeColor="#62C3FE"
-    //    strokeWidth="5"
-    //    animationDuration="0.75"
-    //    width="16"
-    //    visible={true}/>;
-    //    </div>
     ))}
   </div>
 );
@@ -55,7 +48,7 @@ const Page = () => {
     priceFrom: priceFrom ? parseInt(priceFrom) : 0,
     priceTo: priceTo ? parseInt(priceTo) : 999999,
     // sortByLookupId: 0,
-    pageSize: 30,
+    pageSize: 21,
     pageIndex: 0,
   }
 

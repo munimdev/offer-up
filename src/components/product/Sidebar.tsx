@@ -234,14 +234,12 @@ console.log(data,'data')
         >
           <DialogTrigger asChild>
             <button className="">
-              {/* <Heart
-                size={20}
-                className={`inline-block mr-2 ${
-                  data.lstAddedToFavoriteListIds.length > 0
-                    ? "fill-primary"
-                    : null
-                }`}
-              /> */}
+            <Heart
+  size={20}
+  className={`inline-block mr-2 ${
+    data.lstAddedToFavoriteListIds?.length > 0 ? "fill-primary" : ""
+  }`}
+/>
             </button>
           </DialogTrigger>
           <DialogContent className="max-w-[425px]">
