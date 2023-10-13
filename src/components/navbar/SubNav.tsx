@@ -43,6 +43,7 @@ const SubNav = () => {
       <ul style={{ listStyle: "none", padding: 0, display: "flex", flexDirection: "row" }}>
       {data&&data
   .filter((category) => category.children.length > 0)
+  .slice(0, 9)
   .map((category) => (
     <li
       key={category.id}

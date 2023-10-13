@@ -51,7 +51,7 @@ export const itemFormDataAtom = atom<ItemAtom>({
 
 export const updateItemFormDataAtom = atom<Item | null>(null);
 export const zipCodeAtom = atomWithStorage<string>("zipcode", "");
-export const locationAtom = atomWithStorage<{ lat: number; lng: number }>("cordinates", {
+export const locationAtom = atomWithStorage<{ lat: number; lng: number }>("coordinates", {
   lat: 39.8283,
   lng: 98.5795,
 });
