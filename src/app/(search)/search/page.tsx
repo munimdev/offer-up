@@ -13,7 +13,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { RotatingLines } from  'react-loader-spinner'
 import { useAtom, useAtomValue } from "jotai/react";
 import { preferredDistanceAtom, locationAtom } from "@/utils/atoms";
-
+import { useRouter } from "next/navigation";
 const Loader = () => (
   <div className="grid grid-cols-2 mx-auto gap-x-6 gap-y-10 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-8 ">
     {Array.from({ length: 16 }).map((_, index) => (
@@ -24,6 +24,7 @@ const Loader = () => (
 
 const Page = () => {
   const searchParams = useSearchParams();
+  const searchKeyword = searchParams.get('searchKeyword');
   const condition = searchParams.get("condition");
   const priceFrom = searchParams.get("priceFrom");
   const priceTo = searchParams.get("priceTo");
@@ -33,11 +34,11 @@ const Page = () => {
 
   const preferredDistance = useAtomValue(preferredDistanceAtom);
   const [location] = useAtom(locationAtom);
-
-
+ 
+console.log(searchKeyword)
   const [paginatedItems, setPaginatedItems] = useState<any>();
   const query = {
-    searchKeyword: "",
+    searchKeyword: searchKeyword?searchKeyword:"",
     categoryId: category ? parseInt(category) : 0,
     ...childCategory && { childCategoryId: parseInt(childCategory) },
     ...subCategory && { subCategoryId: parseInt(subCategory) },
