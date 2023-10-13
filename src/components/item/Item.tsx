@@ -27,7 +27,7 @@ export const Item = ({ id, name, price,oldPrice,shortAddress, images }: TItem) =
         <div className="flex flex-col justify-end h-full">
           <div className="flex flex-row justify-between">
             <span className="text-base font-medium">{`$${price}`}</span>
-            <span className="text-base font-medium line-through">{`$${oldPrice}`}</span>
+          {oldPrice>price&&<span className="text-base font-medium line-through">{`$${oldPrice}`}</span>}  
             {/* <span className="text-base font-medium">{additionalInfo}</span> */}
           </div>
           {/* <span className="text-sm font-normal text-gray-500/80">{location}</span> */}
