@@ -39,7 +39,7 @@ const SubNav = () => {
 
 
   return (
-    <nav style={{ display: "flex", flexDirection: "row", justifyContent: "center", flexWrap: "wrap" }}>
+    <nav style={{ display: "flex", flexDirection: "row", justifyContent: "center", flexWrap: "wrap",zIndex:100 }}>
       <ul style={{ listStyle: "none", padding: 0, display: "flex", flexDirection: "row" }}>
       {data&&data
   .filter((category) => category.children.length > 0)
