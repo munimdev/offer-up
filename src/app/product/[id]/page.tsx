@@ -29,7 +29,7 @@ const Product = ({ params }: { params: { id: string } }) => {
        strokeWidth="5"
        animationDuration="0.75"
        width="56"
-       visible={true}/>;
+       visible={true}/>
        </div>
   }
   return (
