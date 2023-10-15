@@ -51,7 +51,7 @@ export default function Home() {
     pageIndex: 0,
   }
 
-  const { data, refetch } = useFetch({
+  const { data,isLoading, refetch } = useFetch({
     key: ["search-products", JSON.stringify(query)],
     fn: () =>
       Queries.searchItems(query),
@@ -77,7 +77,19 @@ export default function Home() {
       },
     }
   );
-
+  if (isLoading) {
+    return (
+      <div className="flex justify-center">
+        <RotatingLines
+          strokeColor="#62C3FE"
+          strokeWidth="5"
+          animationDuration="0.75"
+          width="56"
+          visible={true}
+        />
+      </div>
+    );
+  }
   return (
     <main className="flex flex-col items-center justify-center p-4">
       <div className="flex items-center justify-center gap-4 text-[#1BC3FF] container">

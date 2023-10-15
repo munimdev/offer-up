@@ -51,7 +51,7 @@ const Page = () => {
     pageIndex: 0,
   }
 
-  const { data, refetch } = useFetch({
+  const { data,isLoading, refetch } = useFetch({
     key: ["search-products", JSON.stringify(query)],
     fn: () =>
       Queries.searchItems(query),
@@ -77,7 +77,26 @@ const Page = () => {
       },
     }
   );
-
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-2 mx-auto gap-x-6 gap-y-10 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-8">
+        {/* Empty div for the first column */}
+        <div></div>
+        {/* Center column for RotatingLines */}
+        <div className="col-span-2 flex items-center justify-center">
+          <RotatingLines
+            strokeColor="#62C3FE"
+            strokeWidth="5"
+            animationDuration="0.75"
+            width="56"
+            visible={true}
+          />
+        </div>
+        {/* Empty div for the last column */}
+        <div></div>
+      </div>
+    );
+  }
   return (
     <div className="h-full flex-1">
       <InfiniteScroll
