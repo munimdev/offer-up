@@ -1,10 +1,13 @@
 // @ts-nocheck
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Send, X } from 'lucide-react'; // Import the Send and X icons from lucide-react
 
 const StartChat = ({ onClose, onSubmit }) => {
   const [message, setMessage] = useState('');
-
+  const inputRef = useRef(null);
+  useEffect(() => {
+    inputRef.current.focus();
+  }, []);
   const handleInputChange = (e) => {
     setMessage(e.target.value);
   };
@@ -33,6 +36,7 @@ const StartChat = ({ onClose, onSubmit }) => {
             type="text"
             placeholder="Type your message..."
             value={message}
+            ref={inputRef}
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
             className="flex-grow border border-gray-300 rounded-lg px-32 py-3 mr-2" // Use flex-grow and adjust margin

@@ -1,9 +1,12 @@
 // @ts-nocheck
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Link from "next/link";
 const OfferModal = ({ onClose, onSubmit }) => {
   const [price, setPrice] = useState('');
-
+  const inputRef = useRef(null);
+  useEffect(() => {
+    inputRef.current.focus();
+  }, []);
   const handlePriceChange = (e) => {
     setPrice(e.target.value);
   };
@@ -33,6 +36,7 @@ const OfferModal = ({ onClose, onSubmit }) => {
           placeholder="Enter price"
           value={price}
           min={0}
+          ref={inputRef}
           onChange={handlePriceChange}
           onKeyDown={handleKeyDown}
           className="border border-gray-300 rounded-lg p-6 w-full mb-4"

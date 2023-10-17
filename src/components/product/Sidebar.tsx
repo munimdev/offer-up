@@ -204,17 +204,17 @@ console.log(data,'data')
     <div className="flex flex-col gap-2 p-5">
       <h3 className="text-3xl font-bold text-black">{data?.name}</h3>
       <h3 className="text-3xl font-bold text-black">${data?.price}</h3>
-      <p>
+      {/* <p>
         <span className="font-semibold">VIN</span> {data?.id}
       </p>
-      <p>Posted 24 days ago in Islamabd, PK</p>
+      <p>Posted 24 days ago in Islamabd, PK</p> */}
       <p>Condition: {data?.conditionLookUpName}</p>
       <p>
         {data.categoryName} - {data.subCategoryName}
       </p>
-      <Button className="rounded-full bg-primary hover:bg-primary">
+      {/* <Button className="rounded-full bg-primary hover:bg-primary">
         <Phone fill="#fff" size={18} className="mr-2" /> Call for Details
-      </Button>
+      </Button> */}
       <Button className="rounded-full bg-primary hover:bg-primary" onClick={handleOpenOfferModal}>
         <DollarSign fill="#fff" size={18} className="mr-2" /> Make a Offer
       </Button>
