@@ -306,7 +306,7 @@ console.log(data,'data')
           <Share2 className="inline-block mr-2" />
         </span>
       </div>
-      <div className="flex gap-4 py-4 my-4 border-y cursor-pointer">
+      <div className="flex gap-4 py-4 my-4 border-y cursor-pointer items-center">
         <div onClick={()=>sellerPageHandler(data.customer.id)}>
           <Image
             src={data.customer.imagePath || "/images/placeholder.png"}
@@ -320,12 +320,12 @@ console.log(data,'data')
           <p className="font-bold text-black cursor-pointer" onClick={()=>sellerPageHandler(data.customer.id)}>
             {data.customer.name.toUpperCase()}
           </p>
-          <div className="flex gap-1 text-xs">
+          {/* <div className="flex gap-1 text-xs">
             <span>{data.customer.totalRating}</span>
             <Rating rating={data.customer.totalRating} />
             <span>(Google Reviews)</span>
-          </div>
-          <p>{data.customer.isEmailVerified ? "Verifeid" : "Not Verified"}</p>
+          </div> */}
+          {/* <p>{data.customer.isEmailVerified ? "Verifeid" : "Not Verified"}</p> */}
         </div>
       </div>
       <div>
