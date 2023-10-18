@@ -79,7 +79,7 @@ const [downloadAppModal,setDownloadAppModal] = React.useState(false);
     const threeDaysLater = currentTime + 3 * 24 * 60 * 60 * 1000;
 
     // If the last modal time is not available or it's been more than 3 days
-    return !lastModalTime || currentTime > parseInt(lastModalTime);
+    return !lastModalTime || currentTime > parseInt(lastModalTime as string);
   };
   useEffect(() => {
     // Check if the modal should be displayed
@@ -87,7 +87,8 @@ const [downloadAppModal,setDownloadAppModal] = React.useState(false);
       setDownloadAppModal(true);
 
       // Set the cookie for the next 3 days
-      Cookies.set('lastModalTime', new Date().getTime() + 3 * 24 * 60 * 60 * 1000);
+      Cookies.set('lastModalTime', (new Date().getTime() + 3 * 24 * 60 * 60 * 1000).toString());
+
     }
   }, []);
   // Use the useMutation hook to fetch more data
