@@ -1,6 +1,7 @@
 "use client";
 import { ItemList } from "@/components/item-list/ItemList";
 import { Button } from "@/components/ui/button";
+import Cookies from 'js-cookie';
 import { ShoppingCart } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
@@ -72,7 +73,23 @@ const [downloadAppModal,setDownloadAppModal] = React.useState(false);
   }, [
     data
   ])
+  const shouldDisplayModal = () => {
+    const lastModalTime = Cookies.get('lastModalTime');
+    const currentTime = new Date().getTime();
+    const threeDaysLater = currentTime + 3 * 24 * 60 * 60 * 1000;
 
+    // If the last modal time is not available or it's been more than 3 days
+    return !lastModalTime || currentTime > parseInt(lastModalTime);
+  };
+  useEffect(() => {
+    // Check if the modal should be displayed
+    if (shouldDisplayModal()) {
+      setDownloadAppModal(true);
+
+      // Set the cookie for the next 3 days
+      Cookies.set('lastModalTime', new Date().getTime() + 3 * 24 * 60 * 60 * 1000);
+    }
+  }, []);
   // Use the useMutation hook to fetch more data
   const loadMoreData = useMutation(
     (newPageIndex: number) => Queries.searchItems({ ...query, pageIndex: newPageIndex }),
