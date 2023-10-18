@@ -22,6 +22,7 @@ export default function RootLayout({
     <html lang="en">
        <head>
         {/* Other head elements go here */}
+        <meta name="apple-itunes-app" content="app-id=6468424905"/>
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" sizes="any"></link>
       </head>
       <body className={`${inter.className} min-h-screen flex flex-col`}>
