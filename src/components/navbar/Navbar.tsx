@@ -68,7 +68,6 @@ import Google from "@/components/icons/Google";
 import Apple from "@/components/icons/Apple";
 import Twitter from "@/components/icons/Twitter";
 import Microsoft from "@/components/icons/Microsoft";
-
 // Hooks
 import { useLogin, useSignup } from "@/hooks";
 import { useForm } from "react-hook-form";

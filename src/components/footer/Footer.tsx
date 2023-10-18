@@ -5,6 +5,8 @@ import Twitter from "@/components/icons/Twitter";
 import Facebook from "@/components/icons/Facebook";
 import Instagram from "@/components/icons/Instagram";
 import LinkedIn from "@/components/icons/LinkedIn";
+import AppleStore from "@/components/icons/AppleStore";
+import GooglePlayStore from "@/components/icons/GooglePlayStore";
 
 interface FooterProps {}
 
@@ -46,10 +48,21 @@ export const Footer: React.FC<FooterProps> = ({}) => {
             </ul>
           </div>
         </div>
-        <div className="flex flex-col p-3">
-          <Button className="px-5 text-white rounded-full bg-transparent border border-white text-md font-bold">
+        <div className="flex flex-col p-1">
+          {/* <Button className="px-5 text-white rounded-full bg-transparent border border-white text-md font-bold">
             Get app
-          </Button>
+          </Button> */}
+        <div className="flex flex-col p-1 cursor-pointer">
+          <div>
+            <a href="https://play.google.com/store/apps/details?id=com.pauspan.bargainex&hl=en&gl=US" target="_blank">
+          <GooglePlayStore/>
+          </a>
+          </div>
+          <div>
+            <a href="https://apps.apple.com/us/app/bargain-exchange/id6468424905" target="_blank">
+          <AppleStore/></a>
+          </div>
+        </div>
           <div className="flex text-white mt-5">
             <span className="mr-2">
               <Twitter />
