@@ -1,11 +1,11 @@
 import React from "react";
 
-function GooglePlayStore() {
+function GooglePlayStore(props:any) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="119.664"
-      height="40"
+      width={props.width}
+      height={props.height}
       fill="none"
       viewBox="0 0 135 40"
     >

@@ -4,11 +4,20 @@ import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { useFetch } from "@/hooks";
 import { useMutation } from "@tanstack/react-query";
 import * as Queries from "@/utils/queries";
-
+import AppleStore from "@/components/icons/AppleStore";
+import GooglePlayStore from "@/components/icons/GooglePlayStore";
+import Logo from "@/components/icons/Logo";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Skeleton } from "@/components/ui/skeleton";
 import { RotatingLines } from  'react-loader-spinner'
@@ -32,8 +41,7 @@ export default function Home() {
 
   const preferredDistance = useAtomValue(preferredDistanceAtom);
   const [location] = useAtom(locationAtom);
-
-
+const [downloadAppModal,setDownloadAppModal] = React.useState(false);
   const [paginatedItems, setPaginatedItems] = useState<any>();
   const query = {
     searchKeyword: "",
@@ -91,13 +99,58 @@ export default function Home() {
     );
   }
   return (
+    <>
+            <Dialog
+              onOpenChange={(e) => setDownloadAppModal(e)}
+          open={downloadAppModal}
+        >
+          <DialogTrigger asChild>
+            <span className="flex font-bold text-[#1BC3FF] items-center gap-2 cursor-pointer">
+             
+              <span className="hidden gap-2 lg:flex">
+              
+              </span>
+            </span>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <div className="flex flex-col p-4 ">
+            <div className="flex items-center justify-center mb-3">
+  <Logo />
+  <h2 className="text-2xl font-bold text-center text-black">
+    Bargain Ex
+  </h2>
+</div>
+
+           
+              <p className="text-center">
+                 Enhance Your Experience!
+               Get our mobile app for exclusive features and updates
+              </p>
+              <div className="flex justify-between  p-5 ">
+          <div className="cursor-pointer">
+            <a href="https://play.google.com/store/apps/details?id=com.pauspan.bargainex&hl=en&gl=US" target="_blank">
+          <GooglePlayStore idth="119.664" height="40"/>
+          </a>
+          </div>
+          <div className="cursor-pointer">
+            <a href="https://apps.apple.com/us/app/bargain-exchange/id6468424905" target="_blank">
+          <AppleStore/></a>
+          </div>
+        </div>
+      
+            
+            </div>
+          
+          </DialogContent>
+        </Dialog>
     <main className="flex flex-col items-center justify-center p-4">
+
       <div className="flex items-center justify-center gap-4 text-[#1BC3FF] container">
         <ShoppingCart color="#1BC3FF" strokeWidth={3} />
         <h1 className="text-2xl font-bold">
           The simpler way to buy and sell locally!
         </h1>
-        <Button className="px-5 font-bold text-white border border-white rounded-full bg-[#1BC3FF] text-md hover:bg-[#0c769c]">
+        <Button className="px-5 font-bold text-white border border-white rounded-full bg-[#1BC3FF] text-md hover:bg-[#0c769c]" onClick={()=>{setDownloadAppModal(true)}}>
           Get the app
         </Button>
       </div>
@@ -113,5 +166,6 @@ export default function Home() {
       </InfiniteScroll>
     </div>
     </main>
+    </>
   );
 }

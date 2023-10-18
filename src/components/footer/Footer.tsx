@@ -52,13 +52,13 @@ export const Footer: React.FC<FooterProps> = ({}) => {
           {/* <Button className="px-5 text-white rounded-full bg-transparent border border-white text-md font-bold">
             Get app
           </Button> */}
-        <div className="flex flex-col p-1 cursor-pointer">
-          <div>
+        <div className="flex flex-col p-1 ">
+          <div className="cursor-pointer">
             <a href="https://play.google.com/store/apps/details?id=com.pauspan.bargainex&hl=en&gl=US" target="_blank">
-          <GooglePlayStore/>
+          <GooglePlayStore width="119.664" height="40"/>
           </a>
           </div>
-          <div>
+          <div className="cursor-pointer">
             <a href="https://apps.apple.com/us/app/bargain-exchange/id6468424905" target="_blank">
           <AppleStore/></a>
           </div>
