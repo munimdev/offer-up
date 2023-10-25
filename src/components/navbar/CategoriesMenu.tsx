@@ -1,61 +1,52 @@
-import React, {useState} from 'react'
+import React, { useState } from "react";
 import { Menu } from "lucide-react";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuGroup,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-  } from "@/components/ui/dropdown-menu";
-  import { useFetchCategories } from "@/hooks";
+import { useFetchCategories } from "@/hooks";
+import { ChevronDown, ChevronUp } from "lucide-react";
 const CategoriesMenu = () => {
-    const { data, isLoading } = useFetchCategories();
-    const [showSubCategory,setShowSubCategory] = useState(0)
-    const handleShowSubCategories =(id:number)=>{
-        setShowSubCategory(id)
-    }
+  const { data, isLoading } = useFetchCategories();
+  const [showSubCategory, setShowSubCategory] = useState(0);
+
+  const handleShowSubCategories = (id: number) => {
+    setShowSubCategory(id === showSubCategory ? 0 : id);
+  };
+
   return (
-    <div className="block md:hidden">
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+    <div className="block md:hidden" >
+      <div className="relative">
         <button className="font-bold">
           <Menu />
         </button>
-      </DropdownMenuTrigger>
-      {!isLoading&&<DropdownMenuContent className="w-56 max-h-[80vh] overflow-y-auto">
-      <div className="px-2 py-2 text-gray-700 font-bold">All Categories</div>
-        <DropdownMenuGroup>
-        {
-    data?.map((category) => {
-        return (
-            <>
-            <DropdownMenuItem key={category.id} 
-            onKeyUp={(event) => event.stopPropagation()}
-            onClick={event => {event.stopPropagation(); handleShowSubCategories(category.id)}} 
-            >{category.name}</DropdownMenuItem>
-            {
-    showSubCategory==category.id?category.children?.map((categoryChild) => {
-        return (
-            <>
-            <DropdownMenuItem key={categoryChild.id} className='ml-4'>{categoryChild.name}</DropdownMenuItem>
-            </>
-        );
-    })
-:""}
-            </>
-        );
-    })
-}
+        {!isLoading && (
+          <div className="absolute right-0 mt-2 w-64 max-h-[80vh] overflow-y-auto bg-white border rounded shadow-lg p-2" style={{ zIndex: 2 }}>
+            <div className="px-2 py-2 text-gray-700 font-bold">
+              All Categories
+            </div>
+            {data?.map((category) => (
+              <React.Fragment key={category.id}>
+                <div
+                  role="button"
+                  tabIndex={0}
+                  className="cursor-pointer px-4 py-2 hover:bg-gray-200 flex justify-between"
+                  onClick={() => handleShowSubCategories(category.id)}
+                >
+                  {category.name} <ChevronDown/>
+                </div>
+                {showSubCategory === category.id &&
+                  category.children?.map((categoryChild) => (
+                    <div
+                      key={categoryChild.id}
+                      className="ml-4 px-4 py-2 hover:bg-gray-200"
+                    >
+                      {categoryChild.name}
+                    </div>
+                  ))}
+              </React.Fragment>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
-          
-
-
-        </DropdownMenuGroup>
-      </DropdownMenuContent>}
-    </DropdownMenu>
-  </div>
-  )
-}
-
-export default CategoriesMenu
+export default CategoriesMenu;

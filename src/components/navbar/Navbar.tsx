@@ -387,7 +387,7 @@ export const Navbar = ({}: NavbarProps) => {
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
-          <CategoriesMenu/>
+      
           {/* <div className="block md:hidden">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -404,8 +404,13 @@ export const Navbar = ({}: NavbarProps) => {
               </DropdownMenuContent>
             </DropdownMenu>
           </div> */}
+          
+          <CategoriesMenu/>
         </div>
       </div>
+     
+     
+        
       <div className="block sm:hidden flex justify-center">
       <Searchbar />
       </div>
