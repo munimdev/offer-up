@@ -38,7 +38,7 @@ const CategoriesMenu = () => {
     showSubCategory==category.id?category.children?.map((categoryChild) => {
         return (
             <>
-            <DropdownMenuItem key={categoryChild.id}>{categoryChild.name}</DropdownMenuItem>
+            <DropdownMenuItem key={categoryChild.id} className='ml-4'>{categoryChild.name}</DropdownMenuItem>
             </>
         );
     })
