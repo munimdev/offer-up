@@ -208,7 +208,7 @@ export const Navbar = ({}: NavbarProps) => {
           <DialogTrigger asChild>
             <span className="flex font-bold text-[#1BC3FF] items-center gap-2 cursor-pointer">
               <MapPin />{" "}
-              <span className="hidden gap-2 lg:flex">
+              <span className=" gap-2 lg:flex">
                 <p>
                   {locationName
                     ? `${locationName}: ${preferredDistance[0]} Miles`
