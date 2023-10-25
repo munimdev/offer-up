@@ -306,28 +306,27 @@ console.log(user,'user')
           <Share2 className="inline-block mr-2" />
         </span>
       </div>
-      <div className="flex gap-4 py-4 my-4 border-y cursor-pointer items-center">
-        <div onClick={()=>sellerPageHandler(data.customer.id)}>
-          <Image
-            src={data.customer.imagePath || "/images/placeholder.png"}
-            className="rounded-full"
-            alt=""
-            width={70}
-            height={70}
-          />
-        </div>
-        <div>
-          <p className="font-bold text-black cursor-pointer" onClick={()=>sellerPageHandler(data.customer.id)}>
-            {data.customer.name.toUpperCase()}
-          </p>
-          {/* <div className="flex gap-1 text-xs">
-            <span>{data.customer.totalRating}</span>
-            <Rating rating={data.customer.totalRating} />
-            <span>(Google Reviews)</span>
-          </div> */}
-          {/* <p>{data.customer.isEmailVerified ? "Verifeid" : "Not Verified"}</p> */}
-        </div>
-      </div>
+      {/* {data.customer && data.customer.imagePath && data.customer.name &&data.customer.name.trim() !== ''&& ( */}
+  <div className="flex gap-4 py-4 my-4 border-y cursor-pointer items-center">
+    <div onClick={() => sellerPageHandler(data.customer.id)}>
+      <Image
+        src={data.customer.imagePath}
+        className="rounded-full"
+        alt=""
+        width={70}
+        height={70}
+      />
+    </div>
+    <div>
+      <p className="font-bold text-black cursor-pointer" onClick={() => sellerPageHandler(data.customer.id)}>
+        {data.customer.name.toUpperCase()}
+      </p>
+      {/* Other content */}
+    </div>
+  </div>
+{/* )} */}
+
+
       <div>
       {data.fullAddress&& <p className="text-primary my-4">
          <MapPin className="inline" size={24} />{data.fullAddress}
