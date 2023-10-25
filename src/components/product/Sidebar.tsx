@@ -68,11 +68,11 @@ const Sidebar: React.FC<Props> = ({ data }) => {
   // const { isLoggedIn } = useSession();
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
   const { toast } = useToast();
-
+console.log(user,'user')
   // ----------------------------
   const [isOfferDialogOpen, setIsOfferDialogOpen] = React.useState<boolean>(false);
   const [isChatDialogOpen, setIsChatDialogOpen] = React.useState<boolean>(false);
-console.log(data,'data')
+// console.log(data,'data')
   const { mutateAsync: addItemToList } = useMutation(
     Queries.addItemToFavouriteList
   );
@@ -215,12 +215,12 @@ console.log(data,'data')
       {/* <Button className="rounded-full bg-primary hover:bg-primary">
         <Phone fill="#fff" size={18} className="mr-2" /> Call for Details
       </Button> */}
-      <Button className="rounded-full bg-primary hover:bg-primary" onClick={handleOpenOfferModal}>
+     {user && user.id &&<> <Button className="rounded-full bg-primary hover:bg-primary" onClick={handleOpenOfferModal}>
         <DollarSign fill="#fff" size={18} className="mr-2" /> Make a Offer
       </Button>
       <Button className="bg-white border rounded-full text-primary border-primary hover:bg-white"onClick={handleOpenChatModal}>
         <Message className="mr-2" /> Chat
-      </Button>
+      </Button></>}
       <div className="flex items-center justify-center gap-x-5 text-primary">
         <Dialog
           open={isDialogOpen}
