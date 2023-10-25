@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Menu } from "lucide-react";
 import { useFetchCategories } from "@/hooks";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import Link from "next/link";
 const CategoriesMenu = () => {
   const { data, isLoading } = useFetchCategories();
   const [showSubCategory, setShowSubCategory] = useState(0);
@@ -38,7 +39,10 @@ const CategoriesMenu = () => {
                       key={categoryChild.id}
                       className="ml-4 px-4 py-2 hover:bg-gray-200"
                     >
-                      {categoryChild.name}
+                        <Link key={category.id} href={`/search?category=${categoryChild.id}`} onClick={()=>{setIsVisible(false);setShowSubCategory(0)}}>
+                    <p>{categoryChild.name}</p>
+                  </Link>
+                      
                     </div>
                   ))}
               </React.Fragment>
