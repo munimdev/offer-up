@@ -59,7 +59,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import SubNav from "@/components/navbar/SubNav";
 import { Searchbar } from "@/components/searchbar/Searchbar";
 import placholder from "@/components/item/placeholder.png";
-
+import CategoriesMenu from './CategoriesMenu'
 // Icons
 import Logo from "@/components/icons/Logo";
 import { MapPin, Menu, Mail } from "lucide-react";
@@ -387,7 +387,8 @@ export const Navbar = ({}: NavbarProps) => {
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
-          <div className="block md:hidden">
+          <CategoriesMenu/>
+          {/* <div className="block md:hidden">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="font-bold">
@@ -395,13 +396,14 @@ export const Navbar = ({}: NavbarProps) => {
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56">
+              <div className="px-2 py-2 text-gray-700 font-bold">All Categories</div>
                 <DropdownMenuGroup>
                   <DropdownMenuItem>About</DropdownMenuItem>
                   <DropdownMenuItem>Help</DropdownMenuItem>
                 </DropdownMenuGroup>
               </DropdownMenuContent>
             </DropdownMenu>
-          </div>
+          </div> */}
         </div>
       </div>
       <div className="block sm:hidden flex justify-center">
