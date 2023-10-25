@@ -163,15 +163,21 @@ const [downloadAppModal,setDownloadAppModal] = React.useState(false);
         </Dialog>
     <main className="flex flex-col items-center justify-center p-4">
 
-      <div className="flex items-center justify-center gap-4 text-[#1BC3FF] container">
-        <ShoppingCart color="#1BC3FF" strokeWidth={3} />
-        <h1 className="text-2xl font-bold">
-          The simpler way to buy and sell locally!
-        </h1>
-        <Button className="px-5 font-bold text-white border border-white rounded-full bg-[#1BC3FF] text-md hover:bg-[#0c769c]" onClick={()=>{setDownloadAppModal(true)}}>
-          Get the app
-        </Button>
-      </div>
+    <div className="flex flex-col items-center justify-center gap-4 text-[#1BC3FF] container mx-auto px-4">
+  <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-center">
+  <div className="hidden sm:block">
+    <ShoppingCart color="#1BC3FF" strokeWidth={3} className="w-8 h-8" />
+  </div>
+    <h1 className="text-xl md:text-2xl lg:text-3xl font-bold">
+      The simpler way to buy and sell locally!
+    </h1>
+  </div>
+  <Button className="px-4 md:px-5 font-bold text-white border border-white rounded-full bg-[#1BC3FF] text-sm md:text-md hover:bg-[#0c769c]" onClick={() => { setDownloadAppModal(true) }}>
+    Get the app
+  </Button>
+</div>
+
+
       <div className="h-full flex-1">
       <InfiniteScroll
         dataLength={paginatedItems?.data?.length || 0}

@@ -196,9 +196,11 @@ export const Navbar = ({}: NavbarProps) => {
       <div className="flex items-center gap-4 p-4 mt-2">
       <Link href="/" className="flex items-center">
   <Logo/> 
-  <span className=" text-2xl font-bold text-[#1BC3FF]">Bargain Ex</span>
+  <span className=" text-2xl font-bold text-[#1BC3FF] hidden md:block">Bargain Ex</span>
 </Link>
-        <Searchbar />
+<div className="hidden sm:block flex justify-center">
+      <Searchbar />
+      </div>
         <Dialog
           onOpenChange={(e) => setIsLocationModalOpen(e)}
           open={isLocationModalOpen}
@@ -402,7 +404,12 @@ export const Navbar = ({}: NavbarProps) => {
           </div>
         </div>
       </div>
-      <SubNav />
+      <div className="block sm:hidden flex justify-center">
+      <Searchbar />
+      </div>
+     
+
+      {/* <SubNav /> */}
     </>
   );
 };
