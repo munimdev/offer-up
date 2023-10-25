@@ -48,9 +48,9 @@ const Product = ({ params }: { params: { id: string } }) => {
           </div>
           <div className="p-4 my-4 border-b">
             <h3 className="text-3xl font-bold text-black">Typical Features</h3>
-            <p className="my-5">
+            {/* <p className="my-5">
               Contact the seller to confirm vehicle details
-            </p>
+            </p> */}
             <div className="flex flex-wrap gap-y-5">
               {currentItem?.attributes.map((attr, key) => (
                 <div
