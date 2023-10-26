@@ -1,5 +1,6 @@
+"use client";
 import React from "react";
-
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Twitter from "@/components/icons/Twitter";
 import Facebook from "@/components/icons/Facebook";
@@ -7,44 +8,35 @@ import Instagram from "@/components/icons/Instagram";
 import LinkedIn from "@/components/icons/LinkedIn";
 import AppleStore from "@/components/icons/AppleStore";
 import GooglePlayStore from "@/components/icons/GooglePlayStore";
-
+import { useSession } from "@/hooks/useSession";
 interface FooterProps {}
 
 export const Footer: React.FC<FooterProps> = ({}) => {
+  const { isLoggedIn, user } = useSession();
   return (
     <div className="flex flex-col bg-[#1BC3FF] p-5">
       <div className="flex flex-row border-b border-white">
         <div className="flex flex-row flex-1 gap-10 flex-wrap">
           <div className="text-white p-3">
-            <span className="font-bold text-lg">Shop</span>
+            <span className="font-bold text-lg">Profile</span>
             <ul className="text-sm mt-2">
-              <li className="mb-2">How it works</li>
-              <li className="mb-2">Explore</li>
-              <li className="mb-2">Trust & safety</li>
-              <li className="mb-2">Safe Trade Spots</li>
+            <li className="mb-2"><Link href={`/seller/${user!.id}`}>Profile</Link></li>
+            <li className="mb-2"><Link href='/listings'>My Listing</Link></li>
+            <li className="mb-2"><Link href='/account/setting'>Account & Setting</Link></li>
             </ul>
           </div>
           <div className="text-white p-3">
             <span className="font-bold text-lg">Sell</span>
             <ul className="text-sm mt-2">
-              <li className="mb-2">Post an item</li>
-              <li className="mb-2">Auto Dealerships</li>
+              <li className="mb-2"><Link href='/selling'>Post an item</Link></li>
+
             </ul>
           </div>
           <div className="text-white p-3">
             <span className="font-bold text-lg">About</span>
             <ul className="text-sm mt-2">
-              <li className="mb-2">Our Story</li>
-              <li className="mb-2">Careers</li>
-              <li className="mb-2">Press</li>
-            </ul>
-          </div>
-          <div className="text-white p-3">
-            <span className="font-bold text-lg">Help</span>
-            <ul className="text-sm mt-2">
-              <li className="mb-2">Help Center</li>
-              <li className="mb-2">Community</li>
-              <li className="mb-2">Blog</li>
+              <li className="mb-2"><Link href='/privacy'>Privacy</Link></li>
+              <li className="mb-2"><Link href='/terms'>Terms & Conditions</Link></li>
             </ul>
           </div>
         </div>
