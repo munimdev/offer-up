@@ -1,5 +1,6 @@
 "use client";
 import CustomerOtherProducts from "@/components/product/CustomerOtherProducts";
+import SimilarProducts from "@/components/product/SimilarProducts";
 import React, {useEffect, useState} from "react";
 import Slider from "@/components/product/Slider";
 import Sidebar from "@/components/product/Sidebar";
@@ -87,9 +88,7 @@ const Product = ({ params }: { params: { id: string } }) => {
             </div>currentItem
           </div>
          {!isLoading&& <CustomerOtherProducts customerId={currentItem?.customer?.id}/>}  
-            <div className="p-4 my-4 border-b">
-            <h3 className="text-3xl font-bold text-black">Similar Items</h3>
-            </div>
+            {!isLoading&& <SimilarProducts categoryId={JSON.stringify(currentItem?.categoryId)}/>}  
           <div className="px-4 py-2 my-4">
             <ScrollArea className="max-w-full py-2 overflow-y-hidden whitespace-nowrap">
               {currentItem?.attributes.map((attr, key) => (

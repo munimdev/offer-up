@@ -92,7 +92,8 @@ export const userItems = (data: { id: string }): Promise<Result<Item>> =>
   instance.post("/Item/getItemsOfCustomer", data);
 export const getCustomerItemForProfileScreen = (data: { customerId: string }): Promise<Result<Item>> =>
   instance.post("/Item/getCustomerItemForProfileScreen", data);
-   
+export const getSimilarItems = (data: { categoryId: string }): Promise<Result<Item>> =>
+  instance.post("/Item/getSimilarItems", data); 
 
 // Favorite List
 export const getFavoriteList = (): Promise<Result<FavoriteList[]>> =>
