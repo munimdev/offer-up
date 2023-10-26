@@ -1,6 +1,6 @@
 "use client";
-
-import React from "react";
+import CustomerOtherProducts from "@/components/product/CustomerOtherProducts";
+import React, {useEffect, useState} from "react";
 import Slider from "@/components/product/Slider";
 import Sidebar from "@/components/product/Sidebar";
 import Description from "@/components/product/Description";
@@ -22,6 +22,7 @@ const Product = ({ params }: { params: { id: string } }) => {
     },
   });
   const currentItem = data?.dataObject as Item;
+
   console.log(currentItem,'currentItem')
   if (isLoading) {
     return <div className="flex justify-center">
@@ -83,8 +84,12 @@ const Product = ({ params }: { params: { id: string } }) => {
               <Badge className="mx-1 text-black bg-gray-300 cursor-pointer hover:text-white">
                 <Share2 className="inline mr-2" size={16} /> Share
               </Badge>
-            </div>
+            </div>currentItem
           </div>
+         {!isLoading&& <CustomerOtherProducts customerId={currentItem?.customer?.id}/>}  
+            <div className="p-4 my-4 border-b">
+            <h3 className="text-3xl font-bold text-black">Similar Items</h3>
+            </div>
           <div className="px-4 py-2 my-4">
             <ScrollArea className="max-w-full py-2 overflow-y-hidden whitespace-nowrap">
               {currentItem?.attributes.map((attr, key) => (
@@ -98,6 +103,7 @@ const Product = ({ params }: { params: { id: string } }) => {
               <ScrollBar orientation="horizontal" />
             </ScrollArea>
           </div>
+         
         </div>
         <div className="w-full md:w-6/12 lg:w-3/12">
           {currentItem ? (

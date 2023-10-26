@@ -90,6 +90,9 @@ export const userDetails = (data: {
 
 export const userItems = (data: { id: string }): Promise<Result<Item>> =>
   instance.post("/Item/getItemsOfCustomer", data);
+export const getCustomerItemForProfileScreen = (data: { customerId: string }): Promise<Result<Item>> =>
+  instance.post("/Item/getCustomerItemForProfileScreen", data);
+   
 
 // Favorite List
 export const getFavoriteList = (): Promise<Result<FavoriteList[]>> =>
