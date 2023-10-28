@@ -301,14 +301,14 @@ export const Navbar = ({}: NavbarProps) => {
             <Link href={isLoggedIn===true?'/chatList':'/'}  passHref>
                       <NavigationMenuLink
                         className={navigationMenuTriggerStyle()}
-                        // onClick={(e) => 
-                        //   {
-                        //     console.log(isChatListOrSellingScreen,'isChatListOrSellingScreen')
-                        //   if (!isLoggedIn&&!isChatListOrSellingScreen) {
-                        //     e.preventDefault();
-                        //     setIsLoginDialog(true);
-                        //   }
-                        // }}
+                        onClick={(e) => 
+                          {
+                            console.log(isChatListOrSellingScreen,'isChatListOrSellingScreen')
+                          if (!isLoggedIn&&!isChatListOrSellingScreen) {
+                            e.preventDefault();
+                            setIsLoginDialog(true);
+                          }
+                        }}
                       >
                         Chat Inbox
                       </NavigationMenuLink>

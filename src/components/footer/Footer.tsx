@@ -39,7 +39,7 @@ export const Footer: React.FC<FooterProps> = ({}) => {
             </ul>
           </div>
           <div className="text-white p-3">
-            <span className="font-bold text-lg">About</span>
+            <span className="font-bold text-lg">Legal Information</span>
             <ul className="text-sm mt-2">
               <li className="mb-2"><Link href='/privacy'>Privacy</Link></li>
               <li className="mb-2"><Link href='/terms'>Terms & Conditions</Link></li>
