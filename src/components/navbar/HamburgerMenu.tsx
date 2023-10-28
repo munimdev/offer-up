@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Menu } from "lucide-react";
+import { LogIn, LogInIcon, Menu, PlusCircle } from "lucide-react";
 import { useFetchCategories } from "@/hooks";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp,LogOut } from "lucide-react";
 import Link from "next/link";
-const CategoriesMenu = () => {
+const HamburgerMenu = () => {
   const { data, isLoading } = useFetchCategories();
+  const [showCategories,setShowCategories] = useState(false);
   const [showSubCategory, setShowSubCategory] = useState(0);
   const [isVisible, setIsVisible] = useState(false)
 
@@ -19,11 +20,17 @@ const CategoriesMenu = () => {
           <Menu />
         </button>
         {!isLoading && isVisible&&(
-          <div className="absolute right-0 mt-2 w-64 max-h-[80vh] overflow-y-auto bg-white border rounded shadow-lg p-2" style={{ zIndex: 2 }}>
-            <div className="px-2 py-2 text-gray-700 font-bold">
-              All Categories
+          <div className="absolute right-0 mt-2 w-64 max-h-[80vh] overflow-y-auto bg-white border rounded shadow-lg p-2" style={{ zIndex: 2 }}> 
+            <div className="px-2 py-2 text-gray-600 font-bold flex justify-between">
+             Login <LogIn/>  
             </div>
-            {data?.map((category) => (
+            <div className="px-2 py-2 text-gray-600 font-bold flex justify-between">
+            Post Item <PlusCircle />  
+            </div>
+            <div className="px-2 py-2 text-gray-700 font-bold flex justify-between" onClick={()=>{setShowCategories(!showCategories)}}>
+              All Categories {showCategories===false?<ChevronDown />:<ChevronUp/>} 
+            </div>
+            {showCategories&&data?.map((category) => (
               <React.Fragment key={category.id}>
                 <div
                   role="button"
@@ -54,4 +61,4 @@ const CategoriesMenu = () => {
   );
 };
 
-export default CategoriesMenu;
+export default HamburgerMenu;

@@ -59,7 +59,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import SubNav from "@/components/navbar/SubNav";
 import { Searchbar } from "@/components/searchbar/Searchbar";
 import placholder from "@/components/item/placeholder.png";
-import CategoriesMenu from './CategoriesMenu'
+import HamburgerMenu from './HamburgerMenu'
 // Icons
 import Logo from "@/components/icons/Logo";
 import { MapPin, Menu, Mail } from "lucide-react";
@@ -196,7 +196,9 @@ export const Navbar = ({}: NavbarProps) => {
       <div className="flex items-center gap-4 p-4 mt-2">
       <Link href="/" className="flex items-center">
   <Logo/> 
-  <span className=" text-2xl font-bold text-[#1BC3FF] hidden md:block">Bargain Ex</span>
+  <span className="text-xl lg:text-2xl font-bold text-[#1BC3FF] hidden xl:block">Bargain Ex</span>
+
+
 </Link>
 <div className="hidden sm:block flex justify-center">
       <Searchbar />
@@ -291,7 +293,25 @@ export const Navbar = ({}: NavbarProps) => {
         <div className="ml-auto">
           <NavigationMenu className="hidden md:block z-20">
             <NavigationMenuList>
-              {navList.map((item, index) => (
+            <NavigationMenuItem >
+            <Link href={isLoggedIn===true?'/chatList':''} legacyBehavior passHref>
+                      <NavigationMenuLink
+                        className={navigationMenuTriggerStyle()}
+                      >
+                        Chat Inbox
+                      </NavigationMenuLink>
+                    </Link>
+            </NavigationMenuItem>
+            <NavigationMenuItem >
+            <Link href={isLoggedIn===true?'/selling':''} legacyBehavior passHref>
+                      <NavigationMenuLink
+                        className={navigationMenuTriggerStyle()}
+                      >
+                        Post Item
+                      </NavigationMenuLink>
+                    </Link>
+            </NavigationMenuItem>
+              {/* {navList.map((item, index) => (
                 <NavigationMenuItem key={item.title}>
                   {item.content ? (
                     <>
@@ -312,7 +332,7 @@ export const Navbar = ({}: NavbarProps) => {
                       </NavigationMenuContent>
                     </>
                   ) : (
-                    <Link href={item.to} legacyBehavior passHref>
+                    <Link href={isLoggedIn===true?item.to:''} legacyBehavior passHref>
                       <NavigationMenuLink
                         className={navigationMenuTriggerStyle()}
                       >
@@ -321,10 +341,10 @@ export const Navbar = ({}: NavbarProps) => {
                     </Link>
                   )}
                 </NavigationMenuItem>
-              ))}
+              ))} */}
               <NavigationMenuItem>
                 {!isLoggedIn ? (
-                  <Dialog onOpenChange={(e) => setIsLoginDialog(e)} open={isLoginDialog}>
+                  <Dialog onOpenChange={(e) => {setIsLoginDialog(e);console.log(e,'e')}} open={isLoginDialog}>
                     <DialogTrigger asChild>
                       <Button variant="outline">Login</Button>
                     </DialogTrigger>
@@ -405,7 +425,7 @@ export const Navbar = ({}: NavbarProps) => {
             </DropdownMenu>
           </div> */}
           
-          <CategoriesMenu/>
+          <HamburgerMenu/>
         </div>
       </div>
      
