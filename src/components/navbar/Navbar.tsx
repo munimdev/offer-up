@@ -297,6 +297,12 @@ export const Navbar = ({}: NavbarProps) => {
             <Link href={isLoggedIn===true?'/chatList':''} legacyBehavior passHref>
                       <NavigationMenuLink
                         className={navigationMenuTriggerStyle()}
+                        onClick={(e) => {
+                          if (!isLoggedIn) {
+                            e.preventDefault();
+                            setIsLoginDialog(true);
+                          }
+                        }}
                       >
                         Chat Inbox
                       </NavigationMenuLink>
@@ -306,6 +312,12 @@ export const Navbar = ({}: NavbarProps) => {
             <Link href={isLoggedIn===true?'/selling':''} legacyBehavior passHref>
                       <NavigationMenuLink
                         className={navigationMenuTriggerStyle()}
+                        onClick={(e) => {
+                          if (!isLoggedIn) {
+                            e.preventDefault();
+                            setIsLoginDialog(true);
+                          }
+                        }}
                       >
                         Post Item
                       </NavigationMenuLink>
