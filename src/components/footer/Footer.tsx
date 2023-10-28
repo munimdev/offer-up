@@ -20,8 +20,14 @@ export const Footer: React.FC<FooterProps> = ({}) => {
           <div className="text-white p-3">
             <span className="font-bold text-lg">Profile</span>
             <ul className="text-sm mt-2">
-            <li className="mb-2"><Link href={`/seller/${user!.id}`}>Profile</Link></li>
-            <li className="mb-2"><Link href='/listings'>My Listing</Link></li>
+            <li className="mb-2">
+  {user && user.id ? (
+    <Link href={`/seller/${user.id}`}>Profile</Link>
+  ) : (
+    // Render something else or nothing if user or user.id is null
+    null
+  )}
+</li>            <li className="mb-2"><Link href='/listings'>My Listing</Link></li>
             <li className="mb-2"><Link href='/account/setting'>Account & Setting</Link></li>
             </ul>
           </div>
