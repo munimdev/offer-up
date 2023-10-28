@@ -194,6 +194,7 @@ export const Navbar = ({}: NavbarProps) => {
     localStorage.removeItem("accessToken");
     setUser(null);
   };
+  console.log(user,'testing use')
 
   return (
     <>
@@ -377,7 +378,9 @@ export const Navbar = ({}: NavbarProps) => {
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Avatar className="cursor-pointer">
-                        <AvatarImage src="https://github.com/shadcn.png" />
+                        <AvatarImage 
+                        src={user?.imagePath!==''?user?.imagePath:"https://github.com/shadcn.png" }
+                        />
                         <AvatarFallback>CN</AvatarFallback>
                       </Avatar>
                     </DropdownMenuTrigger>
@@ -391,7 +394,7 @@ export const Navbar = ({}: NavbarProps) => {
                             <Image
                               width={80}
                               height={80}
-                              src={placholder}
+                              src={user?.imagePath}
                               alt="User Image"
                               className="rounded-full"
                             />

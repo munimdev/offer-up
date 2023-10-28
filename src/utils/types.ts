@@ -24,6 +24,7 @@ export type SignupData = {
 };
 
 export type User = {
+  imagePath: string ;
   id: string;
   name: string;
   email: string;
