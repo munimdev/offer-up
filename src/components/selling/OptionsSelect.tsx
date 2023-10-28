@@ -26,7 +26,7 @@ const OptionsSelect: React.FC<TOptionsSelect> = ({
       <SelectContent>
         {options.map((option: any) => (
           <SelectItem
-            key={option}
+            // key={option}
             value={option.name}
             onMouseDown={() => onChange(option)}
           >
