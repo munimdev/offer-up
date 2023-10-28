@@ -52,6 +52,10 @@ const Page = () => {
   }
 
   useEffect(() => {
+    if (!user || !user.id) {
+      // Handle the case when user.id is null or undefined
+      return;
+    }
     const chatRef = collection(db, "Chats");
     let queryRef;
   
@@ -100,7 +104,7 @@ const Page = () => {
     });
   
     return () => unsubscribe();
-  }, [selectedTab, user.id]);
+  }, [selectedTab, user?.id]);
     
   const handleTabClick = (tab) => {
     setSelectedTab(tab);
@@ -164,7 +168,7 @@ const Page = () => {
                   <Image
                     alt="Item Image"
                     src={
-                      user.id === val.sellerId
+                      user?.id === val.sellerId
                         ? val.buyerProfileImage
                         : val.sellerProfileImage
                     }
@@ -174,11 +178,11 @@ const Page = () => {
                   />
                   <div className="flex flex-col gap-x-2">
                     <Link
-                      href={`/chat?chatId=${val.id}&userId=${user.id}`}
+                      href={`/chat?chatId=${val.id}&userId=${user?.id}`}
                       style={{ cursor: 'pointer' }}
                     >
                       <p className="text-lg font-bold">
-                        {user.id === val.sellerId
+                        {user?.id === val.sellerId
                           ? val.buyerName
                           : val.sellerName}
                       </p>
@@ -188,7 +192,7 @@ const Page = () => {
                       about {formatTime(val.lastMessageTime.seconds)}
                     </p>
                   </div>
-                  {((user.id === val.sellerId && val.unreadSeller !== 0) || (user.id === val.buyerId && val.unreadBuyer !== 0)) ? (
+                  {((user?.id === val.sellerId && val.unreadSeller !== 0) || (user?.id === val.buyerId && val.unreadBuyer !== 0)) ? (
   <div
     style={{
       width: '2rem',
@@ -203,7 +207,7 @@ const Page = () => {
       marginLeft: 'auto',
     }}
   >
-   {user.id === val.sellerId?val.unreadSeller:val.unreadBuyer}
+   {user?.id === val.sellerId?val.unreadSeller:val.unreadBuyer}
   </div>
 ) :null}
 

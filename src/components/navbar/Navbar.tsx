@@ -5,7 +5,7 @@ import "./Modal.css";
 import React, {useState} from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter,usePathname  } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   signUpWithFacebook,
@@ -185,10 +185,14 @@ export const Navbar = ({}: NavbarProps) => {
   const setUser = useSetAtom(userAtom);
   const [isLoginDialog, setIsLoginDialog] = useAtom(isLoginDialogOpenAtom)
   const { isLoggedIn, user } = useSession();
+  const pathname = usePathname()
+  const isChatListOrSellingScreen =
+  pathname === '/chatList' || pathname === '/selling';
   const onLogoutHandler = () => {
-    setUser(null);
+   
+    router.push("/"); 
     localStorage.removeItem("accessToken");
-    router.push("/");
+    setUser(null);
   };
 
   return (
@@ -294,15 +298,17 @@ export const Navbar = ({}: NavbarProps) => {
           <NavigationMenu className="hidden md:block z-20">
             <NavigationMenuList>
             <NavigationMenuItem >
-            <Link href={isLoggedIn===true?'/chatList':''} legacyBehavior passHref>
+            <Link href={isLoggedIn===true?'/chatList':'/'}  passHref>
                       <NavigationMenuLink
                         className={navigationMenuTriggerStyle()}
-                        onClick={(e) => {
-                          if (!isLoggedIn) {
-                            e.preventDefault();
-                            setIsLoginDialog(true);
-                          }
-                        }}
+                        // onClick={(e) => 
+                        //   {
+                        //     console.log(isChatListOrSellingScreen,'isChatListOrSellingScreen')
+                        //   if (!isLoggedIn&&!isChatListOrSellingScreen) {
+                        //     e.preventDefault();
+                        //     setIsLoginDialog(true);
+                        //   }
+                        // }}
                       >
                         Chat Inbox
                       </NavigationMenuLink>
@@ -313,7 +319,8 @@ export const Navbar = ({}: NavbarProps) => {
                       <NavigationMenuLink
                         className={navigationMenuTriggerStyle()}
                         onClick={(e) => {
-                          if (!isLoggedIn) {
+                          console.log(isChatListOrSellingScreen,'isChatListOrSellingScreen')
+                          if (!isLoggedIn&&!isChatListOrSellingScreen) {
                             e.preventDefault();
                             setIsLoginDialog(true);
                           }
