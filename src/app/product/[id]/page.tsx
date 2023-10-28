@@ -71,6 +71,13 @@ const Product = ({ params }: { params: { id: string } }) => {
               ))}
             </div>
           </div>
+          <div className="w-full md:w-6/12 md:hidden">
+          {currentItem ? (
+            <Sidebar data={currentItem} />
+          ) : (
+            <Skeleton className="w-full h-5/6" />
+          )}
+        </div>
           <div className="p-4 my-4 border-b">
             <Description data={currentItem?.description || ""} />
           </div>
@@ -104,7 +111,7 @@ const Product = ({ params }: { params: { id: string } }) => {
           </div>
          
         </div>
-        <div className="w-full md:w-6/12 lg:w-3/12">
+        <div className="w-full md:w-6/12 lg:w-3/12 hidden md:block">
           {currentItem ? (
             <Sidebar data={currentItem} />
           ) : (

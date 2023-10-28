@@ -315,12 +315,16 @@ export const Navbar = ({}: NavbarProps) => {
                     </Link>
             </NavigationMenuItem>
             <NavigationMenuItem >
-            <Link href={isLoggedIn===true?'/selling':''} legacyBehavior passHref>
-                      <NavigationMenuLink
+            <Link href={isLoggedIn===true?'/selling':'/'}  passHref>
+            <NavigationMenuLink
                         className={navigationMenuTriggerStyle()}
-                        onClick={(e) => {
-                          console.log(isChatListOrSellingScreen,'isChatListOrSellingScreen')
+                        onClick={(e) => 
+                          {
+                            console.log(isChatListOrSellingScreen,'isChatListOrSellingScreen')
                           if (!isLoggedIn&&!isChatListOrSellingScreen) {
+                            console.log('isChatListOrSellingScreen')
+                            console.log(isLoggedIn,'isLoggedIn')
+                            console.log(isChatListOrSellingScreen,'isChatListOrSellingScreen')
                             e.preventDefault();
                             setIsLoginDialog(true);
                           }
@@ -450,7 +454,7 @@ export const Navbar = ({}: NavbarProps) => {
      
      
         
-      <div className="block sm:hidden flex justify-center">
+      <div className="block sm:hidden flex justify-center mb-2">
       <Searchbar />
       </div>
      
