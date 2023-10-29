@@ -2,6 +2,7 @@
 import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { useRouter,usePathname  } from "next/navigation";
 import Twitter from "@/components/icons/Twitter";
 import Facebook from "@/components/icons/Facebook";
 import Instagram from "@/components/icons/Instagram";
@@ -9,10 +10,18 @@ import LinkedIn from "@/components/icons/LinkedIn";
 import AppleStore from "@/components/icons/AppleStore";
 import GooglePlayStore from "@/components/icons/GooglePlayStore";
 import { useSession } from "@/hooks/useSession";
+import { useAtom } from "jotai/react";
+import {
+  isLoginDialogOpenAtom,
+} from "@/utils/atoms";
 interface FooterProps {}
 
 export const Footer: React.FC<FooterProps> = ({}) => {
   const { isLoggedIn, user } = useSession();
+  const [isLoginDialog, setIsLoginDialog] = useAtom(isLoginDialogOpenAtom)
+  const pathname = usePathname()
+  const isChatListOrSellingScreen =
+  pathname === '/chatList' || pathname === '/selling';
   return (
     <div className="flex flex-col bg-[#1BC3FF] p-5">
       <div className="flex flex-row border-b border-white">
@@ -34,8 +43,28 @@ export const Footer: React.FC<FooterProps> = ({}) => {
           <div className="text-white p-3">
             <span className="font-bold text-lg">Sell</span>
             <ul className="text-sm mt-2">
-              <li className="mb-2"><Link href='/selling'>Post an item</Link></li>
-
+              <li className="mb-2"   onClick={(e) => 
+                          {
+                            console.log(isChatListOrSellingScreen,'isChatListOrSellingScreen')
+                          if (!isLoggedIn&&!isChatListOrSellingScreen) {
+                            console.log('isChatListOrSellingScreen')
+                            console.log(isLoggedIn,'isLoggedIn')
+                            console.log(isChatListOrSellingScreen,'isChatListOrSellingScreen')
+                            e.preventDefault();
+                            setIsLoginDialog(true);
+                          }
+                        }}><Link href={isLoggedIn===true?'/selling':'/'}>Post an item</Link></li>
+                           <li className="mb-2"   onClick={(e) => 
+                          {
+                            console.log(isChatListOrSellingScreen,'isChatListOrSellingScreen')
+                          if (!isLoggedIn&&!isChatListOrSellingScreen) {
+                            console.log('isChatListOrSellingScreen')
+                            console.log(isLoggedIn,'isLoggedIn')
+                            console.log(isChatListOrSellingScreen,'isChatListOrSellingScreen')
+                            e.preventDefault();
+                            setIsLoginDialog(true);
+                          }
+                        }}><Link href={isLoggedIn===true?'/chatList':'/'}>Chat Inbox</Link></li>
             </ul>
           </div>
           <div className="text-white p-3">
