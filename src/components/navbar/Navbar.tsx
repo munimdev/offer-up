@@ -194,7 +194,6 @@ export const Navbar = ({}: NavbarProps) => {
     localStorage.removeItem("accessToken");
     setUser(null);
   };
-  console.log(user,'testing use')
 
   return (
     <>
