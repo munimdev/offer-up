@@ -21,7 +21,7 @@ export const Footer: React.FC<FooterProps> = ({}) => {
   const [isLoginDialog, setIsLoginDialog] = useAtom(isLoginDialogOpenAtom)
   const pathname = usePathname()
   const isChatListOrSellingScreen =
-  pathname === '/chatList' || pathname === '/selling';
+  pathname === '/chatList' || pathname === '/selling' || pathname === '/listings' || pathname === '/account/setting';
   return (
     <div className="flex flex-col bg-[#1BC3FF] p-5">
       <div className="flex flex-row border-b border-white">
@@ -36,8 +36,29 @@ export const Footer: React.FC<FooterProps> = ({}) => {
     // Render something else or nothing if user or user.id is null
     null
   )}
-</li>            <li className="mb-2"><Link href='/listings'>My Listing</Link></li>
-            <li className="mb-2"><Link href='/account/setting'>Account & Setting</Link></li>
+</li>         
+<li className="mb-2"   onClick={(e) => 
+                          {
+                            console.log(isChatListOrSellingScreen,'isChatListOrSellingScreen')
+                          if (!isLoggedIn&&!isChatListOrSellingScreen) {
+                            console.log('isChatListOrSellingScreen')
+                            console.log(isLoggedIn,'isLoggedIn')
+                            console.log(isChatListOrSellingScreen,'isChatListOrSellingScreen')
+                            e.preventDefault();
+                            setIsLoginDialog(true);
+                          }
+                        }}><Link href={isLoggedIn===true?'/listings':'/'}>My Listing</Link></li>
+                        <li className="mb-2"   onClick={(e) => 
+                          {
+                            console.log(isChatListOrSellingScreen,'isChatListOrSellingScreen')
+                          if (!isLoggedIn&&!isChatListOrSellingScreen) {
+                            console.log('isChatListOrSellingScreen')
+                            console.log(isLoggedIn,'isLoggedIn')
+                            console.log(isChatListOrSellingScreen,'isChatListOrSellingScreen')
+                            e.preventDefault();
+                            setIsLoginDialog(true);
+                          }
+                        }}><Link href={isLoggedIn===true?'/account/setting':'/'}>Account & Setting</Link></li>
             </ul>
           </div>
           <div className="text-white p-3">
