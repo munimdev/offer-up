@@ -145,7 +145,7 @@ const FileUpload: React.FC<Props> = ({
                       <Draggable
                         draggableId={file.name}
                         index={index}
-                        // key={file.name}
+                        key={file.size}
                       >
                         {(provided) => (
                           <div
