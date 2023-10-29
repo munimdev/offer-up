@@ -15,11 +15,15 @@ const HamburgerMenu = () => {
   const { data, isLoading } = useFetchCategories();
   const [showCategories,setShowCategories] = useState(false);
   const [showSubCategory, setShowSubCategory] = useState(0);
+  const [showProfile, setShowProfile] = useState(false);
   const [isVisible, setIsVisible] = useState(false)
   const setUser = useSetAtom(userAtom);
   const [isLoginDialog, setIsLoginDialog] = useAtom(isLoginDialogOpenAtom)
   const { isLoggedIn, user } = useSession();
   const router = useRouter();
+  const pathname = usePathname()
+  const isChatListOrSellingScreen =
+  pathname === '/chatList' || pathname === '/selling' || pathname === '/listings' || pathname === '/account/setting';
   const handleShowSubCategories = (id: number) => {
     setShowSubCategory(id === showSubCategory ? 0 : id);
   };
@@ -38,17 +42,112 @@ const HamburgerMenu = () => {
         </button>
         {!isLoading && isVisible&&(
           <div className="absolute right-0 mt-2 w-64 max-h-[80vh] overflow-y-auto bg-white border rounded shadow-lg p-2" style={{ zIndex: 2 }}> 
-            {!isLoggedIn&&<div className="px-2 py-2 text-gray-600 font-bold flex justify-between">
-             Profile <ChevronDown /> </div>}    
-         {!isLoggedIn&&<div className="px-2 py-2 text-gray-600 font-bold flex justify-between">
-             Login <LogIn/> </div>}    
             
-            <div className="px-2 py-2 text-gray-600 font-bold flex justify-between">
-            Chat Inbox <MessageCircle />
+         {!isLoggedIn&&<div className="px-2 py-2 text-gray-600 font-bold flex justify-between" onClick={()=>{setIsLoginDialog(true)}}>
+             Login <LogIn/> </div>}    
+             {isLoggedIn&& <div className=" px-2 py-2 text-gray-600 font-bold flex justify-between" onClick={()=>{setShowProfile(!showProfile)}}>
+             Profile {showProfile===false?<ChevronDown />:<ChevronUp/>}</div>}
+            {showProfile&& <div className="ml-4 px-2 py-2 text-gray-600 font-bold "
+             onClick={(e) => 
+              {
+                console.log(isChatListOrSellingScreen,'isChatListOrSellingScreen')
+              if (!isLoggedIn&&!isChatListOrSellingScreen) {
+                console.log('isChatListOrSellingScreen')
+                console.log(isLoggedIn,'isLoggedIn')
+                console.log(isChatListOrSellingScreen,'isChatListOrSellingScreen')
+                e.preventDefault();
+                setIsLoginDialog(true);
+              }
+            }}>
+            <Link href={`/seller/${user?.id}`} className="flex justify-between"> View Profile</Link>
+           
+            </div>}
+            {showProfile&& <div className="ml-4 px-2 py-2 text-gray-600 font-bold "
+             onClick={(e) => 
+              {
+                console.log(isChatListOrSellingScreen,'isChatListOrSellingScreen')
+              if (!isLoggedIn&&!isChatListOrSellingScreen) {
+                console.log('isChatListOrSellingScreen')
+                console.log(isLoggedIn,'isLoggedIn')
+                console.log(isChatListOrSellingScreen,'isChatListOrSellingScreen')
+                e.preventDefault();
+                setIsLoginDialog(true);
+              }
+            }}>
+            <Link  href={isLoggedIn===true?'/listings':'/'} className="flex justify-between"> My Listing</Link>
+           
+            </div>}
+            {showProfile&& <div className="ml-4 px-2 py-2 text-gray-600 font-bold "
+             onClick={(e) => 
+              {
+                console.log(isChatListOrSellingScreen,'isChatListOrSellingScreen')
+              if (!isLoggedIn&&!isChatListOrSellingScreen) {
+                console.log('isChatListOrSellingScreen')
+                console.log(isLoggedIn,'isLoggedIn')
+                console.log(isChatListOrSellingScreen,'isChatListOrSellingScreen')
+                e.preventDefault();
+                setIsLoginDialog(true);
+              }
+            }}>
+            <Link  href={isLoggedIn===true?'/account/setting':'/'} className="flex justify-between"> Account & Setting</Link>
+           
+            </div>}
+
+
+
+
+            <div className="px-2 py-2 text-gray-600 font-bold "
+             onClick={(e) => 
+              {
+                console.log(isChatListOrSellingScreen,'isChatListOrSellingScreen')
+              if (!isLoggedIn&&!isChatListOrSellingScreen) {
+                console.log('isChatListOrSellingScreen')
+                console.log(isLoggedIn,'isLoggedIn')
+                console.log(isChatListOrSellingScreen,'isChatListOrSellingScreen')
+                e.preventDefault();
+                setIsLoginDialog(true);
+              }
+            }}>
+            <Link  href={isLoggedIn===true?'/chatList':'/'} className="flex justify-between"> Chat Inbox <MessageCircle /></Link>
+           
             </div>
-            <div className="px-2 py-2 text-gray-600 font-bold flex justify-between">
-            Post Item <PlusCircle />  
+            <div className="px-2 py-2 text-gray-600 font-bold "
+             onClick={(e) => 
+              {
+                console.log(isChatListOrSellingScreen,'isChatListOrSellingScreen')
+              if (!isLoggedIn&&!isChatListOrSellingScreen) {
+                console.log('isChatListOrSellingScreen')
+                console.log(isLoggedIn,'isLoggedIn')
+                console.log(isChatListOrSellingScreen,'isChatListOrSellingScreen')
+                e.preventDefault();
+                setIsLoginDialog(true);
+              }
+            }}>
+            <Link  href={isLoggedIn===true?'/selling':'/'} className="flex justify-between">  Post Item <PlusCircle /> </Link>
+           
             </div>
+            {/* <li className="mb-2"   onClick={(e) => 
+                          {
+                            console.log(isChatListOrSellingScreen,'isChatListOrSellingScreen')
+                          if (!isLoggedIn&&!isChatListOrSellingScreen) {
+                            console.log('isChatListOrSellingScreen')
+                            console.log(isLoggedIn,'isLoggedIn')
+                            console.log(isChatListOrSellingScreen,'isChatListOrSellingScreen')
+                            e.preventDefault();
+                            setIsLoginDialog(true);
+                          }
+                        }}><Link href={isLoggedIn===true?'/selling':'/'}>Post an item</Link></li>
+                           <li className="mb-2"   onClick={(e) => 
+                          {
+                            console.log(isChatListOrSellingScreen,'isChatListOrSellingScreen')
+                          if (!isLoggedIn&&!isChatListOrSellingScreen) {
+                            console.log('isChatListOrSellingScreen')
+                            console.log(isLoggedIn,'isLoggedIn')
+                            console.log(isChatListOrSellingScreen,'isChatListOrSellingScreen')
+                            e.preventDefault();
+                            setIsLoginDialog(true);
+                          }
+                        }}><Link href={isLoggedIn===true?'/chatList':'/'}>Chat Inbox</Link></li> */}
             <div className="px-2 py-2 text-gray-700 font-bold flex justify-between" onClick={()=>{setShowCategories(!showCategories)}}>
               All Categories {showCategories===false?<ChevronDown />:<ChevronUp/>} 
             </div>
