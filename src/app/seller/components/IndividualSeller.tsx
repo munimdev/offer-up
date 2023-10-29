@@ -163,7 +163,7 @@ const IndividualSeller = ({
         <Link href="/">{profile?.name.toUpperCase()} </Link>
       </div>
       <div className="grid grid-cols-12 gap-4 mt-6">
-        <div className="flex flex-col col-span-3 gap-8">
+        <div className="flex flex-col col-span-8 gap-8">
           <div className="flex flex-row items-center gap-4">
             <Image
               className="object-cover rounded-full"
