@@ -455,7 +455,9 @@ const redirectHandler=(chatId)=>{
                   <Image
                     src={image.imagePath250}
                     alt={image.itemId}
-                    className="object-cover w-full h-full"
+                    width={250} // specify the width
+  height={250} // specify the height
+  className="object-cover"
                   />
                 </div>
                 <div className="flex flex-row items-center gap-x-3">
