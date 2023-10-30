@@ -41,8 +41,8 @@ const Sidebar = () => {
     searchParam.get("child") || ""
   );
   const [selectedCondition, setSelectedCondition] = useState<string[]>();
-  const [minPrice, setMinPrice] = useState<number>();
-  const [maxPrice, setMaxPrice] = useState<number>();
+  const [minPrice, setMinPrice] = useState<number>(0);
+  const [maxPrice, setMaxPrice] = useState<number>(0);
 
   const conditions = searchOptions?.[0]?.data?.dataObject;
   const subCategories = searchOptions?.[1]?.data?.dataObject;
@@ -119,8 +119,8 @@ const Sidebar = () => {
           <p
             className="underline my-2 cursor-pointer text-sm"
             onClick={() => {
-              setMinPrice(undefined);
-              setMaxPrice(undefined);
+              setMinPrice(0);
+              setMaxPrice(0);
               let queryString = "?";
               searchParam.forEach((value, key) => {
                 if (key != "priceFrom" && key != "priceTo") {
