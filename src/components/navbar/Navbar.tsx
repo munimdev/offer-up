@@ -417,11 +417,11 @@ export const Navbar = ({}: NavbarProps) => {
                         </DropdownMenuItem>
                       </DropdownMenuGroup>
                       <DropdownMenuSeparator />
-                      <DropdownMenuGroup>
+                      {/* <DropdownMenuGroup>
                         <DropdownMenuItem>About</DropdownMenuItem>
                         <DropdownMenuItem>Help</DropdownMenuItem>
                       </DropdownMenuGroup>
-                      <DropdownMenuSeparator />
+                      <DropdownMenuSeparator /> */}
                       <DropdownMenuItem
                         className="cursor-pointer"
                         onClick={onLogoutHandler}
