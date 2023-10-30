@@ -15,6 +15,7 @@ export const userAtom = atomWithStorage<User | null>("user", {
   email: "",
   isActive: false,
   isDeleted: false,
+  imagePath:""
 });
 
 export const itemFormDataAtom = atom<ItemAtom>({

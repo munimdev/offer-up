@@ -85,7 +85,7 @@ const Report: React.FC<Props> = ({ isLoggedIn, formSchema, lookupId, onSubmit })
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger>
-              <Flag size={20} strokeWidth={1.75} />
+              <Flag size={20} strokeWidth={1.75} style={{marginTop:2}}/>
             </TooltipTrigger>
             <TooltipContent>Report User</TooltipContent>
           </Tooltip>

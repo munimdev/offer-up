@@ -1,10 +1,25 @@
-import React from "react";
+import React, {useState} from "react";
 import Link from "next/link";
 import Image from "next/image";
-
+import {
+  EmailShareButton,
+  FacebookShareButton,
+  InstapaperShareButton,
+  LinkedinShareButton,
+  TwitterShareButton,
+  WhatsappShareButton,
+} from "react-share";
+import {
+  FacebookIcon,
+  InstapaperIcon,
+  LinkedinIcon,
+  TwitterIcon,
+  WhatsappIcon,
+  EmailIcon
+} from "react-share";
 import { useMutation } from "@tanstack/react-query";
 import * as Querues from "@/utils/queries";
-
+import { useRouter,usePathname  } from "next/navigation";
 import { Follow, ReportUserDto } from "@/types/types";
 import { TItem, UserProfile } from "@/utils/types";
 import * as z from "zod";
@@ -91,6 +106,8 @@ const IndividualSeller = ({
   refetch: () => Promise<any>;
 }) => {
   const { toast } = useToast();
+  const pathname = usePathname()
+  const [isShareTooltipOpen, setShareTooltipOpen] = useState(false);
   const { mutateAsync: followUser } = useMutation({
     mutationKey: ["followUser"],
     mutationFn: (userId: string) => Querues.followCustomer(userId),
@@ -154,6 +171,9 @@ const IndividualSeller = ({
       console.log(error);
     }
   };
+  const handleTooltipToggle = () => {
+    setShareTooltipOpen(!isShareTooltipOpen);
+  };
 
   return (
     <div className="max-w-full p-4">
@@ -212,13 +232,31 @@ const IndividualSeller = ({
               <div className="flex flex-row items-center gap-4 text-primary">
                 {/* Share Userr */}
                 <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger>
-                      <Share2 size={20} strokeWidth={1.75} />
-                    </TooltipTrigger>
-                    <TooltipContent>Share User</TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+      <Tooltip open={isShareTooltipOpen}>
+        <TooltipTrigger>
+          <Share2 size={20} strokeWidth={1.75} onClick={handleTooltipToggle} />
+        </TooltipTrigger>
+        {isShareTooltipOpen && (
+          <TooltipContent >
+            <FacebookShareButton url={`https://bargainex.com/${pathname}`}>
+              <FacebookIcon size={32} round={true} />
+            </FacebookShareButton>
+            <WhatsappShareButton url={`https://bargainex.com/${pathname}`}>
+              <WhatsappIcon size={32} round={true}/>
+            </WhatsappShareButton>
+            <LinkedinShareButton url={`https://bargainex.com/${pathname}`}>
+              <LinkedinIcon size={32} round={true}/>
+            </LinkedinShareButton>
+            <TwitterShareButton url={`https://bargainex.com/${pathname}`}>
+                  <TwitterIcon size={32} round={true}/>
+            </TwitterShareButton>
+            <EmailShareButton url={`https://bargainex.com/${pathname}`}>
+              <EmailIcon size={32} round={true}/>
+            </EmailShareButton>
+          </TooltipContent>
+        )}
+      </Tooltip>
+    </TooltipProvider>
                 {!isOwnProfile && (
                   <>
                     {/* Report User */}

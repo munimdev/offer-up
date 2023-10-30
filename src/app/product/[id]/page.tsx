@@ -6,6 +6,29 @@ import Slider from "@/components/product/Slider";
 import Sidebar from "@/components/product/Sidebar";
 import Description from "@/components/product/Description";
 import { Badge } from "@/components/ui/badge";
+import { usePathname } from "next/navigation";
+import {
+  EmailShareButton,
+  FacebookShareButton,
+  InstapaperShareButton,
+  LinkedinShareButton,
+  TwitterShareButton,
+  WhatsappShareButton,
+} from "react-share";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+  FacebookIcon,
+  InstapaperIcon,
+  LinkedinIcon,
+  TwitterIcon,
+  WhatsappIcon,
+  EmailIcon
+} from "react-share";
 import { Check, Heart, Flag, Share2 } from "lucide-react";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useFetch } from "@/hooks";
@@ -15,6 +38,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { RotatingLines } from  'react-loader-spinner'
 const Product = ({ params }: { params: { id: string } }) => {
   const { id } = params;
+  const pathname = usePathname()
+  const [isShareTooltipOpen, setShareTooltipOpen] = useState(false);
   const { data, isLoading } = useFetch({
     key: ["query-currentItem"],
     fn: () => Queries.getItemById(id),
@@ -23,8 +48,9 @@ const Product = ({ params }: { params: { id: string } }) => {
     },
   });
   const currentItem = data?.dataObject as Item;
-
-  console.log(currentItem,'currentItem')
+  const handleTooltipToggle = () => {
+    setShareTooltipOpen(!isShareTooltipOpen);
+  };
   if (isLoading) {
     return <div className="flex justify-center">
     <RotatingLines strokeColor="#62C3FE"
@@ -89,10 +115,37 @@ const Product = ({ params }: { params: { id: string } }) => {
               <Badge className="mx-1 text-black bg-gray-300 cursor-pointer hover:text-white">
                 <Flag className="inline mr-2" size={16} /> Report
               </Badge>
-              <Badge className="mx-1 text-black bg-gray-300 cursor-pointer hover:text-white">
+              
+           {/* Share Userr */}
+           <TooltipProvider>
+      <Tooltip open={isShareTooltipOpen}>
+        <TooltipTrigger>
+        <Badge className="mx-1 text-black bg-gray-300 cursor-pointer hover:text-white" onClick={handleTooltipToggle}>
                 <Share2 className="inline mr-2" size={16} /> Share
               </Badge>
-            </div>currentItem
+        </TooltipTrigger>
+        {isShareTooltipOpen && (
+          <TooltipContent >
+            <FacebookShareButton url={`https://bargainex.com/${pathname}`}>
+              <FacebookIcon size={32} round={true} />
+            </FacebookShareButton>
+            <WhatsappShareButton url={`https://bargainex.com/${pathname}`}>
+              <WhatsappIcon size={32} round={true}/>
+            </WhatsappShareButton>
+            <LinkedinShareButton url={`https://bargainex.com/${pathname}`}>
+              <LinkedinIcon size={32} round={true}/>
+            </LinkedinShareButton>
+            <TwitterShareButton url={`https://bargainex.com/${pathname}`}>
+                  <TwitterIcon size={32} round={true}/>
+            </TwitterShareButton>
+            <EmailShareButton url={`https://bargainex.com/${pathname}`}>
+              <EmailIcon size={32} round={true}/>
+            </EmailShareButton>
+          </TooltipContent>
+        )}
+      </Tooltip>
+    </TooltipProvider>
+            </div>
           </div>
          {!isLoading&& <CustomerOtherProducts customerId={currentItem?.customer?.id}/>}  
             {!isLoading&& <SimilarProducts categoryId={JSON.stringify(currentItem?.categoryId)}/>}  

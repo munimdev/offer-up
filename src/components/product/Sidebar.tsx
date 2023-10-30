@@ -2,7 +2,7 @@
 import React, {useState} from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter,usePathname } from "next/navigation";
 import OfferModal from "./OfferModal";
 import StartChat from "./StartChat";
 import { useMutation } from "@tanstack/react-query";
@@ -16,7 +16,22 @@ import Map from "./Map";
 import { FavoriteList, Item, ReportItemDto } from "@/types/types";
 import { Result } from "@/utils/types";
 import * as z from "zod";
-
+import {
+  EmailShareButton,
+  FacebookShareButton,
+  InstapaperShareButton,
+  LinkedinShareButton,
+  TwitterShareButton,
+  WhatsappShareButton,
+} from "react-share";
+import {
+  FacebookIcon,
+  InstapaperIcon,
+  LinkedinIcon,
+  TwitterIcon,
+  WhatsappIcon,
+  EmailIcon
+} from "react-share";
 import Rating from "@/components/misc/Rating";
 import Message from "@/components/icons/Message";
 import { Button } from "@/components/ui/button";
@@ -30,6 +45,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import Report from "@/components/report/report";
@@ -62,6 +83,8 @@ const formSchema = z.object({
 
 const Sidebar: React.FC<Props> = ({ data }) => {
   const router = useRouter();
+  const pathname = usePathname()
+  const [isShareTooltipOpen, setShareTooltipOpen] = useState(false);
   // chat info
   const { user, isLoggedIn } = useSession();
   const setIsLoginDialogOpen = useSetAtom(isLoginDialogOpenAtom);
@@ -190,6 +213,9 @@ console.log(user,'user')
   const sellerPageHandler = async (id)=>{
     router.replace(`/seller/${id}`);
   }
+  const handleTooltipToggle = () => {
+    setShareTooltipOpen(!isShareTooltipOpen);
+  };
   return (
     <>
      
@@ -302,9 +328,34 @@ console.log(user,'user')
           formSchema={formSchema}
           onSubmit={onReportHandler}
         />
-        <span className="cursor-pointer">
-          <Share2 className="inline-block mr-2" />
-        </span>
+        
+                {/* Share Userr */}
+                <TooltipProvider>
+      <Tooltip open={isShareTooltipOpen}>
+        <TooltipTrigger>
+        <Share2 className="inline-block mr-2" onClick={handleTooltipToggle}/>
+        </TooltipTrigger>
+        {isShareTooltipOpen && (
+          <TooltipContent >
+            <FacebookShareButton url={`https://bargainex.com/${pathname}`}>
+              <FacebookIcon size={32} round={true} />
+            </FacebookShareButton>
+            <WhatsappShareButton url={`https://bargainex.com/${pathname}`}>
+              <WhatsappIcon size={32} round={true}/>
+            </WhatsappShareButton>
+            <LinkedinShareButton url={`https://bargainex.com/${pathname}`}>
+              <LinkedinIcon size={32} round={true}/>
+            </LinkedinShareButton>
+            <TwitterShareButton url={`https://bargainex.com/${pathname}`}>
+                  <TwitterIcon size={32} round={true}/>
+            </TwitterShareButton>
+            <EmailShareButton url={`https://bargainex.com/${pathname}`}>
+              <EmailIcon size={32} round={true}/>
+            </EmailShareButton>
+          </TooltipContent>
+        )}
+      </Tooltip>
+    </TooltipProvider>
       </div>
       {/* {data.customer && data.customer.imagePath && data.customer.name &&data.customer.name.trim() !== ''&& ( */}
   <div className="flex gap-4 py-4 my-4 border-y cursor-pointer items-center">
