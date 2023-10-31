@@ -333,7 +333,12 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
             <div className="flex flex-row items-center gap-x-10">
               {profileImageLoader===true? <Skeleton className="w-12 h-12 rounded-full" />: <Image
                 alt="Item Image"
-                src={chatInfo&&userId===chatInfo.buyerId?chatInfo.sellerProfileImage:chatInfo.buyerProfileImage}
+                src={
+                  chatInfo&&userId === chatInfo.buyerId
+                    ? chatInfo.sellerProfileImage || "https://github.com/shadcn.png"
+                    : chatInfo.buyerProfileImage || "https://github.com/shadcn.png"
+                }
+              
                 width={60}
                 height={30}
                 className="rounded-full"
@@ -341,10 +346,10 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
              
               <div className="flex flex-col gap-x-2">
                 <p className="text-lg font-bold">{chatInfo&&userId===chatInfo.buyerId?chatInfo.sellerName:chatInfo.buyerName}</p>
-                <p>Active last day</p>
+                {/* <p>Active last day</p> */}
               </div>
             </div>
-            <MoreHorizontal className="text-primary" />
+            {/* <MoreHorizontal className="text-primary" /> */}
           </div>
         </div>
 

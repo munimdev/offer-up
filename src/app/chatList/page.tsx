@@ -169,9 +169,10 @@ const Page = () => {
                     alt="Item Image"
                     src={
                       user?.id === val.sellerId
-                        ? val.buyerProfileImage
-                        : val.sellerProfileImage
+                        ? val.buyerProfileImage || "https://github.com/shadcn.png"
+                        : val.sellerProfileImage || "https://github.com/shadcn.png"
                     }
+                  
                     width={60}
                     height={30}
                     className="rounded-full"
