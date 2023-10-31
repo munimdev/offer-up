@@ -187,7 +187,7 @@ const Page = () => {
                           : val.sellerName}
                       </p>
                     </Link>
-                    <p>{val.lastMessage}</p>
+                    <p>{val.lastMessage.substring(0, 50)} {val.lastMessage.length>50?"...":""}</p>
                     <p className="text-sm text-gray-600">
                       about {formatTime(val.lastMessageTime.seconds)}
                     </p>
