@@ -82,6 +82,7 @@ import {
   locationNameAtom,
   preferredDistanceAtom,
   isLoginDialogOpenAtom,
+  loginDialogCurrentScreenAtom,
 } from "@/utils/atoms";
 import { Slider } from "@/components/ui/slider";
 import axios from "axios";
@@ -184,6 +185,7 @@ export const Navbar = ({}: NavbarProps) => {
   const router = useRouter();
   const setUser = useSetAtom(userAtom);
   const [isLoginDialog, setIsLoginDialog] = useAtom(isLoginDialogOpenAtom)
+  const [loginDialogCurrentScreen,setLoginDialogCurrentScreen] =useAtom(loginDialogCurrentScreenAtom)
   const { isLoggedIn, user } = useSession();
   const pathname = usePathname()
   const isChatListOrSellingScreen =
@@ -307,6 +309,7 @@ export const Navbar = ({}: NavbarProps) => {
                           if (!isLoggedIn&&!isChatListOrSellingScreen) {
                             e.preventDefault();
                             setIsLoginDialog(true);
+                            setLoginDialogCurrentScreen('home')
                           }
                         }}
                       >
@@ -327,6 +330,7 @@ export const Navbar = ({}: NavbarProps) => {
                             console.log(isChatListOrSellingScreen,'isChatListOrSellingScreen')
                             e.preventDefault();
                             setIsLoginDialog(true);
+                            setLoginDialogCurrentScreen('home')
                           }
                         }}
                       >
@@ -367,7 +371,7 @@ export const Navbar = ({}: NavbarProps) => {
               ))} */}
               <NavigationMenuItem>
                 {!isLoggedIn ? (
-                  <Dialog onOpenChange={(e) => {setIsLoginDialog(e);console.log(e,'e')}} open={isLoginDialog}>
+                  <Dialog onOpenChange={(e) => {setIsLoginDialog(e); setLoginDialogCurrentScreen('home')}} open={isLoginDialog}>
                     <DialogTrigger asChild>
                       <Button variant="outline">Login</Button>
                     </DialogTrigger>

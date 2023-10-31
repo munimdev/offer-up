@@ -6,6 +6,7 @@ import { Item } from "@/types/types";
 // Utils
 
 export const isLoginDialogOpenAtom = atom(false);
+export const loginDialogCurrentScreenAtom = atom('home')
 
 //
 

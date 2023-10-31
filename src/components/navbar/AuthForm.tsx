@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {
   signUpWithFacebook,
   signUpWithGoogle,
@@ -25,6 +25,7 @@ import {
   locationNameAtom,
   preferredDistanceAtom,
   isLoginDialogOpenAtom,
+  loginDialogCurrentScreenAtom
 } from "@/utils/atoms";
 import {
   Dialog,
@@ -57,8 +58,13 @@ const LoginDialogScreens = {
   
   export function LoginDialog() {
     const { mutateAsync } = useSignup();
-    const [screen, setScreen] = React.useState(LoginDialogScreens.home);
+    const [screen, setScreen] =useAtom(loginDialogCurrentScreenAtom)
+    // const [screen, setScreen] = React.useState(LoginDialogScreens.home);
     const setUser = useSetAtom(userAtom);
+  useEffect(() => {
+    console.log(LoginDialogScreens.home,'LoginDialogScreens.home')
+    setScreen(LoginDialogScreens.home)
+  }, [])
   
     const handleFacebook = async () => {
       // signUpWithFacebook();
