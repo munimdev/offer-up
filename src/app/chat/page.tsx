@@ -323,7 +323,7 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
   };
   const disabledButtonStyle = inputValue.trim() === '' ? { backgroundColor: 'lightgray', color: 'white', cursor: 'not-allowed' } : {};
   return (
-    <div className=" m-5 md:m-10 lg:m-20 border border-gray-300 flex flex-row">
+    <div className=" m-2 md:m-10 lg:m-20 border border-gray-300 flex flex-row">
       
       {/* Message Window */}
       <div className="flex-1 flex flex-col p-5 border border-primary">
@@ -453,7 +453,7 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
 </div> </div>
 
         {/* Message Input */}
-        <form className="flex flex-row border-t border-gray-300 p-3 pb-1 items-center">
+        <form className="flex flex-row border-t border-gray-300 p-1 md:p-3 pb-1 items-center">
           <Input
          onChange={handleInputChange}
          value={inputValue}
@@ -472,15 +472,15 @@ const timeDifferenceInSeconds = currentTimeInSeconds - messageTime
       <ImageIcon
         size={40}
         style={{ cursor: 'pointer' }}
-        className="bg-white text-primary mr-2"
+        className="bg-white text-primary mr-1"
         onClick={handleIconClick}
       />
-          {/* <ImageIcon size={40} className="bg-white text-primary mr-2"  /> */}
+          {/* <ImageIcon size={40} className="bg-white text-primary "  /> */}
           <Button
           style={disabledButtonStyle}
             type="button"
             onClick ={handleSendMessage}
-            className="border border-primary bg-white text-primary rounded-full"
+            className="border border-primary bg-white text-primary rounded-full  hidden sm:block"
           >
             Send
           </Button>
