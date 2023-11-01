@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useRef} from "react";
 import {
   signUpWithFacebook,
   signUpWithGoogle,
@@ -259,7 +259,7 @@ const LoginDialogScreens = {
   
     const LoginScreen = () => {
       const { mutateAsync, error, isError } = useLogin();
-  
+    
       const loginSchema = z.object({
         email: z.string().email({
           message: "Email is required",
@@ -290,7 +290,25 @@ const LoginDialogScreens = {
           password: "",
         },
       });
-  
+      const emailRef = useRef<HTMLInputElement | null>(null);
+  const passwordRef = useRef<HTMLInputElement | null>(null);
+
+      const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          if (event.currentTarget.name === "email" && passwordRef.current) {
+            passwordRef.current.focus();
+          } else {
+            form.handleSubmit(onSubmit)();
+          }
+        }
+      };
+      useEffect(() => {
+        // Focus on the email input when the modal is opened
+        if (emailRef.current) {
+          emailRef.current.focus();
+        }
+      }, [screen])
       return (
         <div
           className={`dialog ${
@@ -326,7 +344,7 @@ const LoginDialogScreens = {
                     {/* <FormLabel>Email</FormLabel> */}
                     <Label htmlFor="email">Email</Label>
                     <FormControl>
-                      <Input type="email" placeholder="Email" {...field} />
+                      <Input type="email" placeholder="Email"    {...form.register("email", { ref: emailRef })} onKeyDown={handleKeyDown}/>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -339,7 +357,7 @@ const LoginDialogScreens = {
                   <FormItem>
                     <Label htmlFor="password">Password</Label>
                     <FormControl>
-                      <Input type="password" placeholder="Password" {...field} />
+                      <Input type="password" placeholder="Password"   {...form.register("password", { ref: passwordRef })} onKeyDown={handleKeyDown} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
