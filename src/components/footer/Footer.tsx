@@ -111,7 +111,7 @@ export const Footer: React.FC<FooterProps> = ({}) => {
           <AppleStore/></a>
           </div>
         </div>
-          <div className="flex text-white mt-5">
+          {/* <div className="flex text-white mt-5">
             <span className="mr-2">
               <Twitter />
             </span>
@@ -122,12 +122,12 @@ export const Footer: React.FC<FooterProps> = ({}) => {
               <Instagram />
             </span>
             <LinkedIn />
-          </div>
+          </div> */}
         </div>
       </div>
-      <div className="flex flex-row justify-between mt-5 text-white">
+      <div className="flex flex-row justify-center mt-5 text-white">
         <span>© 2023 Bargain Ex Inc.</span>
-        <span>Privacy Policy</span>
+        {/* <span>Privacy Policy</span> */}
       </div>
     </div>
   );
