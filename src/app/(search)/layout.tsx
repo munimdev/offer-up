@@ -143,7 +143,12 @@ const Sidebar = () => {
               value={minPrice}
               placeholder="Min"
               className="w-16 border-none outline-none"
-              onChange={(e) => setMinPrice(parseInt(e.target.value))}
+              onChange={(e) => {
+                const newMinPrice = parseInt(e.target.value);
+                setMinPrice(newMinPrice);
+                setMaxPrice(Math.max(maxPrice, newMinPrice + 1));
+              }
+              }
             />
           </span>
           <span>to</span>
@@ -152,11 +157,14 @@ const Sidebar = () => {
             <input
               placeholder="Max"
               type="number"
-              min={1}
+              min={minPrice + 1} 
               max={999999}
               className="w-16 border-none outline-none"
               value={maxPrice}
-              onChange={(e) => setMaxPrice(parseInt(e.target.value))}
+              onChange={(e) => {
+                const newMaxPrice = parseInt(e.target.value);
+                setMaxPrice(Math.max(newMaxPrice, minPrice + 1));  // Validate max value
+              }}
             />
           </span>
         </div>
