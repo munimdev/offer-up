@@ -123,7 +123,9 @@ const FileUpload: React.FC<Props> = ({
           <Image
             src={cover}
             alt="Cover Image"
-            fill={true}
+            // fill={true}
+            width={300}
+            height={300}
             className="absolute top-0 left-0 object-contain w-full h-full bg-white"
           />
         )}
@@ -160,6 +162,8 @@ const FileUpload: React.FC<Props> = ({
   <Image
     src={file.preview}
     alt={file.name}
+    width={300}
+    height={300}
     className="object-cover w-full h-full"
   />
 ) : (

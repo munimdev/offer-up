@@ -3,6 +3,7 @@
 import React from "react";
 import { useAtom } from "jotai";
 import { itemFormDataAtom } from "@/utils/atoms";
+import { useRouter } from "next/navigation";
 import { useItemMutation } from "@/hooks/useItemMutation";
 import Stepper from "@/components/ui/stepper";
 import ItemDetail from "@/components/selling/ItemDetail";
@@ -20,8 +21,16 @@ const Selling = () => {
   const [currentTab, setCurrentTab] = React.useState(1);
   const { toast } = useToast();
   const { mutateAsync } = useItemMutation();
-
+  const router = useRouter();
   const onFormSubmitHandler = async () => {
+    if (!itemData.price || itemData.price === 0) {
+      toast({
+        title: "Invalid Price",
+        description: "Please enter a valid price to continue",
+        duration: 2500,
+      });
+      return null; // Return null to indicate an invalid price
+    }
     const response = await mutateAsync({
       name: itemData.name,
       description: itemData.description,
@@ -86,6 +95,7 @@ const Selling = () => {
         description: "Please enter item price to continue to the next step",
         duration: 2500,
       });
+      return false;
     }
 
     return true;
@@ -106,6 +116,9 @@ const Selling = () => {
           console.log(response)
 
           const { statusCode, messageCode, message } = response;
+console.log(message)
+console.log(statusCode)
+console.log(messageCode)
 
           if (statusCode === '115') {
             loadingToast.update({
@@ -132,13 +145,16 @@ const Selling = () => {
           id: loadingToast.id,
           title: "Item listed successfully",
           description: "Your item has been listed successfully",
-          duration: 5000,
-          action: (
-            <Link href={`/listings`}>
-              <ToastAction altText="View listings">View</ToastAction>
-            </Link>
-          ),
+          duration: 2000,
+          // action: (
+            // <Link href={`/listings`}>
+            //   <ToastAction altText="View listings">View</ToastAction>
+            // </Link>
+          // ),
         });
+        setTimeout(() => {
+          router.push('/listings'); // Redirect to the "/listings" page
+        }, 2000);
       }
     }
   };
