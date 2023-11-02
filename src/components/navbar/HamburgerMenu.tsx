@@ -41,23 +41,26 @@ const HamburgerMenu = () => {
           <Menu />
         </button>
         {!isLoading && isVisible&&(
-          <div className="absolute right-0 mt-2 w-64 max-h-[80vh] overflow-y-auto bg-white border rounded shadow-lg p-2" style={{ zIndex: 2 }}> 
+          <div className="absolute right-0 mt-2 w-64 max-h-[80vh] overflow-y-auto bg-white border rounded shadow-lg p-2" style={{ zIndex: 100 }}> 
             
-         {!isLoggedIn&&<div className="px-2 py-2 text-gray-600 font-bold flex justify-between" onClick={()=>{setIsLoginDialog(true)}}>
+         {!isLoggedIn&&<div className="px-2 py-2 text-gray-600 font-bold flex justify-between" onClick={()=>{setIsLoginDialog(true);setIsVisible(false)}}>
              Login <LogIn/> </div>}    
              {isLoggedIn&& <div className=" px-2 py-2 text-gray-600 font-bold flex justify-between" onClick={()=>{setShowProfile(!showProfile)}}>
              Profile {showProfile===false?<ChevronDown />:<ChevronUp/>}</div>}
             {showProfile&& <div className="ml-4 px-2 py-2 text-gray-600 font-bold "
              onClick={(e) => 
               {
+                
                 console.log(isChatListOrSellingScreen,'isChatListOrSellingScreen')
               if (!isLoggedIn&&!isChatListOrSellingScreen) {
                 console.log('isChatListOrSellingScreen')
                 console.log(isLoggedIn,'isLoggedIn')
                 console.log(isChatListOrSellingScreen,'isChatListOrSellingScreen')
                 e.preventDefault();
+                
                 setIsLoginDialog(true);
               }
+              setIsVisible(false)
             }}>
             <Link href={`/seller/${user?.id}`} className="flex justify-between"> View Profile</Link>
            
@@ -65,6 +68,7 @@ const HamburgerMenu = () => {
             {showProfile&& <div className="ml-4 px-2 py-2 text-gray-600 font-bold "
              onClick={(e) => 
               {
+                
                 console.log(isChatListOrSellingScreen,'isChatListOrSellingScreen')
               if (!isLoggedIn&&!isChatListOrSellingScreen) {
                 console.log('isChatListOrSellingScreen')
@@ -73,6 +77,7 @@ const HamburgerMenu = () => {
                 e.preventDefault();
                 setIsLoginDialog(true);
               }
+              setIsVisible(false)
             }}>
             <Link  href={isLoggedIn===true?'/listings':'/'} className="flex justify-between"> My Listing</Link>
            
@@ -88,6 +93,7 @@ const HamburgerMenu = () => {
                 e.preventDefault();
                 setIsLoginDialog(true);
               }
+              setIsVisible(false)
             }}>
             <Link  href={isLoggedIn===true?'/account/setting':'/'} className="flex justify-between"> Account & Setting</Link>
            
@@ -107,6 +113,7 @@ const HamburgerMenu = () => {
                 e.preventDefault();
                 setIsLoginDialog(true);
               }
+              setIsVisible(false)
             }}>
             <Link  href={isLoggedIn===true?'/chatList':'/'} className="flex justify-between"> Chat Inbox <MessageCircle /></Link>
            
@@ -122,6 +129,7 @@ const HamburgerMenu = () => {
                 e.preventDefault();
                 setIsLoginDialog(true);
               }
+              setIsVisible(false)
             }}>
             <Link  href={isLoggedIn===true?'/selling':'/'} className="flex justify-between">  Post Item <PlusCircle /> </Link>
            
@@ -175,11 +183,11 @@ const HamburgerMenu = () => {
                   ))}
               </React.Fragment>
             ))}
-             <div className="px-2 py-2 text-gray-600 font-bold flex justify-between">
-            Privacy 
+             <div className="px-2 py-2 text-gray-600 font-bold flex justify-between" onClick={()=>{setIsVisible(false)}}>
+             <Link href='/privacy'>Privacy</Link>
             </div>
-             <div className="px-2 py-2 text-gray-600 font-bold flex justify-between">
-             Terms & Conditions 
+             <div className="px-2 py-2 text-gray-600 font-bold flex justify-between" onClick={()=>{setIsVisible(false)}}>
+             <Link href='/terms'>Terms & Conditions</Link>
             </div>
           {isLoggedIn&&<div className="px-2 py-2 text-gray-600 font-bold flex justify-between" onClick={onLogoutHandler}>
              LogOut <LogOut/>  
