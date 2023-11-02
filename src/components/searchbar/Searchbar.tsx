@@ -8,7 +8,9 @@ export const Searchbar: React.FC<SearchbarProps> = ({}) => {
   const [inputValue, setInputValue] = useState<string>("");
   const router = useRouter();
   const onSearch = () => {
-    router.replace(`/search?searchKeyword=${inputValue}`);
+    const value=inputValue;
+    setInputValue("")
+    router.replace(`/search?searchKeyword=${value}`);
   };
   return (
     <Input
