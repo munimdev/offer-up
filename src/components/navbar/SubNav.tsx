@@ -27,11 +27,13 @@ const [index,setIndex] = useState<number | null>(6);
         index=0
       }
       else if (screenWidth < 1250) {
-        index = 6;
+        index = 5;
       } else if (screenWidth >= 1250 && screenWidth <= 1500) {
+        index = 6;
+      } else if (screenWidth >= 1500 && screenWidth <= 1750)  {
         index = 7;
-      } else {
-        index = 8;
+      }else{
+        index=8
       }
   
       setIndex(index);
@@ -48,7 +50,7 @@ const [index,setIndex] = useState<number | null>(6);
 
 
   return (
-<nav className='md:flex md:flex-row md:justify-center md:flex-wrap hidden' style={{ zIndex: 10 }}>
+<nav className='md:flex md:flex-row md:justify-center md:flex-wrap hidden ' style={{ zIndex: 10 }}>
 
 
       <ul style={{ listStyle: "none", padding: 0, display: "flex", flexDirection: "row" }}>
@@ -60,7 +62,7 @@ const [index,setIndex] = useState<number | null>(6);
       key={category.id}
       onMouseEnter={() => handleMouseEnter(category.id)}
       onMouseLeave={handleMouseLeave}
-      style={{ margin: "0.7rem", position: "relative" }}
+      style={{ margin: "1rem 1.5rem", position: "relative" }}
     >
       <Link href={`/search?category=${category.id}`}>
         <p className={hoveredItemId === category.id ? "active" : ""} style={{ fontSize: "0.8rem", fontWeight: "600", color: "#5A6367" }}>
@@ -90,13 +92,13 @@ const [index,setIndex] = useState<number | null>(6);
   ))}
 
 
-       {index!==0&&data&& <li  style={{ margin: "0.7rem", position: "relative" }}
+       {index!==0&&data&& <li  style={{ margin: "1rem 1.5rem", position: "relative" }}
          key={199}
          onMouseEnter={() => handleMouseEnter(199)}
          onMouseLeave={handleMouseLeave}
         >
           
-          <Link  style={{ fontSize: "0.8rem",fontWeight:"600",color:"#5A6367" }} href={`/`}>
+          <Link  style={{ fontSize: "0.8rem",fontWeight:"600",color:"#5A6367"}} href={`/`}>
             <p >More</p>
           </Link>
           {hoveredItemId === 199 && (
@@ -106,6 +108,8 @@ const [index,setIndex] = useState<number | null>(6);
                 left: -160,
                 display: "flex",
                 flexDirection: "column",
+                justifyContent:"center",
+                
                 backgroundColor: "#ffffff",
                 minWidth: "250px", // Set a minimum width
                 boxShadow: "0 0 5px rgba(0,0,0,0.5)", // Add a box shadow for a better visual separation
