@@ -7,6 +7,9 @@ import Sidebar from "@/components/product/Sidebar";
 import Description from "@/components/product/Description";
 import { Badge } from "@/components/ui/badge";
 import { usePathname } from "next/navigation";
+import { useToast } from "@/components/ui/use-toast";
+import { ToastAction } from "@/components/ui/toast";
+import { useMutation } from "@tanstack/react-query";
 import {
   EmailShareButton,
   FacebookShareButton,
@@ -30,22 +33,36 @@ import {
   EmailIcon
 } from "react-share";
 import { Check, Heart, Flag, Share2 } from "lucide-react";
+import { Result } from "@/utils/types";
+import { FavoriteList, ReportItemDto } from "@/types/types";
+import Report from "@/components/report/report";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useFetch } from "@/hooks";
 import * as Queries from "@/utils/queries";
+import * as z from "zod";
+import { useSession } from "@/hooks";
 import { Item, ItemImages } from "@/types/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import { RotatingLines } from  'react-loader-spinner'
+type Props = {
+  data: Item;
+};
 const Product = ({ params }: { params: { id: string } }) => {
   const { id } = params;
   const pathname = usePathname()
+  const { user, isLoggedIn } = useSession();
   const [isShareTooltipOpen, setShareTooltipOpen] = useState(false);
+  const { toast } = useToast();
   const { data, isLoading } = useFetch({
     key: ["query-currentItem"],
     fn: () => Queries.getItemById(id),
     options: {
       enabled: !!id,
     },
+  });
+  const { mutateAsync: reportUser } = useMutation({
+    mutationKey: ["reportItem"],
+    mutationFn: (data: ReportItemDto) => Queries.reportItem(data),
   });
   const currentItem = data?.dataObject as Item;
   const handleTooltipToggle = () => {
@@ -60,6 +77,35 @@ const Product = ({ params }: { params: { id: string } }) => {
        visible={true}/>
        </div>
   }
+  const formSchema = z.object({
+    reason: z.string().nonempty({
+      message: "Please select a reason",
+    }),
+    description: z.string().min(10, {
+      message: "Please enter a description with at least 10 characters",
+    }),
+  });
+  
+
+
+  const onReportHandler = async (dto: z.infer<typeof formSchema>) => {
+    try {
+      const { reason, description } = dto;
+      await reportUser({
+        reportedItemId: currentItem.id,
+        reportedItemOwnerCustomerId: currentItem.userId,
+        reportReasonLookupId: parseInt(reason),
+        note: description,
+      });
+      toast({
+        title: "Reported",
+        description: `We appreciate your feedback, and will look into this issue.`,
+        duration: 2000,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div>
       <div className="flex flex-col mb-2 border-b md:flex-row">
@@ -113,7 +159,14 @@ const Product = ({ params }: { params: { id: string } }) => {
                 <Heart className="inline mr-2" size={16} /> Save
               </Badge>
               <Badge className="mx-1 text-black bg-gray-300 cursor-pointer hover:text-white">
-                <Flag className="inline mr-2" size={16} /> Report
+           
+                <Report  onSubmit={onReportHandler}
+          isLoggedIn={isLoggedIn}
+          lookupId={10004}
+          formSchema={formSchema}
+          size={16}
+          text={"Report"}
+        />
               </Badge>
               
            {/* Share Userr */}
@@ -127,19 +180,19 @@ const Product = ({ params }: { params: { id: string } }) => {
         {isShareTooltipOpen && (
           <TooltipContent >
             <FacebookShareButton url={`https://bargainex.com/${pathname}`}>
-              <FacebookIcon size={32} round={true} />
+              <FacebookIcon size={32} round={true} onClick={()=>{setShareTooltipOpen(false)}} className="m-1"/>
             </FacebookShareButton>
             <WhatsappShareButton url={`https://bargainex.com/${pathname}`}>
-              <WhatsappIcon size={32} round={true}/>
+              <WhatsappIcon size={32} round={true} onClick={()=>{setShareTooltipOpen(false)}} className="m-1"/>
             </WhatsappShareButton>
             <LinkedinShareButton url={`https://bargainex.com/${pathname}`}>
-              <LinkedinIcon size={32} round={true}/>
+              <LinkedinIcon size={32} round={true} onClick={()=>{setShareTooltipOpen(false)}} className="m-1"/>
             </LinkedinShareButton>
             <TwitterShareButton url={`https://bargainex.com/${pathname}`}>
-                  <TwitterIcon size={32} round={true}/>
+                  <TwitterIcon size={32} round={true} onClick={()=>{setShareTooltipOpen(false)}} className="m-1"/>
             </TwitterShareButton>
             <EmailShareButton url={`https://bargainex.com/${pathname}`}>
-              <EmailIcon size={32} round={true}/>
+              <EmailIcon size={32} round={true} onClick={()=>{setShareTooltipOpen(false)}} className="m-1"/>
             </EmailShareButton>
           </TooltipContent>
         )}

@@ -51,9 +51,11 @@ type Props = {
   formSchema: z.ZodType<any, any>;
   lookupId: number;
   onSubmit: (data: any) => void;
+  size?: number;
+  text?: string;
 };
 
-const Report: React.FC<Props> = ({ isLoggedIn, formSchema, lookupId, onSubmit }) => {
+const Report: React.FC<Props> = ({ isLoggedIn, formSchema, lookupId, onSubmit, size, text }) => {
   const setIsLoginDialogOpen = useSetAtom(isLoginDialogOpenAtom)
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
 
@@ -84,8 +86,8 @@ const Report: React.FC<Props> = ({ isLoggedIn, formSchema, lookupId, onSubmit })
       <DialogTrigger>
         <TooltipProvider>
           <Tooltip>
-            <TooltipTrigger>
-              <Flag size={20} strokeWidth={1.75} style={{marginTop:2}}/>
+            <TooltipTrigger className="flex  items-center">
+              <Flag size={size} strokeWidth={1.75} style={{marginTop:2}}/> {text}
             </TooltipTrigger>
             <TooltipContent>Report User</TooltipContent>
           </Tooltip>

@@ -327,6 +327,8 @@ console.log(user,'user')
           lookupId={10004}
           formSchema={formSchema}
           onSubmit={onReportHandler}
+          size={20}
+          text={""}
         />
         
                 {/* Share Userr */}
@@ -338,19 +340,19 @@ console.log(user,'user')
         {isShareTooltipOpen && (
           <TooltipContent >
             <FacebookShareButton url={`https://bargainex.com/${pathname}`}>
-              <FacebookIcon size={32} round={true} />
+              <FacebookIcon size={32} round={true}  onClick={()=>{setShareTooltipOpen(false)}} className="m-1"/>
             </FacebookShareButton>
-            <WhatsappShareButton url={`https://bargainex.com/${pathname}`}>
-              <WhatsappIcon size={32} round={true}/>
+            <WhatsappShareButton url={`https://bargainex.com/${pathname}`} >
+              <WhatsappIcon size={32} round={true} onClick={()=>{setShareTooltipOpen(false)}} className="m-1"/>
             </WhatsappShareButton>
-            <LinkedinShareButton url={`https://bargainex.com/${pathname}`}>
-              <LinkedinIcon size={32} round={true}/>
+            <LinkedinShareButton url={`https://bargainex.com/${pathname}`} >
+              <LinkedinIcon size={32} round={true} onClick={()=>{setShareTooltipOpen(false)}} className="m-1"/>
             </LinkedinShareButton>
-            <TwitterShareButton url={`https://bargainex.com/${pathname}`}>
-                  <TwitterIcon size={32} round={true}/>
+            <TwitterShareButton url={`https://bargainex.com/${pathname}`} >
+                  <TwitterIcon size={32} round={true} onClick={()=>{setShareTooltipOpen(false)}} className="m-1"/>
             </TwitterShareButton>
-            <EmailShareButton url={`https://bargainex.com/${pathname}`}>
-              <EmailIcon size={32} round={true}/>
+            <EmailShareButton url={`https://bargainex.com/${pathname}`} >
+              <EmailIcon size={32} round={true} onClick={()=>{setShareTooltipOpen(false)}} className="m-1"/>
             </EmailShareButton>
           </TooltipContent>
         )}
