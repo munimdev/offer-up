@@ -478,7 +478,93 @@ export const Navbar = ({}: NavbarProps) => {
       <div className="block lg:hidden flex justify-center mb-2">
       <Searchbar />
       </div>
-     
+      <Dialog
+          onOpenChange={(e) => setIsLocationModalOpen(e)}
+          open={isLocationModalOpen}
+        >
+          <DialogTrigger asChild>
+            <span className="flex font-bold text-[#1BC3FF] items-center gap-2 cursor-pointer  ml-3">
+              <MapPin  className="block lg:hidden"/>{" "}
+              <span className=" gap-2 lg:flex block lg:hidden">
+                <p>
+                  {locationName
+                    ? `${locationName}: ${preferredDistance[0]} Miles`
+                    : "Set Location"}
+                </p>
+              </span>
+            </span>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <div className="flex flex-col p-4">
+              <h2 className="text-2xl font-bold text-center text-black -translate-y-4">
+                Location
+              </h2>
+              <h3 className="text-center">
+                {locationName ? (
+                  <span>
+                    <span className="font-semibold text-primary">
+                      Current Location:{" "}
+                    </span>
+                    {locationName}
+                  </span>
+                ) : (
+                  "No Location Set"
+                )}
+              </h3>
+             
+              <Separator className="my-2" />
+              {zipError&&<h4 className="text-center"><span className="font-semibold text-red-500">Please enter correct Zip code</span></h4>} 
+              <div className="">
+                <p className="text-base font-bold text-black">ZIP Code</p>
+                <button
+                  onClick={handleGetLocation}
+                  className="flex px-2 py-2 mx-auto my-2 border rounded-full border-primary text-primary gap-x-2"
+                >
+                  <MapPin />
+                  <span className="flex-1 text-center">Get my location</span>
+                </button>
+                <p className="my-2 font-bold text-center text-black">Or</p>
+                <Input
+                  value={zipCode}
+                  onClick={()=>{zipError&&setZipError(false)}}
+                  onChange={(e) => {
+                    setZipCode(e.target.value);
+                  }}
+                  className="mx-auto border border-gray-100 w-44"
+                  placeholder="Enter ZIP Code"
+                />
+                <Button
+                  className="block mx-auto mt-3"
+                  type="button"
+                  onClick={() => {
+                    if (zipCode.length === 5) {
+                      handleLocationByZipCode(zipCode);
+                    }
+                  }}
+                >
+                  Fetch Location
+                </Button>
+              </div>
+              <Separator className="my-4" />
+              <div className="flex flex-row justify-between">
+                <p className="mb-3">Distance</p>
+                <p className="mb-3">{preferredDistance[0]}</p>
+              </div>
+              <Slider
+                onValueChange={(e) => {
+                  setPreferredDistance(e);
+                }}
+                defaultValue={preferredDistance}
+                max={50}
+                step={1}
+                min={1}
+              />
+            </div>
+            <Button type="button" onClick={() => setIsLocationModalOpen(false)}>
+              See listings
+            </Button>
+          </DialogContent>
+        </Dialog>
 
       <SubNav />
     </>
