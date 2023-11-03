@@ -13,22 +13,25 @@ export const Searchbar: React.FC<SearchbarProps> = ({}) => {
     router.replace(`/search?searchKeyword=${value}`);
   };
   return (
-    <Input
-    type="text"
-    placeholder="Search"
-    value={inputValue}
-    onChange={(e) => setInputValue(e.target.value)}
-    className="py-6 rounded-full w-max"
-  >
-      <div className="flex gap-2">
-        <div className="hidden h-6 mr-3 border-l border-gray-300 sm:block place-self-center"></div>
-        <button
-          className="p-2 rounded-full bg-primary font-bold"
-          onClick={onSearch}
-        >
-          <Search size={16} className="text-white" />
-        </button>
-      </div>
-    </Input>
+<Input
+  type="text"
+  placeholder="Search"
+  value={inputValue}
+  onChange={(e) => setInputValue(e.target.value)}
+  className="py-6 rounded-full mx-auto lg:w-80 w-11/12"
+>
+  <div className="flex gap-2">
+    <div className="hidden h-6 mr-3 border-l border-gray-300 sm:block place-self-center"></div>
+    <button
+      className="p-2 rounded-full bg-primary font-bold"
+      onClick={onSearch}
+    >
+      <Search size={16} className="text-white" />
+    </button>
+  </div>
+</Input>
+
+
+
   );
 };
