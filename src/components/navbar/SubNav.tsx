@@ -10,32 +10,41 @@ const SubNav = () => {
   const [visibleOptions, setVisibleOptions] = useState<typeof data>([]);
   const [hiddenOptions, setHiddenOptions] = useState<typeof data>([]);
   const [hoveredItemId, setHoveredItemId] = useState<number | null>(null);
-
+const [index,setIndex] = useState<number | null>(6);
   // Function to show/hide options based on hover
+  console.log(data)
   const handleMouseEnter = useCallback((id: number) => {
     setHoveredItemId(id);
   }, [setHoveredItemId]);
   const handleMouseLeave = useCallback(() => {
     setHoveredItemId(null);
   }, [setHoveredItemId]);
-
-  // useEffect to update visible and hidden options on data change
- // useEffect to update visible and hidden options on data change
-// useEffect(() => {
-
-
-//   if (!data) {
-//     setVisibleOptions([]);
-//     setHiddenOptions([]);
-//     return;
-//   }
-
-//   // Assuming data is an array of objects with a 'children' property
-//   const visible = data.filter((category) => category.children.length > 0);
-//   const hidden = data.filter((category) => category.children.length === 0);
-//   // setVisibleOptions(visible);
-//   // setHiddenOptions(hidden);
-// }, [data]);
+  useEffect(() => {
+    const handleResize = () => {
+      const screenWidth = window.innerWidth;
+      let index;
+      if(screenWidth < 1050){
+        index=0
+      }
+      else if (screenWidth < 1250) {
+        index = 6;
+      } else if (screenWidth >= 1250 && screenWidth <= 1500) {
+        index = 7;
+      } else {
+        index = 8;
+      }
+  
+      setIndex(index);
+    };
+  
+    handleResize(); 
+  
+    window.addEventListener("resize", handleResize);
+  
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [isLoading, data]);
 
 
   return (
@@ -43,9 +52,9 @@ const SubNav = () => {
 
 
       <ul style={{ listStyle: "none", padding: 0, display: "flex", flexDirection: "row" }}>
-      {data&&data
-  .filter((category) => category.children.length > 0)
-  .slice(0, 9)
+      {index!==0&&data&&data
+  // .filter((category) => category.children.length > 0)
+  .slice(0, index)
   .map((category) => (
     <li
       key={category.id}
@@ -81,7 +90,7 @@ const SubNav = () => {
   ))}
 
 
-       {data&& <li  style={{ margin: "0.7rem", position: "relative" }}
+       {index!==0&&data&& <li  style={{ margin: "0.7rem", position: "relative" }}
          key={199}
          onMouseEnter={() => handleMouseEnter(199)}
          onMouseLeave={handleMouseLeave}
@@ -103,7 +112,8 @@ const SubNav = () => {
                 border: "1px solid #ccc", // Add a border
               }}>
                  {data&&data
-  .filter((category) => category.children.length== 0)
+  // .filter((category) => category.children.length== 0)
+  .slice(index,data.length)
   .map((category) => (
                   <Link key={category.id} href={`/search?category=${category.id}`} style={{ padding: "10px", }}>
                     <p>{category.name}</p>
