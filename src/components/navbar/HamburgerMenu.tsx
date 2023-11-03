@@ -15,7 +15,7 @@ const HamburgerMenu = () => {
   const { data, isLoading } = useFetchCategories();
   const [showCategories,setShowCategories] = useState(false);
   const [showSubCategory, setShowSubCategory] = useState(0);
-  const [showProfile, setShowProfile] = useState(false);
+  // const [showProfile, setShowProfile] = useState(false);
   const [isVisible, setIsVisible] = useState(false)
   const setUser = useSetAtom(userAtom);
   const [isLoginDialog, setIsLoginDialog] = useAtom(isLoginDialogOpenAtom)
@@ -41,13 +41,13 @@ const HamburgerMenu = () => {
           <Menu />
         </button>
         {!isLoading && isVisible&&(
-          <div className="absolute right-0 mt-2 w-64 max-h-[80vh] overflow-y-auto bg-white border rounded shadow-lg p-2" style={{ zIndex: 100 }}> 
+          <div className="absolute  mt-2 w-64 max-h-[80vh] overflow-y-auto bg-white border rounded shadow-lg p-2" style={{ zIndex: 100 }}> 
             
          {!isLoggedIn&&<div className="px-2 py-2 text-gray-600 font-bold flex justify-between" onClick={()=>{setIsLoginDialog(true);setIsVisible(false)}}>
              Login <LogIn/> </div>}    
-             {isLoggedIn&& <div className=" px-2 py-2 text-gray-600 font-bold flex justify-between" onClick={()=>{setShowProfile(!showProfile)}}>
-             Profile {showProfile===false?<ChevronDown />:<ChevronUp/>}</div>}
-            {showProfile&& <div className="ml-4 px-2 py-2 text-gray-600 font-bold "
+             {/* {isLoggedIn&& <div className=" px-2 py-2 text-gray-600 font-bold flex justify-between" onClick={()=>{setShowProfile(!showProfile)}}>
+             Profile {showProfile===false?<ChevronDown />:<ChevronUp/>}</div>} */}
+            {/* {showProfile&& <div className="ml-4 px-2 py-2 text-gray-600 font-bold "
              onClick={(e) => 
               {
                 
@@ -97,7 +97,7 @@ const HamburgerMenu = () => {
             }}>
             <Link  href={isLoggedIn===true?'/account/setting':'/'} className="flex justify-between"> Account & Setting</Link>
            
-            </div>}
+            </div>} */}
 
 
 
