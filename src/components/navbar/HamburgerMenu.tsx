@@ -35,7 +35,7 @@ const HamburgerMenu = () => {
   };
 
   return (
-    <div className="block md:hidden" >
+    <div className="block lg:hidden" >
       <div className="relative">
         <button className="font-bold" onClick={()=>{setIsVisible(!isVisible)}}>
           <Menu />

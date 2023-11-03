@@ -62,7 +62,7 @@ import placholder from "@/components/item/placeholder.png";
 import HamburgerMenu from './HamburgerMenu'
 // Icons
 import Logo from "@/components/icons/Logo";
-import { MapPin, Menu, Mail } from "lucide-react";
+import { MapPin, Menu, Mail, MessageSquare, PlusSquare } from "lucide-react";
 import Facebook from "@/components/icons/Facebook";
 import Google from "@/components/icons/Google";
 import Apple from "@/components/icons/Apple";
@@ -200,13 +200,14 @@ export const Navbar = ({}: NavbarProps) => {
   return (
     <>
       <div className="flex items-center gap-4 p-4 mt-2">
+      <HamburgerMenu/>
       <Link href="/" className="flex items-center">
   <Logo/> 
   <span className="text-xl lg:text-2xl font-bold text-[#1BC3FF] hidden xl:block">Bargain Ex</span>
 
 
 </Link>
-<div className="hidden sm:block flex justify-center">
+<div className="hidden lg:block flex justify-center">
       <Searchbar />
       </div>
         <Dialog
@@ -214,9 +215,9 @@ export const Navbar = ({}: NavbarProps) => {
           open={isLocationModalOpen}
         >
           <DialogTrigger asChild>
-            <span className="flex font-bold text-[#1BC3FF] items-center gap-2 cursor-pointer">
-              <MapPin />{" "}
-              <span className=" gap-2 lg:flex">
+            <span className="flex font-bold text-[#1BC3FF] items-center gap-2 cursor-pointer  ">
+              <MapPin  className="hidden lg:block"/>{" "}
+              <span className=" gap-2 lg:flex hidden lg:block">
                 <p>
                   {locationName
                     ? `${locationName}: ${preferredDistance[0]} Miles`
@@ -297,7 +298,7 @@ export const Navbar = ({}: NavbarProps) => {
           </DialogContent>
         </Dialog>
         <div className="ml-auto">
-          <NavigationMenu className="hidden md:block z-20">
+          <NavigationMenu className=" z-20">
             <NavigationMenuList>
             <NavigationMenuItem >
             <Link href={isLoggedIn===true?'/chatList':'/'}  passHref>
@@ -313,7 +314,13 @@ export const Navbar = ({}: NavbarProps) => {
                           }
                         }}
                       >
-                        Chat Inbox
+                  
+      <span className="hidden lg:block">Chat Inbox</span>
+      
+   
+      <span className="lg:hidden">
+        <MessageSquare />
+      </span>
                       </NavigationMenuLink>
                     </Link>
             </NavigationMenuItem>
@@ -334,7 +341,13 @@ export const Navbar = ({}: NavbarProps) => {
                           }
                         }}
                       >
-                        Post Item
+                           <span className="hidden lg:block">Post Item</span>
+      
+   
+      <span className="lg:hidden">
+      <PlusSquare />
+      </span>
+                        
                       </NavigationMenuLink>
                     </Link>
             </NavigationMenuItem>
@@ -456,13 +469,13 @@ export const Navbar = ({}: NavbarProps) => {
             </DropdownMenu>
           </div> */}
           
-          <HamburgerMenu/>
+         
         </div>
       </div>
      
      
         
-      <div className="block sm:hidden flex justify-center mb-2">
+      <div className="block lg:hidden flex justify-center mb-2">
       <Searchbar />
       </div>
      
