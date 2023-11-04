@@ -10,6 +10,8 @@ import { usePathname } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import { useMutation } from "@tanstack/react-query";
+import HeartIcon from "@/components/icons/HeartIcon";
+import Link from "next/link";
 import {
   EmailShareButton,
   FacebookShareButton,
@@ -24,6 +26,15 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   FacebookIcon,
   InstapaperIcon,
@@ -42,6 +53,9 @@ import * as Queries from "@/utils/queries";
 import * as z from "zod";
 import { useSession } from "@/hooks";
 import { Item, ItemImages } from "@/types/types";
+
+import { useSetAtom } from "jotai";
+import { isLoginDialogOpenAtom } from "@/utils/atoms";
 import { Skeleton } from "@/components/ui/skeleton";
 import { RotatingLines } from  'react-loader-spinner'
 type Props = {
@@ -50,7 +64,10 @@ type Props = {
 const Product = ({ params }: { params: { id: string } }) => {
   const { id } = params;
   const pathname = usePathname()
+  const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
   const { user, isLoggedIn } = useSession();
+  const setIsLoginDialogOpen = useSetAtom(isLoginDialogOpenAtom);
+
   const [isShareTooltipOpen, setShareTooltipOpen] = useState(false);
   const { toast } = useToast();
   const { data, isLoading } = useFetch({
@@ -60,11 +77,22 @@ const Product = ({ params }: { params: { id: string } }) => {
       enabled: !!id,
     },
   });
+  const currentItem = data?.dataObject as Item;
+  const { data: savedList }: { data: Result<FavoriteList[]> } = useFetch({
+    key: ["query-favoriteList"],
+    fn: () => Queries.getFavoriteList(),
+    options: {
+      enabled: !!currentItem?.id,
+    },
+  });
+  const { mutateAsync: addItemToList } = useMutation(
+    Queries.addItemToFavouriteList
+  );
   const { mutateAsync: reportUser } = useMutation({
     mutationKey: ["reportItem"],
     mutationFn: (data: ReportItemDto) => Queries.reportItem(data),
   });
-  const currentItem = data?.dataObject as Item;
+
   const handleTooltipToggle = () => {
     setShareTooltipOpen(!isShareTooltipOpen);
   };
@@ -156,7 +184,80 @@ const Product = ({ params }: { params: { id: string } }) => {
           <div className="p-4 my-4 border-b">
             <div className="flex flex-wrap gap-3">
               <Badge className="mx-1 text-black bg-gray-300 cursor-pointer hover:text-white">
-                <Heart className="inline mr-2" size={16} /> Save
+              <Dialog
+          open={isDialogOpen}
+          onOpenChange={(e) => {
+            if (isLoggedIn) {
+              setIsDialogOpen(e);
+            } else {
+              setIsLoginDialogOpen(true);
+            }
+          }}
+        >
+          <DialogTrigger asChild>
+            <button className="">
+            <Heart
+  size={16}
+  className={`inline-block mr-2 ${
+    currentItem.lstAddedToFavoriteListIds?.length > 0 ? "fill-primary" : ""
+  }`}
+/> Save
+            </button>
+          </DialogTrigger>
+          <DialogContent className="max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Save Item To List</DialogTitle>
+              <DialogDescription>
+                {"You can save this item to a list to view it later."}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="flex flex-col py-4">
+              {savedList?.dataObject?.map((list) => (
+                <div
+                  key={list.id}
+                  className="flex flex-row items-center justify-between gap-3 py-1 transition-colors duration-300 ease-in-out border-b hover:bg-gray-200 bg-none"
+                >
+                  <div className="flex flex-row items-center">
+                    <HeartIcon size={36} /> Save
+                    <button
+                      className="w-full text-left"
+                      onClick={() => {
+                        addItemToList({
+                          favouriteListId: list.id,
+                          itemId: currentItem.id,
+                        });
+                        toast({
+                          title: "Item Saved",
+                          description: "Item has been saved to your list",
+                          duration: 2000,
+                          action: (
+                            <ToastAction
+                              altText="View List"
+                              onClick={() => {
+                                console.log("View List");
+                              }}
+                            >
+                              <Link href={`/saved-list/${list.id}`} passHref>
+                                View List
+                              </Link>
+                            </ToastAction>
+                          ),
+                        });
+                        setIsDialogOpen(false);
+                      }}
+                    >
+                      {list.name}
+                    </button>
+                  </div>
+                  {currentItem.lstAddedToFavoriteListIds.find((x) => x === list.id) !==
+                  undefined ? (
+                    <Check size={24} />
+                  ) : null}
+                </div>
+              ))}
+            </div>
+          </DialogContent>
+        </Dialog>
               </Badge>
               <Badge className="mx-1 text-black bg-gray-300 cursor-pointer hover:text-white">
            

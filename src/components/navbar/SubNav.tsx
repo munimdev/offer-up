@@ -11,8 +11,6 @@ const SubNav = () => {
   const [hiddenOptions, setHiddenOptions] = useState<typeof data>([]);
   const [hoveredItemId, setHoveredItemId] = useState<number | null>(null);
 const [index,setIndex] = useState<number | null>(6);
-  // Function to show/hide options based on hover
-  console.log(data)
   const handleMouseEnter = useCallback((id: number) => {
     setHoveredItemId(id);
   }, [setHoveredItemId]);
