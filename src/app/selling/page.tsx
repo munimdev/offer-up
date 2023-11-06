@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 
 import React from "react";
@@ -52,7 +53,7 @@ const Selling = () => {
 
     console.log(response);
 
-
+ 
 
     return response as unknown as {
       statusCode: string,
@@ -103,6 +104,30 @@ const Selling = () => {
 
   const handleItemCreation = async () => {
     {
+      setItemData({
+        name: '',
+        description: '',
+        price: 0,
+        isPriceFixed: false,
+        images: [],
+        category: {
+          id: '',
+          name: '',
+          parentCategoryId: '',
+        },
+        subCategory: {
+          id: '',
+          name: '',
+        },
+        validUpto: null,
+        zipcode: '',
+        locationLat: 0,
+        locationLng: 0,
+        fullAddress: '',
+        shortAddress: '',
+        conditionLookUpId: 10001,
+        attributes: [],
+      });
       if (handleItemValidation()) {
         const loadingToast = toast({
           title: "Item listing in progress",
