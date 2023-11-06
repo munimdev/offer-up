@@ -185,9 +185,9 @@ const Product = ({ params }: { params: { id: string } }) => {
             <Sidebar data={currentItem} />
           ) : (
             <Skeleton className="w-full h-5/6" />
-          )}
+          )} 
         </div>
-          <div className="p-4 my-4 border-b">
+          <div className="p-4 my-4 border-b lg:flex hidden">
             <Description data={currentItem?.description || ""} />
           </div>
           <div className="p-4 my-4 border-b">

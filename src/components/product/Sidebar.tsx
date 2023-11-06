@@ -10,6 +10,8 @@ import { useFetch } from "@/hooks";
 import * as Queries from "@/utils/queries";
 import { addDoc, collection, serverTimestamp,getDocs, query,deleteDoc,
   onSnapshot,doc,updateDoc,orderBy,where } from "firebase/firestore";
+  import Description from "@/components/product/Description";
+
 import { db, storage} from "../../firebase/firebase";
 import { useSession } from "@/hooks";
 import Map from "./Map";
@@ -331,7 +333,9 @@ console.log(user,'user')
   </div>
 {/* )} */}
 
-
+<div className="p-4 my-4 border-b lg:hidden">
+            <Description data={data?.description || ""} />
+          </div>
       <div>
       {data.fullAddress&& <p className="text-primary my-4">
          <MapPin className="inline" size={24} />{data.fullAddress}
