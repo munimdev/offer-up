@@ -370,12 +370,12 @@ const redirectHandler=(chatId)=>{
           </AlertDialogContent>
         </AlertDialog>
         <div className="flex flex-wrap mt-8 justify-stretch gap-x-4">
-          <button
+          {/* <button
             type="button"
             className="flex items-center justify-center flex-grow py-2 text-base font-medium text-white rounded-md bg-primary"
           >
             Sell 2x Faster
-          </button>
+          </button> */}
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <button
