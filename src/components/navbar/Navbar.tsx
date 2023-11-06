@@ -483,7 +483,7 @@ export const Navbar = ({}: NavbarProps) => {
           open={isLocationModalOpen}
         >
           <DialogTrigger asChild>
-            <span className="flex font-bold text-[#1BC3FF] items-center gap-2 cursor-pointer  ml-3">
+            <span className="flex font-bold text-[#1BC3FF] items-center gap-2 cursor-pointer  ml-3 mb-3">
               <MapPin  className="block lg:hidden"/>{" "}
               <span className=" gap-2 lg:flex block lg:hidden">
                 <p>
