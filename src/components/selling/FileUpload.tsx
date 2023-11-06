@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useDropzone } from "react-dropzone";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { DropResult } from "react-beautiful-dnd";
-
+import { useToast } from "@/components/ui/use-toast";
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import { UploadCloud, Eye, Trash } from "lucide-react";
 import { toBase64 } from "@/utils";
@@ -35,6 +35,7 @@ const FileUpload: React.FC<Props> = ({
       preview: imageUrl,
     });
   });
+  const { toast } = useToast();
   const [cover, setCover] = useState<string | null>(
     currentImagesWithPreview?.[0].preview || null
   );
@@ -55,6 +56,17 @@ const FileUpload: React.FC<Props> = ({
   }, [files]);
 
   const onDrop = async (acceptedFiles: File[]) => {
+    console.log(files.length,'files.length')
+    console.log(acceptedFiles.length,'acceptedFiles.length')
+    if (files.length + acceptedFiles.length > 10) {
+      console.log("Cannot add more than 10 images");
+      toast({
+        title: "Limit Exceed",
+        description: "Cannot add more than 10 images",
+        duration: 2500,
+      });
+      return;
+    }
     const newFiles = await Promise.all(
       acceptedFiles.map(async (file: File, idx: number) => {
         const base64 = await toBase64(file);

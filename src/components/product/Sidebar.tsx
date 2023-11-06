@@ -262,7 +262,10 @@ console.log(user,'user')
                   className="flex flex-row items-center justify-between gap-3 py-1 transition-colors duration-300 ease-in-out border-b hover:bg-gray-200 bg-none"
                 >
                   <div className="flex flex-row items-center">
-                    <HeartIcon size={36} />
+                    {/* <HeartIcon size={36} />
+                     */}
+                     <HeartIcon size={36} fill="red" />
+
                     <button
                       className="w-full text-left"
                       onClick={() => {
