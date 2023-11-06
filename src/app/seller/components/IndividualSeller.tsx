@@ -126,6 +126,7 @@ const IndividualSeller = ({
   lastActive.setDate(lastActive.getDate() - 2);
   const lastActivity = getLastActiveTime(lastActive);
 
+
   const onFollowHandler = async () => {
     try {
       await followUser(profile.id);
@@ -174,9 +175,17 @@ const IndividualSeller = ({
   const handleTooltipToggle = () => {
     setShareTooltipOpen(!isShareTooltipOpen);
   };
-
+  const handleClickOutside = (event) => {
+    // Check if the click is outside the tooltip and not on the tooltip or its children
+    const isOutsideTooltip = !event.target.closest('.tooltip'); // Add a class to your tooltip content elements
+  
+    if (isOutsideTooltip&&isShareTooltipOpen) {
+      setShareTooltipOpen(false);
+    }
+  };
+  
   return (
-    <div className="max-w-full p-4">
+    <div className="max-w-full p-4" onClick={handleClickOutside}>
       <div className="flex w-full text-sm gap-x-2">
         <Link href="/">Home</Link>
         {">"}
@@ -197,6 +206,7 @@ const IndividualSeller = ({
               <div className="flex items-center font-bold">
                 <span className="mr-1">{profile?.name.toUpperCase()}</span>
                 <TooltipProvider>
+                  <div >
                   <Tooltip>
                     <TooltipTrigger>
                       {profile?.isEmailVerified ? (
@@ -219,6 +229,7 @@ const IndividualSeller = ({
                         : "This user has not verified their identity"}
                     </TooltipContent>
                   </Tooltip>
+                  </div>
                 </TooltipProvider>
                 <span className="ml-2 text-xs text-gray-500">
                   {" "}
