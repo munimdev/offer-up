@@ -32,7 +32,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import placeholder from "@/components/item/placeholder.png";
-
+import SocialShare from "@/components/misc/SocialShare";
 import {
   Tooltip,
   TooltipContent,
@@ -175,9 +175,8 @@ const IndividualSeller = ({
   const handleTooltipToggle = () => {
     setShareTooltipOpen(!isShareTooltipOpen);
   };
-  const handleClickOutside = (event) => {
-    // Check if the click is outside the tooltip and not on the tooltip or its children
-    const isOutsideTooltip = !event.target.closest('.tooltip'); // Add a class to your tooltip content elements
+  const handleClickOutside = (event:any) => {
+    const isOutsideTooltip = !event.target.closest('.tooltip'); 
   
     if (isOutsideTooltip&&isShareTooltipOpen) {
       setShareTooltipOpen(false);
@@ -242,32 +241,7 @@ const IndividualSeller = ({
               </p>
               <div className="flex flex-row items-center gap-4 text-primary">
                 {/* Share Userr */}
-                <TooltipProvider>
-      <Tooltip open={isShareTooltipOpen}>
-        <TooltipTrigger>
-          <Share2 size={20} strokeWidth={1.75} onClick={handleTooltipToggle} />
-        </TooltipTrigger>
-        {isShareTooltipOpen && (
-          <TooltipContent >
-            <FacebookShareButton url={`https://bargainex.com/${pathname}`}>
-              <FacebookIcon size={32} round={true} />
-            </FacebookShareButton>
-            <WhatsappShareButton url={`https://bargainex.com/${pathname}`}>
-              <WhatsappIcon size={32} round={true}/>
-            </WhatsappShareButton>
-            <LinkedinShareButton url={`https://bargainex.com/${pathname}`}>
-              <LinkedinIcon size={32} round={true}/>
-            </LinkedinShareButton>
-            <TwitterShareButton url={`https://bargainex.com/${pathname}`}>
-                  <TwitterIcon size={32} round={true}/>
-            </TwitterShareButton>
-            <EmailShareButton url={`https://bargainex.com/${pathname}`}>
-              <EmailIcon size={32} round={true}/>
-            </EmailShareButton>
-          </TooltipContent>
-        )}
-      </Tooltip>
-    </TooltipProvider>
+                <SocialShare isButton={false}/>
                 {!isOwnProfile && (
                   <>
                     {/* Report User */}

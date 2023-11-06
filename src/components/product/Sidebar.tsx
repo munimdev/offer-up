@@ -16,22 +16,7 @@ import Map from "./Map";
 import { FavoriteList, Item, ReportItemDto } from "@/types/types";
 import { Result } from "@/utils/types";
 import * as z from "zod";
-import {
-  EmailShareButton,
-  FacebookShareButton,
-  InstapaperShareButton,
-  LinkedinShareButton,
-  TwitterShareButton,
-  WhatsappShareButton,
-} from "react-share";
-import {
-  FacebookIcon,
-  InstapaperIcon,
-  LinkedinIcon,
-  TwitterIcon,
-  WhatsappIcon,
-  EmailIcon
-} from "react-share";
+import SocialShare from "../misc/SocialShare";
 import Rating from "@/components/misc/Rating";
 import Message from "@/components/icons/Message";
 import { Button } from "@/components/ui/button";
@@ -45,12 +30,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import Report from "@/components/report/report";
@@ -213,9 +193,7 @@ console.log(user,'user')
   const sellerPageHandler = async (id)=>{
     router.replace(`/seller/${id}`);
   }
-  const handleTooltipToggle = () => {
-    setShareTooltipOpen(!isShareTooltipOpen);
-  };
+
   return (
     <>
      
@@ -330,34 +308,8 @@ console.log(user,'user')
           size={20}
           text={""}
         />
-        
-                {/* Share Userr */}
-                <TooltipProvider>
-      <Tooltip open={isShareTooltipOpen}>
-        <TooltipTrigger>
-        <Share2 className="inline-block mr-2" onClick={handleTooltipToggle}/>
-        </TooltipTrigger>
-        {isShareTooltipOpen && (
-          <TooltipContent >
-            <FacebookShareButton url={`https://bargainex.com/${pathname}`}>
-              <FacebookIcon size={32} round={true}  onClick={()=>{setShareTooltipOpen(false)}} className="m-1"/>
-            </FacebookShareButton>
-            <WhatsappShareButton url={`https://bargainex.com/${pathname}`} >
-              <WhatsappIcon size={32} round={true} onClick={()=>{setShareTooltipOpen(false)}} className="m-1"/>
-            </WhatsappShareButton>
-            <LinkedinShareButton url={`https://bargainex.com/${pathname}`} >
-              <LinkedinIcon size={32} round={true} onClick={()=>{setShareTooltipOpen(false)}} className="m-1"/>
-            </LinkedinShareButton>
-            <TwitterShareButton url={`https://bargainex.com/${pathname}`} >
-                  <TwitterIcon size={32} round={true} onClick={()=>{setShareTooltipOpen(false)}} className="m-1"/>
-            </TwitterShareButton>
-            <EmailShareButton url={`https://bargainex.com/${pathname}`} >
-              <EmailIcon size={32} round={true} onClick={()=>{setShareTooltipOpen(false)}} className="m-1"/>
-            </EmailShareButton>
-          </TooltipContent>
-        )}
-      </Tooltip>
-    </TooltipProvider>
+        <SocialShare isButton={false}/>
+                
       </div>
       {/* {data.customer && data.customer.imagePath && data.customer.name &&data.customer.name.trim() !== ''&& ( */}
   <div className="flex gap-4 py-4 my-4 border-y cursor-pointer items-center">

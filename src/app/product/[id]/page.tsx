@@ -6,7 +6,7 @@ import Slider from "@/components/product/Slider";
 import Sidebar from "@/components/product/Sidebar";
 import Description from "@/components/product/Description";
 import { Badge } from "@/components/ui/badge";
-import { usePathname } from "next/navigation";
+
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import { useMutation } from "@tanstack/react-query";
@@ -53,7 +53,7 @@ import * as Queries from "@/utils/queries";
 import * as z from "zod";
 import { useSession } from "@/hooks";
 import { Item, ItemImages } from "@/types/types";
-
+import SocialShare from "@/components/misc/SocialShare";
 import { useSetAtom } from "jotai";
 import { isLoginDialogOpenAtom } from "@/utils/atoms";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -63,7 +63,7 @@ type Props = {
 };
 const Product = ({ params }: { params: { id: string } }) => {
   const { id } = params;
-  const pathname = usePathname()
+  
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
   const { user, isLoggedIn } = useSession();
   const setIsLoginDialogOpen = useSetAtom(isLoginDialogOpenAtom);
@@ -134,9 +134,18 @@ const Product = ({ params }: { params: { id: string } }) => {
       console.log(error);
     }
   };
+  const handleClickOutside = (event:any) => {
+    console.log('click')
+    const isOutsideTooltip = !event.target.closest('.tooltip'); 
+  console.log(isOutsideTooltip,'isOutsideTooltip')
+  console.log(isShareTooltipOpen,'isShareTooltipOpen')
+    if (isOutsideTooltip&&isShareTooltipOpen) {
+      setShareTooltipOpen(false);
+    }
+  };
   return (
-    <div>
-      <div className="flex flex-col mb-2 border-b md:flex-row">
+    <div onClick={handleClickOutside}>
+      <div className="flex flex-col mb-2 border-b md:flex-row" >
         <div className="w-full md:w-8/12 lg:w-9/12">
           <div>
             <Slider
@@ -271,34 +280,8 @@ const Product = ({ params }: { params: { id: string } }) => {
               </Badge>
               
            {/* Share Userr */}
-           <TooltipProvider>
-      <Tooltip open={isShareTooltipOpen}>
-        <TooltipTrigger>
-        <Badge className="mx-1 text-black bg-gray-300 cursor-pointer hover:text-white" onClick={handleTooltipToggle}>
-                <Share2 className="inline mr-2" size={16} /> Share
-              </Badge>
-        </TooltipTrigger>
-        {isShareTooltipOpen && (
-          <TooltipContent >
-            <FacebookShareButton url={`https://bargainex.com/${pathname}`}>
-              <FacebookIcon size={32} round={true} onClick={()=>{setShareTooltipOpen(false)}} className="m-1"/>
-            </FacebookShareButton>
-            <WhatsappShareButton url={`https://bargainex.com/${pathname}`}>
-              <WhatsappIcon size={32} round={true} onClick={()=>{setShareTooltipOpen(false)}} className="m-1"/>
-            </WhatsappShareButton>
-            <LinkedinShareButton url={`https://bargainex.com/${pathname}`}>
-              <LinkedinIcon size={32} round={true} onClick={()=>{setShareTooltipOpen(false)}} className="m-1"/>
-            </LinkedinShareButton>
-            <TwitterShareButton url={`https://bargainex.com/${pathname}`}>
-                  <TwitterIcon size={32} round={true} onClick={()=>{setShareTooltipOpen(false)}} className="m-1"/>
-            </TwitterShareButton>
-            <EmailShareButton url={`https://bargainex.com/${pathname}`}>
-              <EmailIcon size={32} round={true} onClick={()=>{setShareTooltipOpen(false)}} className="m-1"/>
-            </EmailShareButton>
-          </TooltipContent>
-        )}
-      </Tooltip>
-    </TooltipProvider>
+           <SocialShare isButton={true}/>
+      
             </div>
           </div>
          {!isLoading&& <CustomerOtherProducts customerId={currentItem?.customer?.id}/>}  
