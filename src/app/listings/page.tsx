@@ -199,7 +199,7 @@ const Listings = () => {
                             </span>
                             <span className="text-sm font-medium">{`$${item.price}`}</span>
                           </p>
-                          <p className="text-sm font-medium">{`28 views, 1 conversation`}</p>
+                          {/* <p className="text-sm font-medium">{`28 views, 1 conversation`}</p> */}
                         </div>
                       </div>
                     </div>
