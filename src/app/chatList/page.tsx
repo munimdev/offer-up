@@ -5,6 +5,7 @@ import { RotatingLines } from  'react-loader-spinner'
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from 'next/link';
+import EmptyInbox from '@/components/misc/EmptyInbox'
 import { useSession } from "@/hooks/useSession";
 import { CheckCheck, MoreHorizontal } from "lucide-react";
 import {
@@ -112,43 +113,50 @@ const Page = () => {
 
   return (
     <div
-      className="flex flex-col border-r border-gray-300"
+      className="flex flex-col "
       style={{ width: "80%", margin: "0 auto" }}
     >
+      
+     <div className="flex w-full text-sm gap-x-2">
+        <Link href="/">Home</Link>
+        {">"}
+        <Link href="/chatList">Inbox </Link>
+      </div>
    
-      {/* Tabs */}
-      <div className="flex border-t border-gray-300 pt-4">
+
+      {/* Chat List */}
+    
+      <div className=" pt-4">
+      <div>
+      <p className="px-2 font-semibold text-lg">Messages</p>
+      </div>
+{/* Tabs */}
+<div className="flex border border-primary p-4">
         <p
-          className={`px-2 font-semibold text-lg cursor-pointer ${
-            selectedTab === "All" ? "text-primary" : ""
+          className={`px-5 font-semibold text-lg cursor-pointer ${
+            selectedTab === "All" ? "text-primary border-b-4 border-primary " : ""
           }`}
           onClick={() => handleTabClick("All")}
         >
           All
         </p>
         <p
-          className={`px-2 font-semibold text-lg cursor-pointer ${
-            selectedTab === "Seller" ? "text-primary" : ""
+          className={`px-5 font-semibold text-lg cursor-pointer ${
+            selectedTab === "Seller" ? "text-primary border-b-4 border-primary " : ""
           }`}
           onClick={() => handleTabClick("Seller")}
         >
           Seller
         </p>
         <p
-          className={`px-2 font-semibold text-lg cursor-pointer ${
-            selectedTab === "Buyer" ? "text-primary" : ""
+          className={`px-5 font-semibold text-lg cursor-pointer ${
+            selectedTab === "Buyer" ? "text-primary border-b-4 border-primary " : ""
           }`}
           onClick={() => handleTabClick("Buyer")}
         >
           Buyer
         </p>
       </div>
-
-      {/* Chat List */}
-    
-      <div className="border-t border-gray-300 pt-4">
-        <p className="px-2 font-semibold text-lg">Messages</p>
-
         {/* Chat Entry */}
        {loader&&<div className="flex justify-center">
         <RotatingLines
@@ -159,12 +167,11 @@ const Page = () => {
   visible={true}
 />
         </div >} 
-     
-        {chats &&
+        {chats.length!==0?
           chats.map((val) => {
             return (
-              <div className="flex flex-col py-4" key={val.itemId}>
-                <div className="p-4 flex flex-row items-center gap-x-10 border border-r-4 -mr-1 border-primary border-r-white z-10" >
+              <div className="flex flex-col " key={val.itemId}>
+                <div className="p-4 flex flex-row items-center gap-x-10 border border-t-white  border-primary  z-10" >
                   <Image
                     alt="Item Image"
                     src={
@@ -216,7 +223,7 @@ const Page = () => {
                 </div>
               </div>
             );
-          })}
+          }):<EmptyInbox/>}
       </div>
     </div>
   );
