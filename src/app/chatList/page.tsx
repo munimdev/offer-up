@@ -112,10 +112,7 @@ const Page = () => {
   };
 
   return (
-    <div
-      className="flex flex-col "
-      style={{ width: "80%", margin: "0 auto" }}
-    >
+    <div className="flex flex-col w-full sm:w-3/4 lg:w-4/5 xl:w-4/5 mx-auto">
       
      <div className="flex w-full text-sm gap-x-2">
         <Link href="/">Home</Link>
