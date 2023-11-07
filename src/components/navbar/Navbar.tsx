@@ -401,7 +401,7 @@ export const Navbar = ({}: NavbarProps) => {
                         <AvatarFallback>CN</AvatarFallback>
                       </Avatar>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className="min-w-[325px]">
+                    <DropdownMenuContent className="min-w-[325px]" style={{ zIndex: 102 }}>
                       <DropdownMenuGroup>
                         <DropdownMenuItem>
                           <Link
