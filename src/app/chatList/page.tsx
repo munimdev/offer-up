@@ -1,11 +1,12 @@
 // @ts-nocheck
 "use client";
 import React, { useState, useEffect } from "react";
-import { RotatingLines } from  'react-loader-spinner'
+// import { RotatingLines } from  'react-loader-spinner'
+import Loader from "@/components/misc/Loader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import Link from 'next/link';
-import EmptyInbox from '@/components/misc/EmptyInbox'
+import Link from "next/link";
+import EmptyInbox from "@/components/misc/EmptyInbox";
 import { useSession } from "@/hooks/useSession";
 import { CheckCheck, MoreHorizontal } from "lucide-react";
 import {
@@ -20,20 +21,21 @@ import {
   updateDoc,
   orderBy,
   where,
-  or,and
+  or,
+  and,
 } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 import Image from "next/image";
 
 const Page = () => {
   const { user, isLoggedIn } = useSession();
-  const [loader,setLoader] = useState(true);
-  console.log(user)
+  const [loader, setLoader] = useState(true);
+  console.log(user);
   const [chats, setChats] = useState([]);
   // const [userId, setUserId] = useState("4296a045-deef-4b37-a09c-d22b3eb50cf4");
   const [selectedTab, setSelectedTab] = useState("All"); // Default tab is "All"
 
-  function formatTime(messageTime:any) {
+  function formatTime(messageTime: any) {
     const currentTimeInSeconds = Math.floor(Date.now() / 1000);
     const timeDifferenceInSeconds = currentTimeInSeconds - messageTime;
 
@@ -47,7 +49,7 @@ const Page = () => {
       return `${hours} hours ago`;
     } else {
       const date = new Date(messageTime * 1000);
-      const options = { year: 'numeric', month: 'short', day: 'numeric' };
+      const options = { year: "numeric", month: "short", day: "numeric" };
       return date.toLocaleDateString(undefined, options);
     }
   }
@@ -59,7 +61,7 @@ const Page = () => {
     }
     const chatRef = collection(db, "Chats");
     let queryRef;
-  
+
     if (selectedTab === "Seller") {
       // Show chats where userId matches SellerId
       queryRef = query(chatRef, where("sellerId", "==", user?.id));
@@ -70,7 +72,7 @@ const Page = () => {
       // Combine the results of both queries manually
       queryRef = query(chatRef, where("sellerId", "==", user?.id));
       const buyerQuery = query(chatRef, where("buyerId", "==", user?.id));
-      setLoader(true)
+      setLoader(true);
       // Fetch data from both queries and merge the results
       Promise.all([getDocs(queryRef), getDocs(buyerQuery)])
         .then((results) => {
@@ -83,8 +85,12 @@ const Page = () => {
           });
           const sortedChats = fetchedChats.sort((a, b) => {
             // Assuming 'time' is the field containing serverTimestamp
-            const timestampA = a.lastMessageTime ? a.lastMessageTime.seconds: 0;
-            const timestampB = b.lastMessageTime ? b.lastMessageTime.seconds: 0;
+            const timestampA = a.lastMessageTime
+              ? a.lastMessageTime.seconds
+              : 0;
+            const timestampB = b.lastMessageTime
+              ? b.lastMessageTime.seconds
+              : 0;
             return timestampB - timestampA;
           });
           setChats(sortedChats);
@@ -93,115 +99,115 @@ const Page = () => {
           console.error("Error fetching chats:", error);
         });
     }
-  
+
     const unsubscribe = onSnapshot(queryRef, (querySnapshot) => {
       const fetchedChats = [];
       querySnapshot.forEach((doc) => {
         fetchedChats.push({ ...doc.data(), id: doc.id });
       });
-      console.log(fetchedChats, 'fetchedChats');
+      console.log(fetchedChats, "fetchedChats");
       setChats(fetchedChats);
-      setLoader(false)
+      setLoader(false);
     });
-  
+
     return () => unsubscribe();
   }, [selectedTab, user?.id]);
-    
+
   const handleTabClick = (tab) => {
     setSelectedTab(tab);
   };
 
   return (
     <div className="flex flex-col w-full sm:w-3/4 lg:w-4/5 xl:w-4/5 mx-auto">
-      
-     <div className="flex w-full text-sm gap-x-2">
+      <div className="flex w-full text-sm gap-x-2 ml-2">
         <Link href="/">Home</Link>
         {">"}
         <Link href="/chatList">Inbox </Link>
       </div>
-   
 
       {/* Chat List */}
-    
-      <div className=" pt-4">
-      <div>
-      <p className="px-2 font-semibold text-lg">Messages</p>
-      </div>
-{/* Tabs */}
-<div className="flex border border-primary p-4">
-        <p
-          className={`px-5 font-semibold text-lg cursor-pointer ${
-            selectedTab === "All" ? "text-primary border-b-4 border-primary " : ""
-          }`}
-          onClick={() => handleTabClick("All")}
-        >
-          All
-        </p>
-        <p
-          className={`px-5 font-semibold text-lg cursor-pointer ${
-            selectedTab === "Seller" ? "text-primary border-b-4 border-primary " : ""
-          }`}
-          onClick={() => handleTabClick("Seller")}
-        >
-          Seller
-        </p>
-        <p
-          className={`px-5 font-semibold text-lg cursor-pointer ${
-            selectedTab === "Buyer" ? "text-primary border-b-4 border-primary " : ""
-          }`}
-          onClick={() => handleTabClick("Buyer")}
-        >
-          Buyer
-        </p>
-      </div>
-        {/* Chat Entry */}
-       {loader&&<div className="flex justify-center">
-        <RotatingLines
-  strokeColor="grey"
-  strokeWidth="5"
-  animationDuration="0.75"
-  width="56"
-  visible={true}
-/>
-        </div >} 
-        {/* Chat Entry */}
 
-{!loader && chats.length === 0 ? (
-  <EmptyInbox />
-) : (
-  chats.map((val) => {
-    return (
-      <div className="flex flex-col " key={val.itemId}>
-        <div className="p-4 flex flex-row items-center gap-x-10 border border-t-white  border-primary  z-10" >
-          <Image
-            alt="Item Image"
-            src={
-              user?.id === val.sellerId
-                ? val.buyerProfileImage || "https://github.com/shadcn.png"
-                : val.sellerProfileImage || "https://github.com/shadcn.png"
-            }
-          
-            width={60}
-            height={30}
-            className="rounded-full"
-          />
-          <div className="flex flex-col gap-x-2">
-            <Link
-              href={`/chat?chatId=${val.id}&userId=${user?.id}`}
-              style={{ cursor: 'pointer' }}
-            >
-              <p className="text-lg font-bold">
-                {user?.id === val.sellerId
-                  ? val.buyerName
-                  : val.sellerName}
-              </p>
-            </Link>
-            <p>{val.lastMessage.substring(0, 50)} {val.lastMessage.length>50?"...":""}</p>
-            <p className="text-sm text-gray-600">
-              about {formatTime(val.lastMessageTime.seconds)}
-            </p>
-          </div>
-          {((user?.id === val.sellerId && val.unreadSeller !== 0) || (user?.id === val.buyerId && val.unreadBuyer !== 0)) ? (
+      <div className=" pt-4">
+        <div>
+          <p className="px-2 font-semibold text-lg">Messages</p>
+        </div>
+        {/* Tabs */}
+        <div className="flex border border-primary p-4">
+          <p
+            className={`px-5 font-semibold text-lg cursor-pointer ${
+              selectedTab === "All"
+                ? "text-primary border-b-4 border-primary "
+                : ""
+            }`}
+            onClick={() => handleTabClick("All")}
+          >
+            All
+          </p>
+          <p
+            className={`px-5 font-semibold text-lg cursor-pointer ${
+              selectedTab === "Seller"
+                ? "text-primary border-b-4 border-primary "
+                : ""
+            }`}
+            onClick={() => handleTabClick("Seller")}
+          >
+            Seller
+          </p>
+          <p
+            className={`px-5 font-semibold text-lg cursor-pointer ${
+              selectedTab === "Buyer"
+                ? "text-primary border-b-4 border-primary "
+                : ""
+            }`}
+            onClick={() => handleTabClick("Buyer")}
+          >
+            Buyer
+          </p>
+        </div>
+
+        {/* Chat Entry */}
+        {loader ? null : chats.length === 0 ? (
+          <EmptyInbox />
+        ) : (
+          chats.map((val) => {
+            return (
+              <div className="flex flex-col " key={val.itemId}>
+                <Link
+                  href={`/chat?chatId=${val.id}&userId=${user?.id}`}
+                  style={{ cursor: "pointer" }}
+                >
+                  <div className="p-4 flex flex-row cursor-pointer items-center gap-x-10 border border-t-white  border-primary  z-10">
+                    <Image
+                      alt="Item Image"
+                      src={
+                        user?.id === val.sellerId
+                          ? val.buyerProfileImage ||
+                            "https://github.com/shadcn.png"
+                          : val.sellerProfileImage ||
+                            "https://github.com/shadcn.png"
+                      }
+                      width={60}
+                      height={30}
+                      className="rounded-full hidden md:block"
+                    />
+                    <div className="flex flex-col gap-x-2">
+                      <p className="text-lg font-bold">
+                        {user?.id === val.sellerId
+                          ? val.buyerName
+                          : val.sellerName}
+                      </p>
+
+                      <p>
+                        {val.lastMessage.substring(0, 50)}{" "}
+                        {val.lastMessage.length > 50 ? "..." : ""}
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        about {formatTime(val.lastMessageTime.seconds)}
+                      </p>
+                    </div>
+
+                    {/* Showing unread messages */}
+                    {/* {((user?.id === val.sellerId && val.unreadSeller !== 0) || (user?.id === val.buyerId && val.unreadBuyer !== 0)) ? (
 <div
 style={{
 width: '2rem',
@@ -218,16 +224,30 @@ marginLeft: 'auto',
 >
 {user?.id === val.sellerId?val.unreadSeller:val.unreadBuyer}
 </div>
-) :null}
-
-
+) :null} */}
+    <div className="ml-auto">
+        <div style={{width:"70px"}}>
+          <Image
+            alt="Item Image"
+            src={val.itemImage}
+            width={60}
+            height={30}
+            className="w-full"
+          />
         </div>
       </div>
-    );
-  })
-)}
+                  </div>
+                </Link>
+              </div>
+            );
+          })
+        )}
 
-      
+        {loader && (
+          <div className="flex justify-center">
+            <Loader />
+          </div>
+        )}
       </div>
     </div>
   );
