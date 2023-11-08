@@ -173,6 +173,7 @@ const LoginDialogScreens = {
         className={`dialog ${
           screen === LoginDialogScreens.home ? "active" : ""
         } h-full p-5 flex flex-col`}
+       
       >
         <DialogHeader className="flex flex-col items-center">
           <div></div>
@@ -523,7 +524,7 @@ const LoginDialogScreens = {
     };
   
     return (
-      <DialogContent className="sm:max-w-[425px] text-primary dialog-container h-4/6 p-0">
+      <DialogContent className="sm:max-w-[425px] text-primary dialog-container h-4/6 p-0"  style={{ zIndex: 102 }}>
         <HomeScreen />
         <AuthScreen />
         <LoginScreen />
