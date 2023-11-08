@@ -1,5 +1,7 @@
 // @ts-nocheck
 "use client";
+import { Checkbox } from "@/components/ui/checkbox";
+
 import React, { useState, useEffect } from "react";
 // import { RotatingLines } from  'react-loader-spinner'
 import Loader from "@/components/misc/Loader";
@@ -167,81 +169,66 @@ const Page = () => {
 
         {/* Chat Entry */}
         {loader ? null : chats.length === 0 ? (
-          <EmptyInbox />
-        ) : (
-          chats.map((val) => {
-            return (
-              <div className="flex flex-col " key={val.itemId}>
-                <Link
-                  href={`/chat?chatId=${val.id}&userId=${user?.id}`}
-                  style={{ cursor: "pointer" }}
-                >
-                  <div className="p-4 flex flex-row cursor-pointer items-center gap-x-10 border border-t-white  border-primary  z-10">
-                    <Image
-                      alt="Item Image"
-                      src={
-                        user?.id === val.sellerId
-                          ? val.buyerProfileImage ||
-                            "https://github.com/shadcn.png"
-                          : val.sellerProfileImage ||
-                            "https://github.com/shadcn.png"
-                      }
-                      width={60}
-                      height={30}
-                      className="rounded-full hidden md:block"
-                    />
-                    <div className="flex flex-col gap-x-2">
-                      <p className="text-lg font-bold">
-                        {user?.id === val.sellerId
-                          ? val.buyerName
-                          : val.sellerName}
-                      </p>
+  <EmptyInbox />
+) : (
+  chats.map((val) => {
+    return (
+      <div className="flex flex-col" key={val.itemId}>
+        <div className=" flex flex-row items-center  border border-t-white border-primary z-10 ">
+          <div className=" p-4">
+          <Checkbox className="w-6 h-6 " />
+          </div>
+         
 
-                      <p>
-                        {val.lastMessage.substring(0, 50)}{" "}
-                        {val.lastMessage.length > 50 ? "..." : ""}
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        about {formatTime(val.lastMessageTime.seconds)}
-                      </p>
-                    </div>
+          <Link
+            href={`/chat?chatId=${val.id}&userId=${user?.id}`}
+            style={{ cursor: "pointer" }}
+            className="flex flex-row items-center gap-x-10 w-full h-full  p-4"
+          >
+            <Image
+              alt="Item Image"
+              src={
+                user?.id === val.sellerId
+                  ? val.buyerProfileImage ||
+                    "https://github.com/shadcn.png"
+                  : val.sellerProfileImage ||
+                    "https://github.com/shadcn.png"
+              }
+              width={60}
+              height={30}
+              className="rounded-full hidden md:block"
+            />
+            <div className="flex flex-col gap-x-2">
+              <p className="text-lg font-bold">
+                {user?.id === val.sellerId
+                  ? val.buyerName
+                  : val.sellerName}
+              </p>
+              <p>
+                {val.lastMessage.substring(0, 50)}{" "}
+                {val.lastMessage.length > 50 ? "..." : ""}
+              </p>
+              <p className="text-sm text-gray-600">
+                about {formatTime(val.lastMessageTime.seconds)}
+              </p>
+            </div>
 
-                    {/* Showing unread messages */}
-                    {/* {((user?.id === val.sellerId && val.unreadSeller !== 0) || (user?.id === val.buyerId && val.unreadBuyer !== 0)) ? (
-<div
-style={{
-width: '2rem',
-height: '2rem',
-backgroundColor: '#62C3FE',
-color: 'white',
-borderRadius: '50%',
-display: 'flex',
-justifyContent: 'center',
-alignItems: 'center',
-fontSize: '0.7rem',
-marginLeft: 'auto',
-}}
->
-{user?.id === val.sellerId?val.unreadSeller:val.unreadBuyer}
-</div>
-) :null} */}
-    <div className="ml-auto">
-        <div style={{width:"70px"}}>
-          <Image
-            alt="Item Image"
-            src={val.itemImage}
-            width={60}
-            height={30}
-            className="w-full"
-          />
+            <div className="ml-auto" style={{ width: "70px" }}>
+              <Image
+                alt="Item Image"
+                src={val.itemImage}
+                width={60}
+                height={30}
+                className="w-full"
+              />
+            </div>
+          </Link>
         </div>
       </div>
-                  </div>
-                </Link>
-              </div>
-            );
-          })
-        )}
+    );
+  })
+)}
+
 
         {loader && (
           <div className="flex justify-center">
