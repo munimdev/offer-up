@@ -164,63 +164,70 @@ const Page = () => {
   visible={true}
 />
         </div >} 
-        {chats.length!==0?
-          chats.map((val) => {
-            return (
-              <div className="flex flex-col " key={val.itemId}>
-                <div className="p-4 flex flex-row items-center gap-x-10 border border-t-white  border-primary  z-10" >
-                  <Image
-                    alt="Item Image"
-                    src={
-                      user?.id === val.sellerId
-                        ? val.buyerProfileImage || "https://github.com/shadcn.png"
-                        : val.sellerProfileImage || "https://github.com/shadcn.png"
-                    }
-                  
-                    width={60}
-                    height={30}
-                    className="rounded-full"
-                  />
-                  <div className="flex flex-col gap-x-2">
-                    <Link
-                      href={`/chat?chatId=${val.id}&userId=${user?.id}`}
-                      style={{ cursor: 'pointer' }}
-                    >
-                      <p className="text-lg font-bold">
-                        {user?.id === val.sellerId
-                          ? val.buyerName
-                          : val.sellerName}
-                      </p>
-                    </Link>
-                    <p>{val.lastMessage.substring(0, 50)} {val.lastMessage.length>50?"...":""}</p>
-                    <p className="text-sm text-gray-600">
-                      about {formatTime(val.lastMessageTime.seconds)}
-                    </p>
-                  </div>
-                  {((user?.id === val.sellerId && val.unreadSeller !== 0) || (user?.id === val.buyerId && val.unreadBuyer !== 0)) ? (
-  <div
-    style={{
-      width: '2rem',
-      height: '2rem',
-      backgroundColor: '#62C3FE',
-      color: 'white',
-      borderRadius: '50%',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      fontSize: '0.7rem',
-      marginLeft: 'auto',
-    }}
-  >
-   {user?.id === val.sellerId?val.unreadSeller:val.unreadBuyer}
-  </div>
+        {/* Chat Entry */}
+
+{!loader && chats.length === 0 ? (
+  <EmptyInbox />
+) : (
+  chats.map((val) => {
+    return (
+      <div className="flex flex-col " key={val.itemId}>
+        <div className="p-4 flex flex-row items-center gap-x-10 border border-t-white  border-primary  z-10" >
+          <Image
+            alt="Item Image"
+            src={
+              user?.id === val.sellerId
+                ? val.buyerProfileImage || "https://github.com/shadcn.png"
+                : val.sellerProfileImage || "https://github.com/shadcn.png"
+            }
+          
+            width={60}
+            height={30}
+            className="rounded-full"
+          />
+          <div className="flex flex-col gap-x-2">
+            <Link
+              href={`/chat?chatId=${val.id}&userId=${user?.id}`}
+              style={{ cursor: 'pointer' }}
+            >
+              <p className="text-lg font-bold">
+                {user?.id === val.sellerId
+                  ? val.buyerName
+                  : val.sellerName}
+              </p>
+            </Link>
+            <p>{val.lastMessage.substring(0, 50)} {val.lastMessage.length>50?"...":""}</p>
+            <p className="text-sm text-gray-600">
+              about {formatTime(val.lastMessageTime.seconds)}
+            </p>
+          </div>
+          {((user?.id === val.sellerId && val.unreadSeller !== 0) || (user?.id === val.buyerId && val.unreadBuyer !== 0)) ? (
+<div
+style={{
+width: '2rem',
+height: '2rem',
+backgroundColor: '#62C3FE',
+color: 'white',
+borderRadius: '50%',
+display: 'flex',
+justifyContent: 'center',
+alignItems: 'center',
+fontSize: '0.7rem',
+marginLeft: 'auto',
+}}
+>
+{user?.id === val.sellerId?val.unreadSeller:val.unreadBuyer}
+</div>
 ) :null}
 
 
-                </div>
-              </div>
-            );
-          }):<EmptyInbox/>}
+        </div>
+      </div>
+    );
+  })
+)}
+
+      
       </div>
     </div>
   );
