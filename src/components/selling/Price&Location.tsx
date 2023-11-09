@@ -215,6 +215,7 @@ const PriceLocation: React.FC<Props> = ({ isUpdate = false }) => {
             id="price"
             placeholder="Price of the item"
             className="w-full font-medium text-center border-none placeholder:text-gray placeholder:font-medium"
+            min={0}
             value={isUpdate ? updateItemData!.price : itemData.price}
             onChange={(e) =>
               isUpdate
