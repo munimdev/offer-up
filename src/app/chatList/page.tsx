@@ -11,6 +11,7 @@ import Link from "next/link";
 import EmptyInbox from "@/components/misc/EmptyInbox";
 import { useSession } from "@/hooks/useSession";
 import { CheckCheck, MoreHorizontal } from "lucide-react";
+
 import {
   addDoc,
   collection,
@@ -32,6 +33,7 @@ import Image from "next/image";
 const Page = () => {
   const { user, isLoggedIn } = useSession();
   const [loader, setLoader] = useState(true);
+  const [selectedChats, setSelectedChats] = useState([]);
   console.log(user);
   const [chats, setChats] = useState([]);
   // const [userId, setUserId] = useState("4296a045-deef-4b37-a09c-d22b3eb50cf4");
@@ -118,7 +120,19 @@ const Page = () => {
   const handleTabClick = (tab) => {
     setSelectedTab(tab);
   };
-
+  const deleteChatsHandler =() => {
+    console.log(selectedChats,'selectedChats')
+  }
+  const handleCheckboxChange = (chatId) => {
+    setSelectedChats((prevSelectedChats) => {
+    
+      if (prevSelectedChats.includes(chatId)) {
+        return prevSelectedChats.filter((id) => id !== chatId);
+      } else {
+        return [...prevSelectedChats, chatId];
+      }
+    });
+  };
   return (
     <div className="flex flex-col w-full sm:w-3/4 lg:w-4/5 xl:w-4/5 mx-auto">
       <div className="flex w-full text-sm gap-x-2 ml-2">
@@ -129,9 +143,9 @@ const Page = () => {
 
       {/* Chat List */}
 
-      <div className=" pt-4">
+      <div className=" pt-4 ">
         <div>
-          <p className="px-2 font-semibold text-lg">Messages</p>
+          <p className="px-2 mb-4 font-semibold text-lg">Messages</p>
         </div>
         {/* Tabs */}
         <div className="flex border border-primary p-4">
@@ -166,7 +180,23 @@ const Page = () => {
             Buyer
           </p>
         </div>
-
+<div className="flex flex-row items-center  border border-t-white border-primary z-10 ">
+<div className=" p-4">
+          <Checkbox
+  className="w-6 h-6"
+  // onChange={() => handleCheckboxChange(val.id)}
+  // checked={selectedChats.includes(val.id)}
+/>
+          </div>
+          <Button
+          // style={disabledButtonStyle}
+            type="button"
+            onClick ={deleteChatsHandler}
+            className="border border-primary bg-white text-primary rounded-full  hidden sm:block hover:text-white"
+          >
+           Delete
+          </Button>
+</div>
         {/* Chat Entry */}
         {loader ? null : chats.length === 0 ? (
   <EmptyInbox />
@@ -176,7 +206,11 @@ const Page = () => {
       <div className="flex flex-col" key={val.itemId}>
         <div className=" flex flex-row items-center  border border-t-white border-primary z-10 ">
           <div className=" p-4">
-          <Checkbox className="w-6 h-6 " />
+          <Checkbox
+  className="w-6 h-6"
+  onClick={() => handleCheckboxChange(val.id)}
+  checked={selectedChats.includes(val.id)}
+/>
           </div>
          
 
