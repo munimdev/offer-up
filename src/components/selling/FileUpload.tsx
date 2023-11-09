@@ -50,7 +50,8 @@ const FileUpload: React.FC<Props> = ({
   }, []);
 
   useEffect(() => {
-    if (files?.length === 1) {
+    console.log(files,'files')
+    if (files?.length >= 1) {
       setCover(files[0].preview!);
     }
   }, [files]);
