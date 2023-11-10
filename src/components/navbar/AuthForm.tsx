@@ -8,6 +8,7 @@ import {
   signUpWithMicrosoft,
 } from "@/firebase/auth";
 import * as z from "zod";
+import Loader from "@/components/misc/Loader";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import {
@@ -261,7 +262,7 @@ const LoginDialogScreens = {
   
     const LoginScreen = () => {
       const { mutateAsync, error, isError } = useLogin();
-    
+    const [isLoading,setIsLoading]=useState(false)
       const loginSchema = z.object({
         email: z.string().email({
           message: "Email is required",
@@ -272,16 +273,19 @@ const LoginDialogScreens = {
       });
   
       async function onSubmit(values: z.infer<typeof loginSchema>) {
+        setIsLoading(true)
         const response = await mutateAsync(values);
         if (response.dataObject === null) {
           form.setError("root", {
             type: "custom",
             message: response.message,
           });
+          setIsLoading(false)
         } else {
           const { token, ...userData } = response.dataObject;
           setUser(userData);
           localStorage.setItem("accessToken", token as string);
+          setIsLoading(false)
         }
       }
   
@@ -325,8 +329,9 @@ const LoginDialogScreens = {
             <DialogDescription className="text-3xl font-bold text-primary">
               {"Bargain Ex"}
             </DialogDescription>
+         
           </DialogHeader>
-          <Form {...form}>
+          {isLoading===true?<Loader/>:<Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
               className="flex flex-col justify-center flex-1 space-y-3"
@@ -375,14 +380,14 @@ const LoginDialogScreens = {
                 Login
               </Button>
             </form>
-          </Form>
+          </Form>}
         </div>
       );
     };
   
     const SignupScreen = () => {
       const { mutateAsync } = useSignup();
-  
+      const [isLoading,setIsLoading]=useState(false)
       const signupSchema = z.object({
         firstName: z.string({
           required_error: "First Name is required",
@@ -401,6 +406,7 @@ const LoginDialogScreens = {
       });
   
       async function onSubmit(values: z.infer<typeof signupSchema>) {
+        setIsLoading(true)
         const response = await mutateAsync({
           ...values,
           accTypeLookupId: 10061,
@@ -411,10 +417,12 @@ const LoginDialogScreens = {
             type: "custom",
             message: response.message,
           });
+          setIsLoading(false)
         } else {
           const { token, ...userData } = response.dataObject;
           setUser(userData);
           localStorage.setItem("accessToken", token as string);
+          setIsLoading(false)
         }
       }
   
@@ -442,6 +450,7 @@ const LoginDialogScreens = {
               {"Bargain Ex"}
             </DialogDescription>
           </DialogHeader>
+          {isLoading===true?<Loader/>:
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
@@ -518,7 +527,7 @@ const LoginDialogScreens = {
                 Sign Up
               </Button>
             </form>
-          </Form>
+          </Form>}
         </div>
       );
     };
