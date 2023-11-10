@@ -199,7 +199,9 @@ const Listings = () => {
                             </span>
                             <span className="text-sm font-medium">{`$${item.price}`}</span>
                           </p>
-                          {/* <p className="text-sm font-medium">{`28 views, 1 conversation`}</p> */}
+                          <p className="text-sm font-medium">
+  {`${item.description.length > 50 ? item.description.substring(0, 50) + '...' : item.description}`}
+</p>
                         </div>
                       </div>
                     </div>
