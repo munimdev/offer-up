@@ -12,7 +12,6 @@ import EmptyInbox from "@/components/misc/EmptyInbox";
 import { useSession } from "@/hooks/useSession";
 import { CheckCheck, MoreHorizontal } from "lucide-react";
 import ConfirmDelete from "@/components/misc/ConfirmDelete";
-
 import {
   addDoc,
   collection,
@@ -30,7 +29,6 @@ import {
 } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 import Image from "next/image";
-
 const Page = () => {
   const { user, isLoggedIn } = useSession();
   const [selectAll, setSelectAll] = useState(false);
@@ -136,8 +134,6 @@ const Page = () => {
     }
     setSelectedChats([]);
   };
-  
-  
   const handleCheckboxChange = (chatId) => {
     setSelectedChats((prevSelectedChats) => {
       if (prevSelectedChats.includes(chatId)) {
@@ -158,6 +154,7 @@ const Page = () => {
     setSelectAll((prevSelectAll) => !prevSelectAll);
   };
   return (
+    <>
     <div className="flex flex-col w-full sm:w-3/4 lg:w-4/5 xl:w-4/5 mx-auto">
       <div className="flex w-full text-sm gap-x-2 ml-2">
         <Link href="/">Home</Link>
@@ -204,7 +201,7 @@ const Page = () => {
             Buyer
           </p>
         </div>
-        <div className="flex flex-row items-center  border border-t-white border-primary z-10 ">
+        {chats.length>0&&    <div className="flex flex-row items-center  border border-t-white border-primary z-10 ">
           <div className=" p-4">
             <Checkbox
               className="w-6 h-6"
@@ -213,7 +210,8 @@ const Page = () => {
             />
           </div>
           <ConfirmDelete  deleteChat={deleteChatsHandler}/>
-        </div>
+        </div>}
+    
         {/* Chat Entry */}
         {loader ? null : chats.length === 0 ? (
           <EmptyInbox />
@@ -286,6 +284,7 @@ const Page = () => {
         )}
       </div>
     </div>
+    </>
   );
 };
 
