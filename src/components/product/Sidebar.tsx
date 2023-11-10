@@ -22,7 +22,7 @@ import SocialShare from "../misc/SocialShare";
 import Rating from "@/components/misc/Rating";
 import Message from "@/components/icons/Message";
 import { Button } from "@/components/ui/button";
-
+import SelectFavouriteProducts from "./SelectFavouriteProducts";
 import {
   Dialog,
   DialogContent,
@@ -88,13 +88,7 @@ console.log(user,'user')
     mutationFn: (data: ReportItemDto) => Queries.reportItem(data),
   });
 
-  const { data: savedList }: { data: Result<FavoriteList[]> } = useFetch({
-    key: ["query-favoriteList"],
-    fn: () => Queries.getFavoriteList(),
-    options: {
-      enabled: !!data.id,
-    },
-  });
+
 
   const onReportHandler = async (dto: z.infer<typeof formSchema>) => {
     try {
@@ -234,84 +228,7 @@ console.log(user,'user')
         <Message className="mr-2" /> Chat
       </Button></>}
       <div className="flex items-center justify-center gap-x-5 text-primary">
-        <Dialog
-          open={isDialogOpen}
-          onOpenChange={(e) => {
-            if (isLoggedIn) {
-              setIsDialogOpen(e);
-            } else {
-              setIsLoginDialogOpen(true);
-            }
-          }}
-        >
-          <DialogTrigger asChild>
-            <button className="">
-            <Heart
-  size={20}
-  className={`inline-block mr-2 ${
-    data.lstAddedToFavoriteListIds?.length > 0|| favouriteAdded ? "fill-primary" : ""
-  }`}
-/>
-            </button>
-          </DialogTrigger>
-          <DialogContent className="max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Save Item To List</DialogTitle>
-              <DialogDescription>
-                {"You can save this item to a list to view it later."}
-              </DialogDescription>
-            </DialogHeader>
-            <div className="flex flex-col py-4">
-              {savedList?.dataObject?.map((list) => (
-                <div
-                  key={list.id}
-                  className="flex flex-row items-center justify-between gap-3 py-1 transition-colors duration-300 ease-in-out border-b hover:bg-gray-200 bg-none"
-                >
-                  <div className="flex flex-row items-center">
-                    {/* <HeartIcon size={36} />
-                     */}
-                     <HeartIcon size={36} fill="red" />
-
-                    <button
-                      className="w-full text-left"
-                      onClick={() => {
-                        addItemToList({
-                          favouriteListId: list.id,
-                          itemId: data.id,
-                        });
-                        toast({
-                          title: "Item Saved",
-                          description: "Item has been saved to your list",
-                          duration: 2000,
-                          action: (
-                            <ToastAction
-                              altText="View List"
-                              onClick={() => {
-                                console.log("View List");
-                              }}
-                            >
-                              <Link href={`/saved-list/${list.id}`} passHref>
-                                View List
-                              </Link>
-                            </ToastAction>
-                          ),
-                        });
-                        setFavouriteAdded(true)
-                        setIsDialogOpen(false);
-                      }}
-                    >
-                      {list.name}
-                    </button>
-                  </div>
-                  {data.lstAddedToFavoriteListIds.find((x) => x === list.id) !==
-                  undefined ? (
-                    <Check size={24} />
-                  ) : null}
-                </div>
-              ))}
-            </div>
-          </DialogContent>
-        </Dialog>
+       <SelectFavouriteProducts isLoggedIn={isLoggedIn} data={data}/>
         <Report
           isLoggedIn={isLoggedIn}
           lookupId={10004}
