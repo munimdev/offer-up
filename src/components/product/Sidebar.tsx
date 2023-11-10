@@ -67,6 +67,7 @@ const Sidebar: React.FC<Props> = ({ data }) => {
   const router = useRouter();
   const pathname = usePathname()
   const [isShareTooltipOpen, setShareTooltipOpen] = useState(false);
+  const [favouriteAdded, setFavouriteAdded] = useState(false)
   // chat info
   const { user, isLoggedIn } = useSession();
   const setIsLoginDialogOpen = useSetAtom(isLoginDialogOpenAtom);
@@ -243,7 +244,7 @@ console.log(user,'user')
             <Heart
   size={20}
   className={`inline-block mr-2 ${
-    data.lstAddedToFavoriteListIds?.length > 0 ? "fill-primary" : ""
+    data.lstAddedToFavoriteListIds?.length > 0|| favouriteAdded ? "fill-primary" : ""
   }`}
 />
             </button>
@@ -290,6 +291,7 @@ console.log(user,'user')
                             </ToastAction>
                           ),
                         });
+                        setFavouriteAdded(true)
                         setIsDialogOpen(false);
                       }}
                     >
