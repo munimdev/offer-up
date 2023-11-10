@@ -272,6 +272,8 @@ export const Navbar = ({}: NavbarProps) => {
                   onClick={() => {
                     if (zipCode.length === 5) {
                       handleLocationByZipCode(zipCode);
+                    }else{
+                      setZipError(true);
                     }
                   }}
                 >
@@ -540,6 +542,8 @@ export const Navbar = ({}: NavbarProps) => {
                   onClick={() => {
                     if (zipCode.length === 5) {
                       handleLocationByZipCode(zipCode);
+                    }else{
+                      setZipError(true);
                     }
                   }}
                 >
