@@ -74,6 +74,7 @@ const [index,setIndex] = useState<number | null>(6);
           left: -60,
           display: "flex",
           flexDirection: "column",
+          zIndex:150,
           backgroundColor: "#ffffff",
           minWidth: "250px", // Set a minimum width
           boxShadow: "0 0 5px rgba(0,0,0,0.5)", // Add a box shadow for a better visual separation
