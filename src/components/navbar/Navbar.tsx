@@ -541,8 +541,10 @@ export const Navbar = ({}: NavbarProps) => {
                   type="button"
                   onClick={() => {
                     if (zipCode.length === 5) {
+                      console.log(zipCode.length,'zipCode.length1')
                       handleLocationByZipCode(zipCode);
                     }else{
+                      console.log(zipCode.length,'zipCode.length2')
                       setZipError(true);
                     }
                   }}

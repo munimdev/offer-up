@@ -104,30 +104,7 @@ const Selling = () => {
 
   const handleItemCreation = async () => {
     {
-      setItemData({
-        name: '',
-        description: '',
-        price: 0,
-        isPriceFixed: false,
-        images: [],
-        category: {
-          id: '',
-          name: '',
-          parentCategoryId: '',
-        },
-        subCategory: {
-          id: '',
-          name: '',
-        },
-        validUpto: null,
-        zipcode: '',
-        locationLat: 0,
-        locationLng: 0,
-        fullAddress: '',
-        shortAddress: '',
-        conditionLookUpId: 10001,
-        attributes: [],
-      });
+     
       if (handleItemValidation()) {
         const loadingToast = toast({
           title: "Item listing in progress",
@@ -141,9 +118,6 @@ const Selling = () => {
           console.log(response)
 
           const { statusCode, messageCode, message } = response;
-console.log(message)
-console.log(statusCode)
-console.log(messageCode)
 
           if (statusCode === '115') {
             loadingToast.update({
@@ -165,7 +139,30 @@ console.log(messageCode)
             action: <ToastAction altText="Try again">Try again</ToastAction>,
           });
         }
-
+        setItemData({
+          name: '',
+          description: '',
+          price: 0,
+          isPriceFixed: false,
+          images: [],
+          category: {
+            id: '',
+            name: '',
+            parentCategoryId: '',
+          },
+          subCategory: {
+            id: '',
+            name: '',
+          },
+          validUpto: null,
+          zipcode: '',
+          locationLat: 0,
+          locationLng: 0,
+          fullAddress: '',
+          shortAddress: '',
+          conditionLookUpId: 10001,
+          attributes: [],
+        });
         loadingToast.update({
           id: loadingToast.id,
           title: "Item listed successfully",
@@ -182,6 +179,7 @@ console.log(messageCode)
         }, 2000);
       }
     }
+   
   };
 
   return (
