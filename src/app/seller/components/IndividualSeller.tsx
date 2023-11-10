@@ -268,7 +268,7 @@ const IndividualSeller = ({
             ))}
           <div className="flex flex-row gap-5 justify-evenly border-y">
             {/* Followers */}
-            <Dialog>
+            {profile?.totalFollowing>0? <Dialog>
               <DialogTrigger asChild>
                 <div className="flex flex-col items-center p-3 cursor-pointer hover:bg-gray-200">
                   <p className="text-lg font-bold">{profile?.totalFollowing}</p>
@@ -305,9 +305,14 @@ const IndividualSeller = ({
                   )}
                 </ScrollArea>
               </DialogContent>
-            </Dialog>
+            </Dialog>:
+             <div className="flex flex-col items-center p-3 cursor-pointer hover:bg-gray-200">
+             <p className="text-lg font-bold">{profile?.totalFollowing}</p>
+             <p className="font-semibold">Following</p>
+           </div>}
+           
             {/* Following */}
-            <Dialog>
+            {profile?.totalFollowers>0? <Dialog>
               <DialogTrigger asChild>
                 <div className="flex flex-col items-center p-3 cursor-pointer hover:bg-gray-200">
                   <p className="text-lg font-bold">{profile?.totalFollowers}</p>
@@ -345,7 +350,11 @@ const IndividualSeller = ({
                   )}
                 </ScrollArea>
               </DialogContent>
-            </Dialog>
+            </Dialog>: <div className="flex flex-col items-center p-3 cursor-pointer hover:bg-gray-200">
+                  <p className="text-lg font-bold">{profile?.totalFollowers}</p>
+                  <p className="font-semibold">Followers</p>
+                </div>}
+           
           </div>
         </div>
         <div className="flex flex-col col-span-7 col-start-5"></div>
