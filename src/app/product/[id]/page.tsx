@@ -6,7 +6,7 @@ import Slider from "@/components/product/Slider";
 import Sidebar from "@/components/product/Sidebar";
 import Description from "@/components/product/Description";
 import { Badge } from "@/components/ui/badge";
-
+import SelectFavouriteProducts from "@/components/product/SelectFavouriteProducts";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import { useMutation } from "@tanstack/react-query";
@@ -194,81 +194,9 @@ const [isReported,setIsReportedAdded] =useState(false)
           <div className="p-4 my-4 border-b">
             <div className="flex flex-wrap gap-3">
               <Badge className="mx-1 text-black bg-gray-300 cursor-pointer hover:text-white">
-              <Dialog
-          open={isDialogOpen}
-          onOpenChange={(e) => {
-            if (isLoggedIn) {
-              setIsDialogOpen(e);
-            } else {
-              setIsLoginDialogOpen(true);
-            }
-          }}
-        >
-          <DialogTrigger asChild>
-            <button className="">
-            <Heart
-  size={16}
-  className={`inline-block mr-2 ${
-    currentItem.lstAddedToFavoriteListIds?.length > 0 ||favouriteAdded? "fill-primary" : ""
-  }`}
-/>  {currentItem.lstAddedToFavoriteListIds?.length > 0||favouriteAdded ?"Saved":"Save"} 
-            </button>
-          </DialogTrigger>
-          <DialogContent className="max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Save Item To List</DialogTitle>
-              <DialogDescription>
-                {"You can save this item to a list to view it later."}
-              </DialogDescription>
-            </DialogHeader>
-            <div className="flex flex-col py-4">
-              {savedList?.dataObject?.map((list) => (
-                <div
-                  key={list.id}
-                  className="flex flex-row items-center justify-between gap-3 py-1 transition-colors duration-300 ease-in-out border-b hover:bg-gray-200 bg-none"
-                >
-                  <div className="flex flex-row items-center">
-                    <HeartIcon size={36} /> Save
-                    <button
-                      className="w-full text-left"
-                      onClick={() => {
-                        addItemToList({
-                          favouriteListId: list.id,
-                          itemId: currentItem.id,
-                        });
-                        toast({
-                          title: "Item Saved",
-                          description: "Item has been saved to your list",
-                          duration: 2000,
-                          action: (
-                            <ToastAction
-                              altText="View List"
-                              onClick={() => {
-                                console.log("View List");
-                              }}
-                            >
-                              <Link href={`/saved-list/${list.id}`} passHref>
-                                View List
-                              </Link>
-                            </ToastAction>
-                          ),
-                        });
-                        setFavouriteAdded(true)
-                        setIsDialogOpen(false);
-                      }}
-                    >
-                      {list.name}
-                    </button>
-                  </div>
-                  {currentItem.lstAddedToFavoriteListIds.find((x) => x === list.id) !==
-                  undefined ? (
-                    <Check size={24} />
-                  ) : null}
-                </div>
-              ))}
-            </div>
-          </DialogContent>
-        </Dialog>
+              <SelectFavouriteProducts isLoggedIn={isLoggedIn} data={currentItem} isButton={true}/>
+
+             
               </Badge>
               <Badge className="mx-1 text-black bg-gray-300 cursor-pointer hover:text-white">
            

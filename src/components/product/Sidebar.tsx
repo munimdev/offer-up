@@ -1,18 +1,29 @@
 // @ts-nocheck
-import React, {useState} from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter,usePathname } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import OfferModal from "./OfferModal";
 import StartChat from "./StartChat";
 import { useMutation } from "@tanstack/react-query";
 import { useFetch } from "@/hooks";
 import * as Queries from "@/utils/queries";
-import { addDoc, collection, serverTimestamp,getDocs, query,deleteDoc,
-  onSnapshot,doc,updateDoc,orderBy,where } from "firebase/firestore";
-  import Description from "@/components/product/Description";
+import {
+  addDoc,
+  collection,
+  serverTimestamp,
+  getDocs,
+  query,
+  deleteDoc,
+  onSnapshot,
+  doc,
+  updateDoc,
+  orderBy,
+  where,
+} from "firebase/firestore";
+import Description from "@/components/product/Description";
 
-import { db, storage} from "../../firebase/firebase";
+import { db, storage } from "../../firebase/firebase";
 import { useSession } from "@/hooks";
 import Map from "./Map";
 import { FavoriteList, Item, ReportItemDto } from "@/types/types";
@@ -65,21 +76,23 @@ const formSchema = z.object({
 
 const Sidebar: React.FC<Props> = ({ data }) => {
   const router = useRouter();
-  const pathname = usePathname()
+  const pathname = usePathname();
   const [isShareTooltipOpen, setShareTooltipOpen] = useState(false);
-  const [favouriteAdded,setFavouriteAdded] =useState(false)
-  const [isReported,setIsReportedAdded] =useState(false)
+  const [favouriteAdded, setFavouriteAdded] = useState(false);
+  const [isReported, setIsReportedAdded] = useState(false);
   // chat info
   const { user, isLoggedIn } = useSession();
   const setIsLoginDialogOpen = useSetAtom(isLoginDialogOpenAtom);
   // const { isLoggedIn } = useSession();
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
   const { toast } = useToast();
-console.log(user,'user')
+  console.log(user, "user");
   // ----------------------------
-  const [isOfferDialogOpen, setIsOfferDialogOpen] = React.useState<boolean>(false);
-  const [isChatDialogOpen, setIsChatDialogOpen] = React.useState<boolean>(false);
-// console.log(data,'data')
+  const [isOfferDialogOpen, setIsOfferDialogOpen] =
+    React.useState<boolean>(false);
+  const [isChatDialogOpen, setIsChatDialogOpen] =
+    React.useState<boolean>(false);
+  // console.log(data,'data')
   const { mutateAsync: addItemToList } = useMutation(
     Queries.addItemToFavouriteList
   );
@@ -87,8 +100,6 @@ console.log(user,'user')
     mutationKey: ["reportItem"],
     mutationFn: (data: ReportItemDto) => Queries.reportItem(data),
   });
-
-
 
   const onReportHandler = async (dto: z.infer<typeof formSchema>) => {
     try {
@@ -99,7 +110,7 @@ console.log(user,'user')
         reportReasonLookupId: parseInt(reason),
         note: description,
       });
-      setIsReportedAdded(true)
+      setIsReportedAdded(true);
       toast({
         title: "Reported",
         description: `We appreciate your feedback, and will look into this issue.`,
@@ -123,34 +134,34 @@ console.log(user,'user')
   };
 
   const handleOfferSubmit = (price) => {
-    console.log('Offer Price:', price);
-    startChatHandler(price)
+    console.log("Offer Price:", price);
+    startChatHandler(price);
     setIsOfferDialogOpen(false);
   };
-  const handleChatSubmit =(chat) =>{
-    startChatHandler(chat)
+  const handleChatSubmit = (chat) => {
+    startChatHandler(chat);
     setIsChatDialogOpen(false);
-  }
+  };
   const startChatHandler = async (text) => {
     try {
       // Check if a chat already exists for the same buyer, seller, and product
       const chatQuery = query(
-        collection(db, 'Chats'),
-        where('buyerId', '==', user.id),
-        where('sellerId', '==', data.customer.id),
-        where('itemId', '==', data.id)
+        collection(db, "Chats"),
+        where("buyerId", "==", user.id),
+        where("sellerId", "==", data.customer.id),
+        where("itemId", "==", data.id)
       );
-  
+
       const chatQuerySnapshot = await getDocs(chatQuery);
       let chatId = null;
-  
+
       // If a chat already exists, use its ID; otherwise, create a new chat
       if (!chatQuerySnapshot.empty) {
         chatQuerySnapshot.forEach((doc) => {
           chatId = doc.id;
         });
       } else {
-        const chatRef = collection(db, 'Chats');
+        const chatRef = collection(db, "Chats");
         const chatRes = await addDoc(chatRef, {
           buyerId: user.id,
           buyerName: user.name,
@@ -170,110 +181,131 @@ console.log(user,'user')
           startDate: serverTimestamp(),
           // Add more fields as needed
         });
-  
+
         chatId = chatRes.id;
       }
-  
+
       // Add the message to the chat
-      const messagesCollectionRef = collection(db, 'Chats', chatId, 'messages');
+      const messagesCollectionRef = collection(db, "Chats", chatId, "messages");
       const messageRef = await addDoc(messagesCollectionRef, {
-        imageUrl: '',
+        imageUrl: "",
         isImage: false,
         messages: text,
         senderId: user.id,
         time: serverTimestamp(),
       });
-  
+
       router.replace(`/chat?chatId=${chatId}&userId=${user.id}`);
     } catch (error) {
       console.log(error);
     }
   };
-  const sellerPageHandler = async (id)=>{
+  const sellerPageHandler = async (id) => {
     router.replace(`/seller/${id}`);
-  }
+  };
 
   return (
     <>
-     
-       {isOfferDialogOpen && (
-       <OfferModal onClose={handleCloseOfferModal} onSubmit={handleOfferSubmit} />
-      )} 
-  
-       {isChatDialogOpen && (
-       <StartChat onClose={handleCloseChatModal} onSubmit={handleChatSubmit} />
-      )} 
-  
-    <div className="flex flex-col gap-2 p-5">
-    <h3 className="text-3xl font-bold text-black" style={{ overflowWrap: "break-word" }}>
-  {data?.name}
-</h3>
+      {isOfferDialogOpen && (
+        <OfferModal
+          onClose={handleCloseOfferModal}
+          onSubmit={handleOfferSubmit}
+        />
+      )}
 
-      <h3 className="text-3xl font-bold text-black">${data?.price}</h3>
-      {/* <p>
+      {isChatDialogOpen && (
+        <StartChat onClose={handleCloseChatModal} onSubmit={handleChatSubmit} />
+      )}
+
+      <div className="flex flex-col gap-2 p-5">
+        <h3
+          className="text-3xl font-bold text-black"
+          style={{ overflowWrap: "break-word" }}
+        >
+          {data?.name}
+        </h3>
+
+        <h3 className="text-3xl font-bold text-black">${data?.price}</h3>
+        {/* <p>
         <span className="font-semibold">VIN</span> {data?.id}
       </p>
       <p>Posted 24 days ago in Islamabd, PK</p> */}
-      <p>Condition: {data?.conditionLookUpName}</p>
-      <p>
-        {data.categoryName} - {data.subCategoryName}
-      </p>
-      {/* <Button className="rounded-full bg-primary hover:bg-primary">
+        <p>Condition: {data?.conditionLookUpName}</p>
+        <p>
+          {data.categoryName} - {data.subCategoryName}
+        </p>
+        {/* <Button className="rounded-full bg-primary hover:bg-primary">
         <Phone fill="#fff" size={18} className="mr-2" /> Call for Details
       </Button> */}
-     {user && user.id &&<> <Button className="rounded-full bg-primary hover:bg-primary" onClick={handleOpenOfferModal}>
-        <DollarSign fill="#fff" size={18} className="mr-2" /> Make a Offer
-      </Button>
-      <Button className="bg-white border rounded-full text-primary border-primary hover:bg-white"onClick={handleOpenChatModal}>
-        <Message className="mr-2" /> Chat
-      </Button></>}
-      <div className="flex items-center justify-center gap-x-5 text-primary">
-       <SelectFavouriteProducts isLoggedIn={isLoggedIn} data={data}/>
-        <Report
-          isLoggedIn={isLoggedIn}
-          lookupId={10004}
-          formSchema={formSchema}
-          onSubmit={onReportHandler}
-          size={20}
-          text={""}
-          isReported={isReported}
-        />
-        <SocialShare isButton={false}/>
-                
-      </div>
-      {/* {data.customer && data.customer.imagePath && data.customer.name &&data.customer.name.trim() !== ''&& ( */}
-  <div className="flex gap-4 py-4 my-4 border-y cursor-pointer items-center">
-    <div onClick={() => sellerPageHandler(data.customer.id)}>
-      <Image
-        src={data.customer.imagePath}
-        className="rounded-full"
-        alt=""
-        width={70}
-        height={70}
-      />
-    </div>
-    <div>
-      <p className="font-bold text-black cursor-pointer" onClick={() => sellerPageHandler(data.customer.id)}>
-        {data.customer.name.toUpperCase()}
-      </p>
-      {/* Other content */}
-    </div>
-  </div>
-{/* )} */}
-
-<div className="p-4 my-4 border-b lg:hidden">
-            <Description data={data?.description || ""} />
+        {user && user.id && (
+          <>
+            {" "}
+            <Button
+              className="rounded-full bg-primary hover:bg-primary"
+              onClick={handleOpenOfferModal}
+            >
+              <DollarSign fill="#fff" size={18} className="mr-2" /> Make a Offer
+            </Button>
+            <Button
+              className="bg-white border rounded-full text-primary border-primary hover:bg-white"
+              onClick={handleOpenChatModal}
+            >
+              <Message className="mr-2" /> Chat
+            </Button>
+          </>
+        )}
+        <div className="flex items-center justify-center gap-x-5 text-primary">
+          <SelectFavouriteProducts isLoggedIn={isLoggedIn} data={data} isButton={false}/>
+          <Report
+            isLoggedIn={isLoggedIn}
+            lookupId={10004}
+            formSchema={formSchema}
+            onSubmit={onReportHandler}
+            size={20}
+            text={""}
+            isReported={isReported}
+          />
+          <SocialShare isButton={false} />
+        </div>
+        {/* {data.customer && data.customer.imagePath && data.customer.name &&data.customer.name.trim() !== ''&& ( */}
+        <div className="flex gap-4 py-4 my-4 border-y cursor-pointer items-center">
+          <div onClick={() => sellerPageHandler(data.customer.id)}>
+            <Image
+              src={data.customer.imagePath}
+              className="rounded-full"
+              alt=""
+              width={70}
+              height={70}
+            />
           </div>
-      <div>
-      {data.fullAddress&& <p className="text-primary my-4">
-         <MapPin className="inline" size={24} />{data.fullAddress}
-        </p>} 
-       
-        <Map lat={data.locationLat} lng={data.locationLng}/>
-        {/* <p className="mt-2 text-primary">
+          <div>
+            <p
+              className="font-bold text-black cursor-pointer"
+              onClick={() => sellerPageHandler(data.customer.id)}
+            >
+              {data.customer.name.toUpperCase()}
+            </p>
+            {/* Other content */}
+          </div>
+        </div>
+        {/* )} */}
+
+        <div className="p-4 my-4 border-b lg:hidden">
+          <Description data={data?.description || ""} />
+        </div>
+        <div>
+          {data.fullAddress && (
+            <p className="text-primary my-4">
+              <MapPin className="inline" size={24} />
+              {data.fullAddress}
+            </p>
+          )}
+
+          <Map lat={data.locationLat} lng={data.locationLng} />
+          {/* <p className="mt-2 text-primary">
           <Globe className="inline" size={24} /> https://www.uniqueautomall.com/
         </p> */}
-        {/* <p className="mt-2">
+          {/* <p className="mt-2">
           <Phone className="inline" />
           (732) 707-3223
         </p>
@@ -285,8 +317,8 @@ console.log(user,'user')
             <p className="font-semibold text-primary">See hours of operation</p>
           </span>
         </div> */}
+        </div>
       </div>
-    </div>
     </>
   );
 };
