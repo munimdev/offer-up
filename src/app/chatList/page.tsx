@@ -120,7 +120,11 @@ const Page = () => {
   };
   const deleteChatsHandler = async () => {
     console.log("delete click")
+    console.log(selectedChats,'selectedChats')
     const chatIdsToDelete = selectedChats;
+    setChats((prevChats) =>
+    prevChats.filter((chat) => !chatIdsToDelete.includes(chat.id))
+  );
     for (const chatId of chatIdsToDelete) {
       const chatDocRef = doc(db, 'Chats', chatId);
       try {
@@ -130,7 +134,7 @@ const Page = () => {
         console.error(`Error deleting chat with ID ${chatId}: `, error);
       }
     }
-    // setSelectedChats([]);
+    setSelectedChats([]);
   };
   
   
@@ -145,10 +149,13 @@ const Page = () => {
   };
 
   const handleSelectAllChange = () => {
+    if(selectAll){
+      setSelectedChats([])
+    }else{
+      const arrayOfIds = chats.map(obj => obj.id);
+      setSelectedChats(arrayOfIds)
+    }
     setSelectAll((prevSelectAll) => !prevSelectAll);
-    setSelectedChats((prevSelectedChats) =>
-    prevSelectedChats ? [] : chats.map((chat) => chat.id)
-    );
   };
   return (
     <div className="flex flex-col w-full sm:w-3/4 lg:w-4/5 xl:w-4/5 mx-auto">

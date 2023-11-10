@@ -482,7 +482,6 @@ export const Navbar = ({}: NavbarProps) => {
       <Dialog
           onOpenChange={(e) => setIsLocationModalOpen(e)}
           open={isLocationModalOpen}
-          style={{ zIndex: 110 }}
         >
           <DialogTrigger asChild>
             <span className="flex font-bold text-[#1BC3FF] items-center gap-2 cursor-pointer  ml-3 mb-3">
