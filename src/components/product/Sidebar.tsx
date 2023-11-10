@@ -211,7 +211,10 @@ console.log(user,'user')
       )} 
   
     <div className="flex flex-col gap-2 p-5">
-      <h3 className="text-3xl font-bold text-black">{data?.name}</h3>
+    <h3 className="text-3xl font-bold text-black" style={{ overflowWrap: "break-word" }}>
+  {data?.name}
+</h3>
+
       <h3 className="text-3xl font-bold text-black">${data?.price}</h3>
       {/* <p>
         <span className="font-semibold">VIN</span> {data?.id}
