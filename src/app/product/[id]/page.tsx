@@ -55,7 +55,7 @@ import { useSession } from "@/hooks";
 import { Item, ItemImages } from "@/types/types";
 import SocialShare from "@/components/misc/SocialShare";
 import { useSetAtom } from "jotai";
-import { isLoginDialogOpenAtom } from "@/utils/atoms";
+import { isLoginDialogOpenAtom} from "@/utils/atoms";
 import { Skeleton } from "@/components/ui/skeleton";
 import { RotatingLines } from  'react-loader-spinner'
 type Props = {
@@ -63,11 +63,10 @@ type Props = {
 };
 const Product = ({ params }: { params: { id: string } }) => {
   const { id } = params;
-  
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
   const { user, isLoggedIn } = useSession();
   const setIsLoginDialogOpen = useSetAtom(isLoginDialogOpenAtom);
-
+const [favouriteAdded,setFavouriteAdded] =useState(false)
   const [isShareTooltipOpen, setShareTooltipOpen] = useState(false);
   const { toast } = useToast();
   const { data, isLoading } = useFetch({
@@ -208,9 +207,9 @@ const Product = ({ params }: { params: { id: string } }) => {
             <Heart
   size={16}
   className={`inline-block mr-2 ${
-    currentItem.lstAddedToFavoriteListIds?.length > 0 ? "fill-primary" : ""
+    currentItem.lstAddedToFavoriteListIds?.length > 0 ||favouriteAdded? "fill-primary" : ""
   }`}
-/> Save
+/>  {currentItem.lstAddedToFavoriteListIds?.length > 0||favouriteAdded ?"Saved":"Save"} 
             </button>
           </DialogTrigger>
           <DialogContent className="max-w-[425px]">
@@ -252,6 +251,7 @@ const Product = ({ params }: { params: { id: string } }) => {
                             </ToastAction>
                           ),
                         });
+                        setFavouriteAdded(true)
                         setIsDialogOpen(false);
                       }}
                     >

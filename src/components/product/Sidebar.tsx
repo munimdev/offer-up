@@ -48,7 +48,7 @@ import {
 } from "lucide-react";
 import HeartIcon from "@/components/icons/HeartIcon";
 import { useSetAtom } from "jotai";
-import { isLoginDialogOpenAtom } from "@/utils/atoms";
+import { isLoginDialogOpenAtom, favouriteAdded } from "@/utils/atoms";
 
 type Props = {
   data: Item;
@@ -67,10 +67,11 @@ const Sidebar: React.FC<Props> = ({ data }) => {
   const router = useRouter();
   const pathname = usePathname()
   const [isShareTooltipOpen, setShareTooltipOpen] = useState(false);
-  const [favouriteAdded, setFavouriteAdded] = useState(false)
+  
   // chat info
   const { user, isLoggedIn } = useSession();
   const setIsLoginDialogOpen = useSetAtom(isLoginDialogOpenAtom);
+  const setFavouriteAdded = useSetAtom(false)
   // const { isLoggedIn } = useSession();
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
   const { toast } = useToast();
