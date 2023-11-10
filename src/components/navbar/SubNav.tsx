@@ -48,7 +48,7 @@ const [index,setIndex] = useState<number | null>(6);
 
 
   return (
-<nav className='md:flex md:flex-row md:justify-center md:flex-wrap hidden ' style={{ zIndex: 100 }}>
+<nav className='md:flex md:flex-row md:justify-center md:flex-wrap hidden z-100' >
 
 
       <ul style={{ listStyle: "none", padding: 0, display: "flex", flexDirection: "row" }}>

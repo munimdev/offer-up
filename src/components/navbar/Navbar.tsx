@@ -207,12 +207,13 @@ export const Navbar = ({}: NavbarProps) => {
 
 
 </Link>
-<div className="hidden lg:block flex justify-center">
+<div className="hidden lg:block flex justify-center" >
       <Searchbar />
       </div>
         <Dialog
           onOpenChange={(e) => setIsLocationModalOpen(e)}
           open={isLocationModalOpen}
+        
         >
           <DialogTrigger asChild>
             <span className="flex font-bold text-[#1BC3FF] items-center gap-2 cursor-pointer  ">
@@ -401,7 +402,7 @@ export const Navbar = ({}: NavbarProps) => {
                         <AvatarFallback>CN</AvatarFallback>
                       </Avatar>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className="min-w-[325px]" style={{ zIndex: 102 }}>
+                    <DropdownMenuContent className="min-w-[325px]">
                       <DropdownMenuGroup>
                         <DropdownMenuItem>
                           <Link
@@ -481,6 +482,7 @@ export const Navbar = ({}: NavbarProps) => {
       <Dialog
           onOpenChange={(e) => setIsLocationModalOpen(e)}
           open={isLocationModalOpen}
+          style={{ zIndex: 110 }}
         >
           <DialogTrigger asChild>
             <span className="flex font-bold text-[#1BC3FF] items-center gap-2 cursor-pointer  ml-3 mb-3">
@@ -494,8 +496,8 @@ export const Navbar = ({}: NavbarProps) => {
               </span>
             </span>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
-            <div className="flex flex-col p-4">
+          <DialogContent className="sm:max-w-[425px]" >
+            <div className="flex flex-col p-4" >
               <h2 className="text-2xl font-bold text-center text-black -translate-y-4">
                 Location
               </h2>

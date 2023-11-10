@@ -11,6 +11,7 @@ import Link from "next/link";
 import EmptyInbox from "@/components/misc/EmptyInbox";
 import { useSession } from "@/hooks/useSession";
 import { CheckCheck, MoreHorizontal } from "lucide-react";
+import ConfirmDelete from "@/components/misc/ConfirmDelete";
 
 import {
   addDoc,
@@ -32,11 +33,10 @@ import Image from "next/image";
 
 const Page = () => {
   const { user, isLoggedIn } = useSession();
+  const [selectAll, setSelectAll] = useState(false);
   const [loader, setLoader] = useState(true);
   const [selectedChats, setSelectedChats] = useState([]);
-  console.log(user);
   const [chats, setChats] = useState([]);
-  // const [userId, setUserId] = useState("4296a045-deef-4b37-a09c-d22b3eb50cf4");
   const [selectedTab, setSelectedTab] = useState("All"); // Default tab is "All"
 
   function formatTime(messageTime: any) {
@@ -60,7 +60,6 @@ const Page = () => {
 
   useEffect(() => {
     if (!user || !user.id) {
-      // Handle the case when user.id is null or undefined
       return;
     }
     const chatRef = collection(db, "Chats");
@@ -88,7 +87,6 @@ const Page = () => {
             });
           });
           const sortedChats = fetchedChats.sort((a, b) => {
-            // Assuming 'time' is the field containing serverTimestamp
             const timestampA = a.lastMessageTime
               ? a.lastMessageTime.seconds
               : 0;
@@ -120,18 +118,37 @@ const Page = () => {
   const handleTabClick = (tab) => {
     setSelectedTab(tab);
   };
-  const deleteChatsHandler =() => {
-    console.log(selectedChats,'selectedChats')
-  }
+  const deleteChatsHandler = async () => {
+    console.log("delete click")
+    const chatIdsToDelete = selectedChats;
+    for (const chatId of chatIdsToDelete) {
+      const chatDocRef = doc(db, 'Chats', chatId);
+      try {
+        await deleteDoc(chatDocRef);
+        console.log(`Chat with ID ${chatId} deleted successfully!`);
+      } catch (error) {
+        console.error(`Error deleting chat with ID ${chatId}: `, error);
+      }
+    }
+    // setSelectedChats([]);
+  };
+  
+  
   const handleCheckboxChange = (chatId) => {
     setSelectedChats((prevSelectedChats) => {
-    
       if (prevSelectedChats.includes(chatId)) {
         return prevSelectedChats.filter((id) => id !== chatId);
       } else {
         return [...prevSelectedChats, chatId];
       }
     });
+  };
+
+  const handleSelectAllChange = () => {
+    setSelectAll((prevSelectAll) => !prevSelectAll);
+    setSelectedChats((prevSelectedChats) =>
+    prevSelectedChats ? [] : chats.map((chat) => chat.id)
+    );
   };
   return (
     <div className="flex flex-col w-full sm:w-3/4 lg:w-4/5 xl:w-4/5 mx-auto">
@@ -180,89 +197,80 @@ const Page = () => {
             Buyer
           </p>
         </div>
-<div className="flex flex-row items-center  border border-t-white border-primary z-10 ">
-<div className=" p-4">
-          <Checkbox
-  className="w-6 h-6"
-  // onChange={() => handleCheckboxChange(val.id)}
-  // checked={selectedChats.includes(val.id)}
-/>
+        <div className="flex flex-row items-center  border border-t-white border-primary z-10 ">
+          <div className=" p-4">
+            <Checkbox
+              className="w-6 h-6"
+              onClick={handleSelectAllChange}
+              checked={selectAll}
+            />
           </div>
-          <Button
-          // style={disabledButtonStyle}
-            type="button"
-            onClick ={deleteChatsHandler}
-            className="border border-primary bg-white text-primary rounded-full  hidden sm:block hover:text-white"
-          >
-           Delete
-          </Button>
-</div>
+          <ConfirmDelete  deleteChat={deleteChatsHandler}/>
+        </div>
         {/* Chat Entry */}
         {loader ? null : chats.length === 0 ? (
-  <EmptyInbox />
-) : (
-  chats.map((val) => {
-    return (
-      <div className="flex flex-col" key={val.itemId}>
-        <div className=" flex flex-row items-center  border border-t-white border-primary z-10 ">
-          <div className=" p-4">
-          <Checkbox
-  className="w-6 h-6"
-  onClick={() => handleCheckboxChange(val.id)}
-  checked={selectedChats.includes(val.id)}
-/>
-          </div>
-         
+          <EmptyInbox />
+        ) : (
+          chats.map((val) => {
+            return (
+              <div className="flex flex-col" key={val.itemId}>
+                <div className=" flex flex-row items-center  border border-t-white border-primary z-10 ">
+                  <div className=" p-4">
+                    <Checkbox
+                      className="w-6 h-6"
+                      onClick={() => handleCheckboxChange(val.id)}
+                      checked={selectAll || selectedChats.includes(val.id)}
+                    />
+                  </div>
 
-          <Link
-            href={`/chat?chatId=${val.id}&userId=${user?.id}`}
-            style={{ cursor: "pointer" }}
-            className="flex flex-row items-center gap-x-10 w-full h-full  p-4"
-          >
-            <Image
-              alt="Item Image"
-              src={
-                user?.id === val.sellerId
-                  ? val.buyerProfileImage ||
-                    "https://github.com/shadcn.png"
-                  : val.sellerProfileImage ||
-                    "https://github.com/shadcn.png"
-              }
-              width={60}
-              height={30}
-              className="rounded-full hidden md:block"
-            />
-            <div className="flex flex-col gap-x-2">
-              <p className="text-lg font-bold">
-                {user?.id === val.sellerId
-                  ? val.buyerName
-                  : val.sellerName}
-              </p>
-              <p>
-                {val.lastMessage.substring(0, 50)}{" "}
-                {val.lastMessage.length > 50 ? "..." : ""}
-              </p>
-              <p className="text-sm text-gray-600">
-                about {formatTime(val.lastMessageTime.seconds)}
-              </p>
-            </div>
+                  <Link
+                    href={`/chat?chatId=${val.id}&userId=${user?.id}`}
+                    style={{ cursor: "pointer" }}
+                    className="flex flex-row items-center gap-x-10 w-full h-full  p-4"
+                  >
+                    <Image
+                      alt="Item Image"
+                      src={
+                        user?.id === val.sellerId
+                          ? val.buyerProfileImage ||
+                            "https://github.com/shadcn.png"
+                          : val.sellerProfileImage ||
+                            "https://github.com/shadcn.png"
+                      }
+                      width={60}
+                      height={30}
+                      className="rounded-full hidden md:block"
+                    />
+                    <div className="flex flex-col gap-x-2">
+                      <p className="text-lg font-bold">
+                        {user?.id === val.sellerId
+                          ? val.buyerName
+                          : val.sellerName}
+                      </p>
+                      <p>
+                        {val.lastMessage.substring(0, 50)}{" "}
+                        {val.lastMessage.length > 50 ? "..." : ""}
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        about {formatTime(val.lastMessageTime.seconds)}
+                      </p>
+                    </div>
 
-            <div className="ml-auto" style={{ width: "70px" }}>
-              <Image
-                alt="Item Image"
-                src={val.itemImage}
-                width={60}
-                height={30}
-                className="w-full"
-              />
-            </div>
-          </Link>
-        </div>
-      </div>
-    );
-  })
-)}
-
+                    <div className="ml-auto" style={{ width: "70px" }}>
+                      <Image
+                        alt="Item Image"
+                        src={val.itemImage}
+                        width={60}
+                        height={30}
+                        className="w-full"
+                      />
+                    </div>
+                  </Link>
+                </div>
+              </div>
+            );
+          })
+        )}
 
         {loader && (
           <div className="flex justify-center">
