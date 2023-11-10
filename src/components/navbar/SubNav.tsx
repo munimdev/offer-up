@@ -71,7 +71,6 @@ const [index,setIndex] = useState<number | null>(6);
         <div style={{
           position: "absolute",
           top: "100%",
-          left: -60,
           display: "flex",
           flexDirection: "column",
           zIndex:150,
