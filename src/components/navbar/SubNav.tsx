@@ -63,9 +63,10 @@ const [index,setIndex] = useState<number | null>(6);
       style={{ margin: "1rem 1.5rem", position: "relative" }}
     >
       <Link href={`/search?category=${category.id}`}>
-        <p className={hoveredItemId === category.id ? "active" : ""} style={{ fontSize: "0.8rem", fontWeight: "600", color: "#5A6367" }}>
-          {category.name}
-        </p>
+      <p className={`text-sm font-semibold text-gray-700 ${hoveredItemId === category.id ? 'active' : ''}`}>
+  {category.name}
+</p>
+
       </Link>
       {hoveredItemId === category.id && (
         <div style={{
@@ -96,8 +97,8 @@ const [index,setIndex] = useState<number | null>(6);
          onMouseLeave={handleMouseLeave}
         >
           
-          <Link  style={{ fontSize: "0.8rem",fontWeight:"600",color:"#5A6367"}} href={`/`}>
-            <p >More</p>
+          <Link   href={`/`}>
+            <p className='text-sm font-semibold text-gray-700'>More</p>
           </Link>
           {hoveredItemId === 199 && (
               <div style={{
