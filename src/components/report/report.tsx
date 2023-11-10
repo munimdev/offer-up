@@ -53,9 +53,10 @@ type Props = {
   onSubmit: (data: any) => void;
   size?: number;
   text?: string;
+  isReported?: boolean;
 };
 
-const Report: React.FC<Props> = ({ isLoggedIn, formSchema, lookupId, onSubmit, size, text }) => {
+const Report: React.FC<Props> = ({ isLoggedIn, formSchema, lookupId, onSubmit, size, text, isReported }) => {
   const setIsLoginDialogOpen = useSetAtom(isLoginDialogOpenAtom)
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
 
@@ -87,7 +88,7 @@ const Report: React.FC<Props> = ({ isLoggedIn, formSchema, lookupId, onSubmit, s
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger className="flex  items-center">
-              <Flag size={size} strokeWidth={1.75} style={{marginTop:2}}/> {text}
+              <Flag size={size} strokeWidth={1.75} style={{marginTop:2}} className={`${isReported?"fill-primary":""}`}/> {text}
             </TooltipTrigger>
             <TooltipContent>Report User</TooltipContent>
           </Tooltip>

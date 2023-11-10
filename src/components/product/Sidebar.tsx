@@ -68,6 +68,7 @@ const Sidebar: React.FC<Props> = ({ data }) => {
   const pathname = usePathname()
   const [isShareTooltipOpen, setShareTooltipOpen] = useState(false);
   const [favouriteAdded,setFavouriteAdded] =useState(false)
+  const [isReported,setIsReportedAdded] =useState(false)
   // chat info
   const { user, isLoggedIn } = useSession();
   const setIsLoginDialogOpen = useSetAtom(isLoginDialogOpenAtom);
@@ -104,6 +105,7 @@ console.log(user,'user')
         reportReasonLookupId: parseInt(reason),
         note: description,
       });
+      setIsReportedAdded(true)
       toast({
         title: "Reported",
         description: `We appreciate your feedback, and will look into this issue.`,
@@ -314,6 +316,7 @@ console.log(user,'user')
           onSubmit={onReportHandler}
           size={20}
           text={""}
+          isReported={isReported}
         />
         <SocialShare isButton={false}/>
                 

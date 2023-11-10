@@ -67,6 +67,7 @@ const Product = ({ params }: { params: { id: string } }) => {
   const { user, isLoggedIn } = useSession();
   const setIsLoginDialogOpen = useSetAtom(isLoginDialogOpenAtom);
 const [favouriteAdded,setFavouriteAdded] =useState(false)
+const [isReported,setIsReportedAdded] =useState(false)
   const [isShareTooltipOpen, setShareTooltipOpen] = useState(false);
   const { toast } = useToast();
   const { data, isLoading } = useFetch({
@@ -124,6 +125,7 @@ const [favouriteAdded,setFavouriteAdded] =useState(false)
         reportReasonLookupId: parseInt(reason),
         note: description,
       });
+      setIsReportedAdded(true)
       toast({
         title: "Reported",
         description: `We appreciate your feedback, and will look into this issue.`,
@@ -276,6 +278,7 @@ const [favouriteAdded,setFavouriteAdded] =useState(false)
           formSchema={formSchema}
           size={16}
           text={"Report"}
+          isReported={isReported}
         />
               </Badge>
               
