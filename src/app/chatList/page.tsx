@@ -166,10 +166,10 @@ const Page = () => {
 
       <div className=" pt-4 ">
         <div>
-          <p className="px-2 mb-4 font-semibold text-lg">Messages</p>
+          <p className="px-2 mb-4 font-semibold text-lg">Inbox</p>
         </div>
         {/* Tabs */}
-        <div className="flex border border-primary p-4">
+        <div className="flex border border-primary pt-4 px-4 pb-2 rounded-tl-lg rounded-tr-lg">
           <p
             className={`px-5 font-semibold text-lg cursor-pointer ${
               selectedTab === "All"
@@ -216,10 +216,11 @@ const Page = () => {
         {loader ? null : chats.length === 0 ? (
           <EmptyInbox />
         ) : (
-          chats.map((val) => {
+          chats.map((val,index) => {
+            const isLastItem = index === chats.length - 1;
             return (
               <div className="flex flex-col" key={val.itemId}>
-                <div className=" flex flex-row items-center  border border-t-white border-primary z-10 ">
+                <div className={`flex flex-row items-center  border border-t-white border-primary z-10 ${isLastItem ? 'rounded-bl-lg rounded-br-lg' : ''}`}>
                   <div className=" p-4">
                     <Checkbox
                       className="w-6 h-6"

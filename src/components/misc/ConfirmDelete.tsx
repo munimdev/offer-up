@@ -14,7 +14,7 @@ const ConfirmDelete = (props: any) => {
       <DialogTrigger asChild>
         <Button
           type="button"
-          className="border border-primary bg-white text-primary rounded-full  hidden sm:block hover:text-white"
+          className="border border-primary bg-white font-bold text-primary rounded-full  hidden sm:block hover:text-white"
           onClick={()=>setConfirmModal(true)}
         >
           Delete
