@@ -86,7 +86,6 @@ const Sidebar: React.FC<Props> = ({ data }) => {
   // const { isLoggedIn } = useSession();
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
   const { toast } = useToast();
-  console.log(user, "user");
   // ----------------------------
   const [isOfferDialogOpen, setIsOfferDialogOpen] =
     React.useState<boolean>(false);
@@ -203,7 +202,6 @@ const Sidebar: React.FC<Props> = ({ data }) => {
   const sellerPageHandler = async (id) => {
     router.replace(`/seller/${id}`);
   };
-
   return (
     <>
       {isOfferDialogOpen && (
@@ -271,7 +269,7 @@ const Sidebar: React.FC<Props> = ({ data }) => {
         <div className="flex gap-4 py-4 my-4 border-y cursor-pointer items-center">
           <div onClick={() => sellerPageHandler(data.customer.id)}>
             <Image
-              src={data.customer.imagePath}
+              src={data?.customer.imagePath!==''?data?.customer.imagePath:"/images/profileImg.png" }
               className="rounded-full"
               alt=""
               width={70}
