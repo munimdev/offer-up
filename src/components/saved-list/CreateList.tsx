@@ -27,7 +27,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-const CreateList = () => {
+const CreateList = ({ refetchhandler }: { refetchhandler: () => void }) => {
   const { toast } = useToast();
   const [isDialogOpen, setDialogOpen] = useState(false);
   const {
@@ -51,7 +51,9 @@ const CreateList = () => {
     if ("name" in values && typeof values.name === "string") {
       createList(values as { name: string });
     }
+    collectionNameForm.reset();
     setDialogOpen(false);
+    refetchhandler();
   }
   return (
     <Dialog open={isDialogOpen} onOpenChange={(e) => setDialogOpen(e)}>

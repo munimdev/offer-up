@@ -16,7 +16,7 @@ import Loader from "@/components/misc/Loader";
 const SaveList = () => {
   const { toast } = useToast();
 
-  const { data,isLoading, }: { data: Result<FavoriteList[]> } = useFetch({
+  const { data, isLoading, refetch: refetchList }: { data: Result<FavoriteList[]>; isLoading: boolean; refetch: Function } = useFetch({
     key: ["query-favoriteList"],
     fn: () => Queries.getFavoriteList(),
   });
@@ -51,11 +51,18 @@ const SaveList = () => {
       });
     }
   }, [isSuccess, isError, toast, collectionNameForm]);
+const refetchhandler =async()=> {
+  console.log("hello world")
+  setTimeout(() => {
+    refetchList()
+  }, 300);
 
+ console.log(data)
+}
   return (
     <div className="w-8/12 py-4 mx-auto">
       <h1 className="mb-4 text-3xl font-bold">Saved Items</h1>
-      <CreateList/>
+      <CreateList refetchhandler={refetchhandler}/>
       <div className="px-4">
         {isLoading&&<Loader/>}
         {!isLoading&&data?.dataObject.map((item: FavoriteList, idx: number) => (
