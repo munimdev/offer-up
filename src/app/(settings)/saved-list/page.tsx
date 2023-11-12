@@ -12,10 +12,11 @@ import { useToast } from "@/components/ui/use-toast";
 import { Result } from "@/utils/types";
 import { useEffect } from "react";
 import CreateList from "@/components/saved-list/CreateList";
+import Loader from "@/components/misc/Loader";
 const SaveList = () => {
   const { toast } = useToast();
 
-  const { data }: { data: Result<FavoriteList[]> } = useFetch({
+  const { data,isLoading, }: { data: Result<FavoriteList[]> } = useFetch({
     key: ["query-favoriteList"],
     fn: () => Queries.getFavoriteList(),
   });
@@ -56,7 +57,8 @@ const SaveList = () => {
       <h1 className="mb-4 text-3xl font-bold">Saved Items</h1>
       <CreateList/>
       <div className="px-4">
-        {data?.dataObject.map((item: FavoriteList, idx: number) => (
+        {isLoading&&<Loader/>}
+        {!isLoading&&data?.dataObject.map((item: FavoriteList, idx: number) => (
           <List data={item} key={item.id} />
         ))}
       </div>
