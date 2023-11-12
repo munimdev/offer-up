@@ -20,12 +20,13 @@ import { Result } from "@/utils/types";
 import { FavoriteList } from "@/types/types";
 import { ToastAction } from "@/components/ui/toast";
 import * as Queries from "@/utils/queries";
+import CreateList from "@/components/saved-list/CreateList"
 const SelectFavouriteProducts = (props: any) => {
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
   const [favouriteAdded, setFavouriteAdded] = useState(false);
   const setIsLoginDialogOpen = useSetAtom(isLoginDialogOpenAtom);
   const { toast } = useToast();
-  const { data: savedList }: { data: Result<FavoriteList[]> } = useFetch({
+  const { data: savedList,isLoading, refetch: refetchList }: { data: Result<FavoriteList[]>;isLoading: boolean; refetch: Function } = useFetch({
     key: ["query-favoriteList"],
     fn: () => Queries.getFavoriteList(),
     options: {
@@ -35,6 +36,12 @@ const SelectFavouriteProducts = (props: any) => {
   const { mutateAsync: addItemToList } = useMutation(
     Queries.addItemToFavouriteList
   );
+  const refetchhandler =async()=> {
+    console.log("hello world")
+    setTimeout(() => {
+      refetchList()
+    }, 300);
+  }
   return (
     <Dialog
       open={isDialogOpen}
@@ -71,10 +78,11 @@ const SelectFavouriteProducts = (props: any) => {
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col py-4">
+      
           {savedList?.dataObject?.map((list) => (
             <div
               key={list.id}
-              className="flex flex-row items-center justify-between gap-3 py-1 transition-colors duration-300 ease-in-out border-b hover:bg-gray-200 bg-none"
+              className="flex flex-row items-center justify-between gap-3 py-1 transition-colors duration-300 ease-in-out border-b hover:bg-gray-200 bg-none mb-3"
             >
               <div className="flex flex-row items-center">
                 {/* <HeartIcon size={36} />
@@ -119,6 +127,7 @@ const SelectFavouriteProducts = (props: any) => {
               ) : null}
             </div>
           ))}
+            <CreateList refetchhandler={refetchhandler}/>
         </div>
       </DialogContent>
     </Dialog>

@@ -56,8 +56,6 @@ const refetchhandler =async()=> {
   setTimeout(() => {
     refetchList()
   }, 300);
-
- console.log(data)
 }
   return (
     <div className="w-8/12 py-4 mx-auto">
