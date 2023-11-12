@@ -31,21 +31,22 @@ const Sidebar = () => {
 
   return (
     <div className="h-fit flex flex-col gap-y-2 border border-gray-200 p-3">
-      <Title title="Account" />
+      {/* <Title title="Account" />
       <Item title="Purchase & Sales" to="#" />
-      <Item title="Payment & Deposit Method" to="#" />
+      <Item title="Payment & Deposit Method" to="#" /> */}
+        <Title title="Account" />
+      <Item
+        title="Account Settings"
+        active={path.includes("setting")}
+        to="/account/setting"
+      />
       <Title title="Saves" />
       <Item
         title="Saved Item"
         active={path.includes("saved-list")}
         to="/saved-list"
       />
-      <Title title="Account" />
-      <Item
-        title="Account Settings"
-        active={path.includes("setting")}
-        to="/account/setting"
-      />
+    
     </div>
   );
 };
