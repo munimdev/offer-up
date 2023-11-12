@@ -398,8 +398,7 @@ export const Navbar = ({}: NavbarProps) => {
                     <DropdownMenuTrigger asChild>
                       <Avatar className="cursor-pointer">
                         <AvatarImage 
-                        // src={user?.imagePath!==''?user?.imagePath:"https://github.com/shadcn.png" }
-                        src="https://github.com/shadcn.png"
+                        src={user?.imagePath!==''?user?.imagePath:"/images/profileImg.png" }
                         />
                         <AvatarFallback>CN</AvatarFallback>
                       </Avatar>
@@ -414,7 +413,7 @@ export const Navbar = ({}: NavbarProps) => {
                             <Image
                               width={80}
                               height={80}
-                              src={'https://github.com/shadcn.png'}
+                              src={"/images/profileImg.png"}
 
                               alt="User Image"
                               className="rounded-full"
