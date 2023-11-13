@@ -64,7 +64,7 @@ const Page = () => {
   }, [
     data
   ])
-
+console.log(data,'data')
   // Use the useMutation hook to fetch more data
   const loadMoreData = useMutation(
     (newPageIndex: number) => Queries.searchItems({ ...query, pageIndex: newPageIndex }),
@@ -95,6 +95,16 @@ const Page = () => {
         {/* Empty div for the last column */}
         <div></div>
       </div>
+    );
+  }
+  if (!paginatedItems || paginatedItems.data.length === 0) {
+    return (
+      <div className="h-full flex-1">
+   <div className="text-center flex justify-center align-center">
+        <p>No More Items</p>
+      </div>
+      </div>
+   
     );
   }
   return (
