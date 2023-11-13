@@ -172,6 +172,7 @@ export const Navbar = ({}: NavbarProps) => {
           setLocationName(locationName);
           // setZipCode(zipCode);
           setLocation({ lat, lng });
+          setZipCode("")
         } catch (error) {
           console.log(error);
         }
