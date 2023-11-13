@@ -150,7 +150,10 @@ export const Navbar = ({}: NavbarProps) => {
         // localStorage.setItem("formatted_address", modifiedAddress as string);
         setLocation({ lat, lng });
       }else{
+        console.log(response,'response')
+        console.log(zipCode.length,'inside handleLocationByZipCode')
         setZipError(true)
+        setZipCode("")
       }
     } catch (error) {
       console.log(error);
@@ -272,9 +275,12 @@ export const Navbar = ({}: NavbarProps) => {
                   type="button"
                   onClick={() => {
                     if (zipCode.length === 5) {
+                      console.log(zipCode.length,'if')
                       handleLocationByZipCode(zipCode);
                     }else{
+                      console.log(zipCode.length,'else')
                       setZipError(true);
+                      setZipCode("")
                     }
                   }}
                 >
@@ -541,11 +547,12 @@ export const Navbar = ({}: NavbarProps) => {
                   type="button"
                   onClick={() => {
                     if (zipCode.length === 5) {
-                      console.log(zipCode.length,'zipCode.length1')
+                     
                       handleLocationByZipCode(zipCode);
                     }else{
-                      console.log(zipCode.length,'zipCode.length2')
+                     
                       setZipError(true);
+                      setZipCode("")
                     }
                   }}
                 >
