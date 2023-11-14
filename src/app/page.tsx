@@ -5,6 +5,7 @@ import Cookies from 'js-cookie';
 import { ShoppingCart } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import axios from "axios";
 import {
   Dialog,
   DialogContent,
@@ -23,7 +24,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { Skeleton } from "@/components/ui/skeleton";
 import { RotatingLines } from  'react-loader-spinner'
 import { useAtom, useAtomValue } from "jotai/react";
-import { preferredDistanceAtom, locationAtom } from "@/utils/atoms";
+import { preferredDistanceAtom, locationAtom, zipCodeAtom,  locationNameAtom } from "@/utils/atoms";
 const Loader = () => (
   <div className="grid grid-cols-2 mx-auto gap-x-6 gap-y-10 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-8 ">
     {Array.from({ length: 16 }).map((_, index) => (
@@ -39,9 +40,11 @@ export default function Home() {
   const category = searchParams.get("category");
   const childCategory = searchParams.get("child");
   const subCategory = searchParams.get("sub");
-
+  const [locationName, setLocationName] = useAtom(locationNameAtom);
+  const [location, setLocation] = useAtom(locationAtom);
+  const [zipCode, setZipCode] = useAtom(zipCodeAtom);
   const preferredDistance = useAtomValue(preferredDistanceAtom);
-  const [location] = useAtom(locationAtom);
+
 const [downloadAppModal,setDownloadAppModal] = React.useState(false);
   const [paginatedItems, setPaginatedItems] = useState<any>();
   const query = {
@@ -81,7 +84,39 @@ const [downloadAppModal,setDownloadAppModal] = React.useState(false);
     // If the last modal time is not available or it's been more than 3 days
     return !lastModalTime || currentTime > parseInt(lastModalTime as string);
   };
+  const handleGetLocation = () => {
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+          const response = await axios.get(
+            `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyAC1zTJy_NTO4dbq253Pv1VOSz_MB8YRTI`
+          );
+          const data = response.data;
+          const locationName = data.results[0].address_components[4].long_name;
+          const zipCode = data.results[0].address_components[6].short_name;
+          setLocationName(locationName);
+          // setZipCode(zipCode);
+          setLocation({ lat, lng });
+          setZipCode("")
+        } catch (error) {
+          console.log(error);
+        }
+      },
+      (error) => {
+        console.error("Error getting current location:", error);
+      }
+    );
+  };
   useEffect(() => {
+    const isDefaultLocationSelectionSet = localStorage.getItem('defaultLocationSelection') 
+    console.log(isDefaultLocationSelectionSet,'defaultLocationSelection')
+    if (!isDefaultLocationSelectionSet) {
+      console.log("called")
+      handleGetLocation();
+      localStorage.setItem('defaultLocationSelection', 'true');
+    }
     // Check if the modal should be displayed
     if (shouldDisplayModal()) {
       setDownloadAppModal(true);
