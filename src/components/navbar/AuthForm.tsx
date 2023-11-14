@@ -106,7 +106,8 @@ export function LoginDialog() {
       const firebase = await signUpWithGoogle();
       console.log(firebase, "google");
       const response = await mutateAsync({
-        email: firebase.user.email!,
+        // email: firebase.user.email!,
+        email: firebase.user.providerData[0].email!,
         password: "",
         firstName: firebase.user.displayName!.split(" ")[0],
         lastName: firebase.user.displayName!.split(" ")[1],
