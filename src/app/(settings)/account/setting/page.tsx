@@ -43,7 +43,7 @@ const Setting = () => {
   const { user } = useSession();
   const { toast } = useToast();
   const router = useRouter();
-
+console.log(user,'setting')
   // States
   const [error, setError] = useState<string>();
   const [image, setImage] = useState<File>();
@@ -205,21 +205,37 @@ const forgetPasswordHandler = async () => {
     <div className="w-8/12 py-4 mx-auto">
       <div className="flex flex-row items-center gap-x-5">
         <div className="flex flex-col items-center gap-y-2">
-          <Image
+          {/* <Image
             width={100}
             height={100}
             src="/images/placeholder.png"
             alt="account-image"
             className="rounded-full"
-          />
+          /> */}
 
           <Dialog
             onOpenChange={(e) => setIsImageDialogOpen(e)}
             open={isImageDialogOpen}
           >
-            <DialogTrigger>
-              <Camera strokeWidth={1.5} />
-            </DialogTrigger>
+        <DialogTrigger>
+  <div className="relative flex flex-col items-center gap-y-2">
+    <div className="relative rounded-full overflow-hidden">
+      <Image
+        width={100}
+        height={100}
+        src={`${user?.imagePath ? user.imagePath : '/images/placeholder.png'}`}
+        alt="account-image"
+        className="rounded-full relative z-0"
+      />
+    </div>
+    <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2  z-10">
+      <div className="rounded-full bg-slate-200 p-1">
+        <Camera strokeWidth={1.5} />
+      </div>
+    </div>
+  </div>
+</DialogTrigger>
+
             <DialogContent>
               {/* Dropzone */}
               {image ? (
