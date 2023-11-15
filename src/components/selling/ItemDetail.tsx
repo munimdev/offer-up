@@ -39,13 +39,13 @@ const ItemDetail = () => {
   const [itemData, setItemData] = useAtom(itemFormDataAtom);
 
 
-  useEffect(() => {
-    setItemData({
-      ...itemData,
-      conditionLookUpId: conditions[3].id,
-    });
-  }
-  , [itemData, setItemData]);
+  // useEffect(() => {
+  //   setItemData({
+  //     ...itemData,
+  //     conditionLookUpId: conditions[3].id,
+  //   });
+  // }
+  // , [itemData, setItemData]);
 
   return (
     <>
