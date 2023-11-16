@@ -203,14 +203,15 @@ const Location: React.FC<Props> = ({ isUpdate = false }) => {
     
   return (
    <>
-   <div className="grid w-full max-w-md gap-1.5">
+ <div className="grid w-full max-w-md gap-1.5">
+        <p className="text-xl text-center text-gray-200">OR</p>
         <Label htmlFor="zip-code">Zip Code</Label>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 border border-gray rounded-md p-2">
           <Input
             type="text"
             id="zip-code"
             placeholder="Zip Code"
-            className="font-medium border-gray placeholder:text-gray placeholder:font-medium"
+            className="font-medium outline-none border-none placeholder:text-gray placeholder:font-medium"
             value={
               isUpdate ? updateItemData!.zipCode : itemData.zipcode.toString()
             }
@@ -226,7 +227,12 @@ const Location: React.FC<Props> = ({ isUpdate = false }) => {
                   })
             }
           />
-          <Button onClick={handleZipChange}>Fetch Address</Button>
+          <Button
+            className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 p-0 w-44"
+            onClick={handleZipChange}
+          >
+            Fetch Address
+          </Button>
         </div>
       </div>
       <p className="text-xl text-center text-gray-200">OR</p>
