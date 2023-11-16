@@ -204,14 +204,6 @@ const Location: React.FC<Props> = ({ isUpdate = false }) => {
   return (
    <>
    <div className="grid w-full max-w-md gap-1.5">
-        <Button
-          variant="outline"
-          className="border text-primary border-primary"
-          onClick={handleGetCurrentLocation}
-        >
-          Get my current Location
-        </Button>
-        <p className="text-xl text-center text-gray-200">OR</p>
         <Label htmlFor="zip-code">Zip Code</Label>
         <div className="flex items-center gap-2">
           <Input
@@ -238,24 +230,34 @@ const Location: React.FC<Props> = ({ isUpdate = false }) => {
         </div>
       </div>
       <p className="text-xl text-center text-gray-200">OR</p>
-      <Dialog open={isMapOpen} onOpenChange={(e) => setIsMapOpen(e)}>
-        <DialogTrigger asChild>
-          <Button
-            variant="outline"
-            className="w-full max-w-md border text-primary border-primary"
-          >
-            Pick Location From Map
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="max-w-[59rem]">
-          <DialogHeader>
-            <DialogTitle>Pick Location From Map</DialogTitle>
-            <DialogDescription>
-              Pick your location to let interested buyers know where you are
-            </DialogDescription>
-          </DialogHeader>
-          <div>
-            {/* <MapPicker
+      <div className="flex w-full max-w-md gap-1.5">
+        <Button
+          variant="outline"
+          // className="border text-primary border-primary"
+          className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 w-1/2 transition-colors duration-300 ease-in-out bg-white border border-primary text-primary hover:bg-gray-50"
+          onClick={handleGetCurrentLocation}
+        >
+          Get my current Location
+        </Button>
+        <Dialog open={isMapOpen} onOpenChange={(e) => setIsMapOpen(e)}>
+          <DialogTrigger asChild>
+            <Button
+              variant="outline"
+              // className=" max-w-md border text-primary border-primary"
+              className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 w-1/2 transition-colors duration-300 ease-in-out bg-white border border-primary text-primary hover:bg-gray-50"
+            >
+              Pick Location From Map
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-[59rem]">
+            <DialogHeader>
+              <DialogTitle>Pick Location From Map</DialogTitle>
+              <DialogDescription>
+                Pick your location to let interested buyers know where you are
+              </DialogDescription>
+            </DialogHeader>
+            <div>
+              {/* <MapPicker
               defaultLocation={location}
               zoom={zoom}
               style={{ height: "600px", width: "900px" }}
@@ -265,32 +267,34 @@ const Location: React.FC<Props> = ({ isUpdate = false }) => {
               onChangeZoom={handleChangeZoom}
               apiKey="AIzaSyAC1zTJy_NTO4dbq253Pv1VOSz_MB8YRTI"
             /> */}
-            <GoogleMap
-              mapContainerStyle={mapContainerStyle}
-              center={location} // Use the location state as the center
-              zoom={zoom}
-              onLoad={onLoad}
-              onUnmount={onUnmount}
-              onDragEnd={changeMarkerPosition}
-              onClick={handleMapClick}
-              onZoomChanged={handleZoomChange}
-            >
-              <Marker position={location} /> {/* Add a marker at the center */}
-            </GoogleMap>
-          </div>
-          <DialogFooter>
-            <Button
-              type="submit"
-              onClick={() => {
-                handleMapLocationChange(location.lat, location.lng);
-                setIsMapOpen(false);
-              }}
-            >
-              Get Location
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+              <GoogleMap
+                mapContainerStyle={mapContainerStyle}
+                center={location} // Use the location state as the center
+                zoom={zoom}
+                onLoad={onLoad}
+                onUnmount={onUnmount}
+                onDragEnd={changeMarkerPosition}
+                onClick={handleMapClick}
+                onZoomChanged={handleZoomChange}
+              >
+                <Marker position={location} />{" "}
+                {/* Add a marker at the center */}
+              </GoogleMap>
+            </div>
+            <DialogFooter>
+              <Button
+                type="submit"
+                onClick={() => {
+                  handleMapLocationChange(location.lat, location.lng);
+                  setIsMapOpen(false);
+                }}
+              >
+                Get Location
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
       {locationFetched && (
         <div className="mt-4">
           <p className="text-base font-medium">
