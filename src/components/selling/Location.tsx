@@ -210,7 +210,7 @@ const Location: React.FC<Props> = ({ isUpdate = false }) => {
    <>
  <div className="grid w-full max-w-md gap-1.5">
         <Label htmlFor="zip-code">Zip Code</Label>
-        <div className="flex items-center gap-2 border border-gray rounded-md p-2">
+        <div className="flex items-center gap-2 border border-gray rounded-3xl p-2">
           <Input
             type="text"
             id="zip-code"
@@ -262,7 +262,7 @@ const Location: React.FC<Props> = ({ isUpdate = false }) => {
         <Button
           variant="outline"
           // className="border text-primary border-primary"
-          className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 w-1/2 transition-colors duration-300 ease-in-out bg-white border border-primary text-primary hover:bg-gray-50"
+          className="inline-flex items-center justify-center rounded-3xl text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 w-1/2 transition-colors duration-300 ease-in-out bg-white border border-primary text-primary hover:bg-gray-50"
           onClick={handleGetCurrentLocation}
         >
           Get my current Location
@@ -272,7 +272,7 @@ const Location: React.FC<Props> = ({ isUpdate = false }) => {
             <Button
               variant="outline"
               // className=" max-w-md border text-primary border-primary"
-              className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 w-1/2 transition-colors duration-300 ease-in-out bg-white border border-primary text-primary hover:bg-gray-50"
+              className="inline-flex items-center justify-center rounded-3xl text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 w-1/2 transition-colors duration-300 ease-in-out bg-white border border-primary text-primary hover:bg-gray-50"
             >
               Pick Location From Map
             </Button>
