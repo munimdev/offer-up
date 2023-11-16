@@ -204,7 +204,6 @@ const Location: React.FC<Props> = ({ isUpdate = false }) => {
   return (
    <>
  <div className="grid w-full max-w-md gap-1.5">
-        <p className="text-xl text-center text-gray-200">OR</p>
         <Label htmlFor="zip-code">Zip Code</Label>
         <div className="flex items-center gap-2 border border-gray rounded-md p-2">
           <Input
