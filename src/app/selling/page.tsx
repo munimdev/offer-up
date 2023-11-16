@@ -10,12 +10,14 @@ import Stepper from "@/components/ui/stepper";
 import ItemDetail from "@/components/selling/ItemDetail";
 import { Button } from "@/components/ui/button";
 import CategoryDetail from "@/components/selling/CategoryDetail";
-import PriceLocation from "@/components/selling/Price&Location";
+// import PriceLocation from "@/components/selling/Price&Location";
+import Price from "@/components/selling/Price";
+import Location from "@/components/selling/Location";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import Link from "next/link";
 
-const tabs = ["Item", "Category", "Price & Location"];
+const tabs = ["Item", "Category", "Price","Location"];
 
 const Selling = () => {
   const [itemData, setItemData] = useAtom(itemFormDataAtom);
@@ -189,8 +191,9 @@ const Selling = () => {
       </div>
       {currentTab === 1 && <ItemDetail />} 
        {currentTab === 2 && <CategoryDetail />}
-{currentTab === 3 && <PriceLocation />}
-      {currentTab === 3 ? (
+{currentTab === 3 && <Price/>}
+{currentTab === 4 && <Location />}
+      {currentTab === 4 ? (
         <div className="flex w-full max-w-md gap-1.5">
           <Button
             className="w-1/2 transition-colors duration-300 ease-in-out bg-white border border-primary text-primary hover:bg-gray-50"

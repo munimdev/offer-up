@@ -28,163 +28,163 @@ type Props = {
 };
 
 const PriceLocation: React.FC<Props> = ({ isUpdate = false }) => {
-  const [isMapOpen, setIsMapOpen] = useState(false);
-  const [itemData, setItemData] = useAtom(itemFormDataAtom);
-  const [updateItemData, setUpdateItemData] = useAtom(updateItemFormDataAtom);
+  // const [isMapOpen, setIsMapOpen] = useState(false);
+  // const [itemData, setItemData] = useAtom(itemFormDataAtom);
+  // const [updateItemData, setUpdateItemData] = useAtom(updateItemFormDataAtom);
 
-  const [location, setLocation] = useState(DefaultLocation);
-  const [zoom, setZoom] = useState(DefaultZoom);
-  const [addresses, setAddresses] = useState({
-    shortAddress: "",
-    longAddress: "",
-  });
+  // const [location, setLocation] = useState(DefaultLocation);
+  // const [zoom, setZoom] = useState(DefaultZoom);
+  // const [addresses, setAddresses] = useState({
+  //   shortAddress: "",
+  //   longAddress: "",
+  // });
 
-  function handleChangeLocation(lat: number, lng: number) {
-    setLocation({ lat: lat, lng: lng });
-  }
+  // function handleChangeLocation(lat: number, lng: number) {
+  //   setLocation({ lat: lat, lng: lng });
+  // }
 
-  function handleChangeZoom(newZoom: number) {
-    setZoom(newZoom);
-  }
+  // function handleChangeZoom(newZoom: number) {
+  //   setZoom(newZoom);
+  // }
 
-  function handleResetLocation() {
-    setLocation({ ...DefaultLocation });
-    setZoom(DefaultZoom);
-  }
+  // function handleResetLocation() {
+  //   setLocation({ ...DefaultLocation });
+  //   setZoom(DefaultZoom);
+  // }
 
-  async function fetchAddressFromZip(zip: string) {
-    try {
-      const response = await axios.get(
-        `https://maps.googleapis.com/maps/api/geocode/json?address=${zip}&key=AIzaSyAC1zTJy_NTO4dbq253Pv1VOSz_MB8YRTI`
-      );
-      const data = response.data;
-      if (data.status === "OK") {
-        const shortAddress = `${
-          data.results[0].address_components[2].short_name
-        }, ${
-          data.results[0].address_components[
-            data.results[0].address_components.length - 1
-          ].short_name
-        }`;
-        const longAddress = data.results[0].formatted_address;
-        console.log({ shortAddress, longAddress });
-        isUpdate
-          ? setUpdateItemData({
-              ...updateItemData!,
-              fullAddress: longAddress,
-              shortAddress: shortAddress,
-              locationLat: data.results[0].geometry.location.lat,
-              locationLng: data.results[0].geometry.location.lng,
-              zipCode: zip,
-            })
-          : setItemData({
-              ...itemData,
-              fullAddress: longAddress,
-              shortAddress: shortAddress,
-              locationLat: data.results[0].geometry.location.lat,
-              locationLng: data.results[0].geometry.location.lng,
-              zipcode: zip,
-            });
-        setLocationFetched(true);
-      }
-    } catch (error) {
-      console.error("Error fetching address from ZIP:", error);
-    }
-  }
+  // async function fetchAddressFromZip(zip: string) {
+  //   try {
+  //     const response = await axios.get(
+  //       `https://maps.googleapis.com/maps/api/geocode/json?address=${zip}&key=AIzaSyAC1zTJy_NTO4dbq253Pv1VOSz_MB8YRTI`
+  //     );
+  //     const data = response.data;
+  //     if (data.status === "OK") {
+  //       const shortAddress = `${
+  //         data.results[0].address_components[2].short_name
+  //       }, ${
+  //         data.results[0].address_components[
+  //           data.results[0].address_components.length - 1
+  //         ].short_name
+  //       }`;
+  //       const longAddress = data.results[0].formatted_address;
+  //       console.log({ shortAddress, longAddress });
+  //       isUpdate
+  //         ? setUpdateItemData({
+  //             ...updateItemData!,
+  //             fullAddress: longAddress,
+  //             shortAddress: shortAddress,
+  //             locationLat: data.results[0].geometry.location.lat,
+  //             locationLng: data.results[0].geometry.location.lng,
+  //             zipCode: zip,
+  //           })
+  //         : setItemData({
+  //             ...itemData,
+  //             fullAddress: longAddress,
+  //             shortAddress: shortAddress,
+  //             locationLat: data.results[0].geometry.location.lat,
+  //             locationLng: data.results[0].geometry.location.lng,
+  //             zipcode: zip,
+  //           });
+  //       setLocationFetched(true);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching address from ZIP:", error);
+  //   }
+  // }
 
-  async function fetchAddressFromLatLong(lat: string, lng: string) {
-    try {
-      const response = await axios.get(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyAC1zTJy_NTO4dbq253Pv1VOSz_MB8YRTI`
-      );
-      const data = response.data;
-      if (data.status === "OK") {
-        const addressComponents = data.results[0].address_components;
-        const shortAddress = `${addressComponents[2].short_name}, ${addressComponents[addressComponents.length - 1].short_name}`;
-        const longAddress = data.results[0].formatted_address;
-        const postalCode = addressComponents.find((component : {types: String[]}) => component.types.includes('postal_code')).long_name;
-        console.log({ shortAddress, longAddress });
-        isUpdate
-          ? setUpdateItemData({
-              ...updateItemData!,
-              fullAddress: longAddress,
-              shortAddress: shortAddress,
-              locationLat: data.results[0].geometry.location.lat,
-              locationLng: data.results[0].geometry.location.lng,
-              zipCode: postalCode,
-            })
-          : setItemData({
-              ...itemData,
-              fullAddress: longAddress,
-              shortAddress: shortAddress,
-              locationLat: data.results[0].geometry.location.lat,
-              locationLng: data.results[0].geometry.location.lng,
-              zipcode: postalCode,
-            });
-        setLocationFetched(true);
-      }
-    } catch (error) {
-      console.error("Error fetching address from lat-long:", error);
-    }
-  }
+  // async function fetchAddressFromLatLong(lat: string, lng: string) {
+  //   try {
+  //     const response = await axios.get(
+  //       `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyAC1zTJy_NTO4dbq253Pv1VOSz_MB8YRTI`
+  //     );
+  //     const data = response.data;
+  //     if (data.status === "OK") {
+  //       const addressComponents = data.results[0].address_components;
+  //       const shortAddress = `${addressComponents[2].short_name}, ${addressComponents[addressComponents.length - 1].short_name}`;
+  //       const longAddress = data.results[0].formatted_address;
+  //       const postalCode = addressComponents.find((component : {types: String[]}) => component.types.includes('postal_code')).long_name;
+  //       console.log({ shortAddress, longAddress });
+  //       isUpdate
+  //         ? setUpdateItemData({
+  //             ...updateItemData!,
+  //             fullAddress: longAddress,
+  //             shortAddress: shortAddress,
+  //             locationLat: data.results[0].geometry.location.lat,
+  //             locationLng: data.results[0].geometry.location.lng,
+  //             zipCode: postalCode,
+  //           })
+  //         : setItemData({
+  //             ...itemData,
+  //             fullAddress: longAddress,
+  //             shortAddress: shortAddress,
+  //             locationLat: data.results[0].geometry.location.lat,
+  //             locationLng: data.results[0].geometry.location.lng,
+  //             zipcode: postalCode,
+  //           });
+  //       setLocationFetched(true);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching address from lat-long:", error);
+  //   }
+  // }
 
-  function handleZipChange() {
-    fetchAddressFromZip(isUpdate ? updateItemData!.zipCode : itemData.zipcode);
-  }
+  // function handleZipChange() {
+  //   fetchAddressFromZip(isUpdate ? updateItemData!.zipCode : itemData.zipcode);
+  // }
 
-  function handleGetCurrentLocation() {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const lat = position.coords.latitude;
-        const lng = position.coords.longitude;
-        fetchAddressFromLatLong(lat.toString(), lng.toString());
-      },
-      (error) => {
-        console.error("Error getting current location:", error);
-      }
-    );
-  }
+  // function handleGetCurrentLocation() {
+  //   navigator.geolocation.getCurrentPosition(
+  //     (position) => {
+  //       const lat = position.coords.latitude;
+  //       const lng = position.coords.longitude;
+  //       fetchAddressFromLatLong(lat.toString(), lng.toString());
+  //     },
+  //     (error) => {
+  //       console.error("Error getting current location:", error);
+  //     }
+  //   );
+  // }
 
-  function handleMapLocationChange(lat: number, lng: number) {
-    fetchAddressFromLatLong(lat.toString(), lng.toString());
-  }
+  // function handleMapLocationChange(lat: number, lng: number) {
+  //   fetchAddressFromLatLong(lat.toString(), lng.toString());
+  // }
 
-  const mapContainerStyle = {
-    width: "900px",
-    height: "600px",
-  };
+  // const mapContainerStyle = {
+  //   width: "900px",
+  //   height: "600px",
+  // };
 
-  const { isLoaded } = useJsApiLoader({
-    id: "google-map-script",
-    googleMapsApiKey: "AIzaSyAC1zTJy_NTO4dbq253Pv1VOSz_MB8YRTI",
-  });
+  // const { isLoaded } = useJsApiLoader({
+  //   id: "google-map-script",
+  //   googleMapsApiKey: "AIzaSyAC1zTJy_NTO4dbq253Pv1VOSz_MB8YRTI",
+  // });
 
-  const [map, setMap] = React.useState<any>(null);
+  // const [map, setMap] = React.useState<any>(null);
 
-  const onLoad = React.useCallback(function callback(map: any) {
-    const bounds = new window.google.maps.LatLngBounds(DefaultLocation);
-    setLocation({
-      lat: DefaultLocation.lat,
-      lng: DefaultLocation.lng,
-    });
-    setMap(map);
-  }, []);
+  // const onLoad = React.useCallback(function callback(map: any) {
+  //   const bounds = new window.google.maps.LatLngBounds(DefaultLocation);
+  //   setLocation({
+  //     lat: DefaultLocation.lat,
+  //     lng: DefaultLocation.lng,
+  //   });
+  //   setMap(map);
+  // }, []);
 
-  const onUnmount = React.useCallback(function callback(map: any) {
-    setMap(null);
-  }, []);
+  // const onUnmount = React.useCallback(function callback(map: any) {
+  //   setMap(null);
+  // }, []);
 
-  const changeMarkerPosition = () => {
-    const newCenter = map.getCenter();
-    setLocation({
-      lat: newCenter.lat(),
-      lng: newCenter.lng(),
-    });
-    // fetchAddressFromLatLong(
-    //   newCenter.lat().toString(),
-    //   newCenter.lng().toString()
-    // );
-  };
+  // const changeMarkerPosition = () => {
+  //   const newCenter = map.getCenter();
+  //   setLocation({
+  //     lat: newCenter.lat(),
+  //     lng: newCenter.lng(),
+  //   });
+  //   // fetchAddressFromLatLong(
+  //   //   newCenter.lat().toString(),
+  //   //   newCenter.lng().toString()
+  //   // );
+  // };
 
   const [locationFetched, setLocationFetched] = useState(false);
   function handleMapClick(event: any) {
@@ -206,7 +206,7 @@ const PriceLocation: React.FC<Props> = ({ isUpdate = false }) => {
 
   return (
     <>
-      <div className="flex items-center w-full max-w-md font-medium border border-gray">
+      {/* <div className="flex items-center w-full max-w-md font-medium border border-gray">
           <div className="$">
               $
           </div>
@@ -242,8 +242,8 @@ const PriceLocation: React.FC<Props> = ({ isUpdate = false }) => {
               : setItemData({ ...itemData, isPriceFixed: e })
           }
         />
-      </div>
-      <div className="grid w-full max-w-md gap-1.5">
+      </div> */}
+      {/* <div className="grid w-full max-w-md gap-1.5">
         <Button
           variant="outline"
           className="border text-primary border-primary"
@@ -338,7 +338,7 @@ const PriceLocation: React.FC<Props> = ({ isUpdate = false }) => {
             {/* ({location.lat.toFixed(3)},{location.lng.toFixed(3)}) */}
           </p>
         </div>
-      )}
+      )} */}
     </>
   );
 };
