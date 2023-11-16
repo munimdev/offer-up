@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { RotatingLines } from  'react-loader-spinner'
 import {
   Dialog,
   DialogContent,
@@ -29,6 +30,7 @@ type Props = {
 const Location: React.FC<Props> = ({ isUpdate = false }) => {
     const [isMapOpen, setIsMapOpen] = useState(false);
     const [itemData, setItemData] = useAtom(itemFormDataAtom);
+    const [isZipcodeFetching,setIsZipcodeFetching]= useState(false)
     const [updateItemData, setUpdateItemData] = useAtom(updateItemFormDataAtom);
     const [locationFetched, setLocationFetched] = useState(false);
     const [location, setLocation] = useState(DefaultLocation);
@@ -53,6 +55,7 @@ const Location: React.FC<Props> = ({ isUpdate = false }) => {
     
       async function fetchAddressFromZip(zip: string) {
         try {
+            setIsZipcodeFetching(true)
           const response = await axios.get(
             `https://maps.googleapis.com/maps/api/geocode/json?address=${zip}&key=AIzaSyAC1zTJy_NTO4dbq253Pv1VOSz_MB8YRTI`
           );
@@ -85,8 +88,10 @@ const Location: React.FC<Props> = ({ isUpdate = false }) => {
                   zipcode: zip,
                 });
             setLocationFetched(true);
+            setIsZipcodeFetching(false)
           }
         } catch (error) {
+            setIsZipcodeFetching(false)
           console.error("Error fetching address from ZIP:", error);
         }
       }
@@ -226,12 +231,30 @@ const Location: React.FC<Props> = ({ isUpdate = false }) => {
                   })
             }
           />
-          <Button
-            className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 p-0 w-44"
-            onClick={handleZipChange}
-          >
-            Fetch Address
-          </Button>
+     {itemData.zipcode.length === 5 && (
+  <div className="flex justify-center">
+    {isZipcodeFetching ? (
+      <RotatingLines
+        strokeColor="#62C3FE"
+        strokeWidth="5"
+        animationDuration="0.75"
+        width="20"
+        visible={true}
+      />
+    ) : (
+      <p
+        className="inline-flex items-center justify-center text-sm font-medium focus-visible:outline-none focus-visible:ring-2 p-0 cursor-pointer text-blue-500 hover:text-blue-700"
+        onClick={handleZipChange}
+      >
+        Apply
+      </p>
+    )}
+  </div>
+)}
+
+
+
+
         </div>
       </div>
       <p className="text-xl text-center text-gray-200">OR</p>
