@@ -210,7 +210,7 @@ const Location: React.FC<Props> = ({ isUpdate = false }) => {
    <>
  <div className="grid w-full max-w-md gap-1.5">
         <Label htmlFor="zip-code">Zip Code</Label>
-        <div className="flex items-center gap-2 border border-gray rounded-3xl p-2">
+        <div className="flex items-center gap-2 border border-gray rounded-3xl p-2 ">
           <Input
             type="text"
             id="zip-code"
@@ -231,8 +231,9 @@ const Location: React.FC<Props> = ({ isUpdate = false }) => {
                   })
             }
           />
-     {itemData.zipcode.length === 5 && (
-  <div className="flex justify-center">
+          <div className="px-4 inline-flex items-center justify-center">
+{itemData.zipcode.length === 5 && (
+  <>
     {isZipcodeFetching ? (
       <RotatingLines
         strokeColor="#62C3FE"
@@ -243,14 +244,16 @@ const Location: React.FC<Props> = ({ isUpdate = false }) => {
       />
     ) : (
       <p
-        className="inline-flex items-center justify-center text-sm font-medium focus-visible:outline-none focus-visible:ring-2 p-0 cursor-pointer text-blue-500 hover:text-blue-700"
+        className="  text-sm font-medium focus-visible:outline-none focus-visible:ring-2  cursor-pointer text-blue-500 hover:text-blue-700 "
         onClick={handleZipChange}
       >
         Apply
       </p>
     )}
-  </div>
+    
+  </>
 )}
+</div>
 
 
 

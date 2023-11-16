@@ -189,11 +189,10 @@ const Selling = () => {
       <div className="grid w-full max-w-lg items-center gap-1.5">
         <Stepper tabs={tabs} activeTab={currentTab} />
       </div>
-      {/* {currentTab === 1 && <ItemDetail />} 
+      {currentTab === 1 && <ItemDetail />} 
        {currentTab === 2 && <CategoryDetail />}
 {currentTab === 3 && <Price/>}
-{currentTab === 4 && <Location />} */}
-<Location/>
+{currentTab === 4 && <Location />}
       {currentTab === 4 ? (
         <div className="flex w-full max-w-md gap-1.5">
           <Button
