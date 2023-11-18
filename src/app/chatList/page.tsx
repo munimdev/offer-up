@@ -117,14 +117,14 @@ const Page = () => {
     setSelectedTab(tab);
   };
   const deleteChatsHandler = async () => {
-    console.log("delete click")
-    console.log(selectedChats,'selectedChats')
+    console.log("delete click");
+    console.log(selectedChats, "selectedChats");
     const chatIdsToDelete = selectedChats;
     setChats((prevChats) =>
-    prevChats.filter((chat) => !chatIdsToDelete.includes(chat.id))
-  );
+      prevChats.filter((chat) => !chatIdsToDelete.includes(chat.id))
+    );
     for (const chatId of chatIdsToDelete) {
-      const chatDocRef = doc(db, 'Chats', chatId);
+      const chatDocRef = doc(db, "Chats", chatId);
       try {
         await deleteDoc(chatDocRef);
         console.log(`Chat with ID ${chatId} deleted successfully!`);
@@ -145,146 +145,155 @@ const Page = () => {
   };
 
   const handleSelectAllChange = () => {
-    if(selectAll){
-      setSelectedChats([])
-    }else{
-      const arrayOfIds = chats.map(obj => obj.id);
-      setSelectedChats(arrayOfIds)
+    if (selectAll) {
+      setSelectedChats([]);
+    } else {
+      const arrayOfIds = chats.map((obj) => obj.id);
+      setSelectedChats(arrayOfIds);
     }
     setSelectAll((prevSelectAll) => !prevSelectAll);
   };
   return (
     <>
-    <div className="flex flex-col w-full sm:w-3/4 lg:w-4/5 xl:w-4/5 mx-auto">
-      <div className="flex w-full text-sm gap-x-2 ml-2">
-        <Link href="/">Home</Link>
-        {">"}
-        <Link href="/chatList">Inbox </Link>
-      </div>
-
-      {/* Chat List */}
-
-      <div className=" pt-4 ">
-        <div>
-          <p className="px-2 mb-4 font-semibold text-lg">Inbox</p>
+      <div className="flex flex-col w-full sm:w-3/4 lg:w-4/5 xl:w-4/5 mx-auto mb-2">
+        <div className="flex w-full text-sm gap-x-2 ml-2">
+          <Link href="/">Home</Link>
+          {">"}
+          <Link href="/chatList">Inbox </Link>
         </div>
-        {/* Tabs */}
-        <div className="flex border border-primary pt-4 px-4 pb-2 rounded-tl-lg rounded-tr-lg">
-          <p
-            className={`px-5 font-semibold text-lg cursor-pointer ${
-              selectedTab === "All"
-                ? "text-primary border-b-4 border-primary "
-                : ""
-            }`}
-            onClick={() => handleTabClick("All")}
-          >
-            All
-          </p>
-          <p
-            className={`px-5 font-semibold text-lg cursor-pointer ${
-              selectedTab === "Seller"
-                ? "text-primary border-b-4 border-primary "
-                : ""
-            }`}
-            onClick={() => handleTabClick("Seller")}
-          >
-            Seller
-          </p>
-          <p
-            className={`px-5 font-semibold text-lg cursor-pointer ${
-              selectedTab === "Buyer"
-                ? "text-primary border-b-4 border-primary "
-                : ""
-            }`}
-            onClick={() => handleTabClick("Buyer")}
-          >
-            Buyer
-          </p>
-        </div>
-        {chats.length>0&&    <div className="flex flex-row items-center  border border-t-white border-primary z-10 ">
-          <div className=" p-4">
-            <Checkbox
-              className="w-6 h-6"
-              onClick={handleSelectAllChange}
-              checked={selectAll}
-            />
+
+        {/* Chat List */}
+
+        <div className=" pt-4 ">
+          <div>
+            <p className="px-2 mb-4 font-semibold text-lg">Messages</p>
           </div>
-          <ConfirmDelete  deleteChat={deleteChatsHandler}/>
-        </div>}
-    
-        {/* Chat Entry */}
-        {loader ? null : chats.length === 0 ? (
-          <EmptyInbox />
-        ) : (
-          chats.map((val,index) => {
-            const isLastItem = index === chats.length - 1;
-            return (
-              <div className="flex flex-col" key={val.itemId}>
-                <div className={`flex flex-row items-center  border border-t-white border-primary z-10 ${isLastItem ? 'rounded-bl-lg rounded-br-lg' : ''}`}>
-                  <div className=" p-4">
-                    <Checkbox
-                      className="w-6 h-6"
-                      onClick={() => handleCheckboxChange(val.id)}
-                      checked={selectAll || selectedChats.includes(val.id)}
-                    />
-                  </div>
+          {/* Tabs */}
+        <div className="sm:border border-primary sm:rounded-xl w-screen border-t border-b-white   sm:w-auto">
+        <div className="flex border-b border-primary  p-4 ">
+            <p
+              className={`px-5 font-semibold text-lg cursor-pointer ${
+                selectedTab === "All"
+                  ? "text-primary border-b-4 border-primary "
+                  : ""
+              }`}
+              onClick={() => handleTabClick("All")}
+            >
+              All
+            </p>
+            <p
+              className={`px-5 font-semibold text-lg cursor-pointer ${
+                selectedTab === "Seller"
+                  ? "text-primary border-b-4 border-primary "
+                  : ""
+              }`}
+              onClick={() => handleTabClick("Seller")}
+            >
+              Seller
+            </p>
+            <p
+              className={`px-5 font-semibold text-lg cursor-pointer ${
+                selectedTab === "Buyer"
+                  ? "text-primary border-b-4 border-primary "
+                  : ""
+              }`}
+              onClick={() => handleTabClick("Buyer")}
+            >
+              Buyer
+            </p>
+          </div>
+          {chats.length > 0 && (
+            <div className="flex flex-row items-center border border-t-white border-primary    z-10 ">
+              <div className=" p-4">
+                <Checkbox
+                  className="w-6 h-6"
+                  onClick={handleSelectAllChange}
+                  checked={selectAll}
+                />
+              </div>
+              <ConfirmDelete deleteChat={deleteChatsHandler} />
+            </div>
+          )}
 
-                  <Link
-                    href={`/chat?chatId=${val.id}&userId=${user?.id}`}
-                    style={{ cursor: "pointer" }}
-                    className="flex flex-row items-center gap-x-10 w-full h-full  p-4"
-                  >
-                    <Image
-                      alt="Item Image"
-                      src={
-                        user?.id === val.sellerId
-                          ? val.buyerProfileImage ||
-                            "https://github.com/shadcn.png"
-                          : val.sellerProfileImage ||
-                            "https://github.com/shadcn.png"
-                      }
-                      width={60}
-                      height={30}
-                      className="rounded-full hidden md:block"
-                    />
-                    <div className="flex flex-col gap-x-2">
-                      <p className="text-lg font-bold">
-                        {user?.id === val.sellerId
-                          ? val.buyerName
-                          : val.sellerName}
-                      </p>
-                      <p>
-                        {val.lastMessage.substring(0, 50)}{" "}
-                        {val.lastMessage.length > 50 ? "..." : ""}
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        about {formatTime(val.lastMessageTime.seconds)}
-                      </p>
-                    </div>
-
-                    <div className="ml-auto" style={{ width: "70px" }}>
-                      <Image
-                        alt="Item Image"
-                        src={val.itemImage}
-                        width={60}
-                        height={30}
-                        className="w-full"
+          {/* Chat Entry */}
+          {loader ? null : chats.length === 0 ? (
+            <EmptyInbox />
+          ) : (
+            chats.map((val,index) => {
+              const isLastItem = index === chats.length - 1;
+              return (
+                <div className="flex flex-col" key={val.itemId}>
+                  <div className={`flex flex-row items-center z-10 border border-t-white border-primary ${isLastItem ? 'rounded-bl-lg rounded-br-lg' : ''}`} >
+                  {/* style={{    boxShadow: '0px 0px 3px 0px inset hsl(var(--primary))'}} */}
+                    <div className=" p-2 sm:p-4">
+                      <Checkbox
+                        className="w-6 h-6"
+                        onClick={() => handleCheckboxChange(val.id)}
+                        checked={selectAll || selectedChats.includes(val.id)}
                       />
                     </div>
-                  </Link>
-                </div>
-              </div>
-            );
-          })
-        )}
 
-        {loader && (
-          <div className="flex justify-center">
-            <Loader />
-          </div>
-        )}
+                    <Link
+                      href={`/chat?chatId=${val.id}&userId=${user?.id}`}
+                      style={{ cursor: "pointer" }}
+                      className="flex flex-row items-center sm:gap-x-10 w-full h-full p-2 sm:p-4"
+                    >
+                      <Image
+                        alt="Item Image"
+                        src={
+                          user?.id === val.sellerId
+                            ? val.buyerProfileImage ||
+                              "https://github.com/shadcn.png"
+                            : val.sellerProfileImage ||
+                              "https://github.com/shadcn.png"
+                        }
+                        width={60}
+                        height={30}
+                        className="rounded-full hidden md:block"
+                      />
+                      <div className="flex flex-col gap-x-2">
+                        <p className="text-lg font-bold">
+                          {user?.id === val.sellerId
+                            ? val.buyerName
+                            : val.sellerName}
+                        </p>
+                        <p className="break-all">
+                          {val.lastMessage.substring(0, 20)}{" "}
+                          {val.lastMessage.length > 20 ? "..." : ""}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          about {formatTime(val.lastMessageTime.seconds)}
+                        </p>
+                      </div>
+
+                      <div className="w-16 sm:w-20 ml-auto overflow-hidden"
+                      style={{
+                        borderRadius:10,
+                      }}
+                      >
+                        <Image
+                          alt="Item Image"
+                          src={val.itemImage}
+                          width={60}
+                          height={30}
+                          className="w-full"
+                        />
+                      </div>
+                    </Link>
+                  </div>
+                </div>
+              );
+            })
+          )}
+
+          {loader && (
+            <div className="flex justify-center">
+              <Loader />
+            </div>
+          )}
+        </div>
+        </div>
       </div>
-    </div>
     </>
   );
 };
