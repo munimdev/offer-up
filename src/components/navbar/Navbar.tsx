@@ -361,37 +361,7 @@ export const Navbar = ({}: NavbarProps) => {
                       </NavigationMenuLink>
                     </Link>
             </NavigationMenuItem>
-              {/* {navList.map((item, index) => (
-                <NavigationMenuItem key={item.title}>
-                  {item.content ? (
-                    <>
-                      <NavigationMenuTrigger>
-                        {item.title}
-                      </NavigationMenuTrigger>
-                      <NavigationMenuContent>
-                        <ul className="grid gap-3 p-6 w-[200px] grid-cols-1 ">
-                          {item?.children?.map((child) => (
-                            <li
-                              key={child.to}
-                              className="row-span-3 text-sm text-black"
-                            >
-                              <Link href={child.to}>{child.title}</Link>
-                            </li>
-                          ))}
-                        </ul>
-                      </NavigationMenuContent>
-                    </>
-                  ) : (
-                    <Link href={isLoggedIn===true?item.to:''} legacyBehavior passHref>
-                      <NavigationMenuLink
-                        className={navigationMenuTriggerStyle()}
-                      >
-                        {item.title}
-                      </NavigationMenuLink>
-                    </Link>
-                  )}
-                </NavigationMenuItem>
-              ))} */}
+              
               <NavigationMenuItem>
                 {!isLoggedIn ? (
                   <Dialog onOpenChange={(e) => {setIsLoginDialog(e); setLoginDialogCurrentScreen('home')}} open={isLoginDialog}>
@@ -412,10 +382,10 @@ export const Navbar = ({}: NavbarProps) => {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="min-w-[325px]">
                       <DropdownMenuGroup>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem asChild className="cursor-pointer">
                           <Link
                             href={`/seller/${user!.id}`}
-                            className="flex flex-row items-center gap-x-5"
+                            className="flex flex-row items-center gap-x-5 "
                           >
                             <Image
                               width={80}
@@ -433,11 +403,11 @@ export const Navbar = ({}: NavbarProps) => {
                             </div>
                           </Link>
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          <Link href="/listings">My Listings</Link>
+                        <DropdownMenuItem asChild className="cursor-pointer">
+                          <Link href="/listings" >My Listings</Link>
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          <Link href="/account/setting">
+                        <DropdownMenuItem asChild className="cursor-pointer">
+                          <Link href="/account/setting" >
                             Account & Settings
                           </Link>
                         </DropdownMenuItem>
