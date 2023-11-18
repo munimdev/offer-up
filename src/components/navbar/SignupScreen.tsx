@@ -62,10 +62,14 @@ const SignupScreen = (props:any) => {
       firstName: z.string({
         required_error: "First Name is required",
         invalid_type_error: "Furst Name must be a string",
+      }).max(10,{
+        message:"Max limit is 10 characters"
       }),
       lastName: z.string({
         required_error: "Last Name is required",
         invalid_type_error: "Last Name must be a string",
+      }).max(10,{
+        message:"Max limit is 10 characters"
       }),
       email: z.string().email({
         message: "Email is required",
