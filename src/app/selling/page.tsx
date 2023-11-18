@@ -76,6 +76,22 @@ const Selling = () => {
       });
       return false;
     }
+    if (currentTab === 1 && itemData.name.length>30) {
+      toast({
+        title: "Max characters limit reached",
+        description: "Max limit of characters for name is 30",
+        duration: 2500,
+      });
+      return false;
+    }
+    if (currentTab === 1 && itemData.description.length>500) {
+      toast({
+        title: "Max characters limit reached",
+        description: "Max limit of characters for name is 500",
+        duration: 2500,
+      });
+      return false;
+    }
     if (currentTab === 1 && itemData.images?.length == 0) {
       toast({
         title: "Item images are required",
