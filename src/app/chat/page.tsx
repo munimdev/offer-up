@@ -440,23 +440,24 @@ const Page = () => {
             />
           </div>
         )}
-
         <div
           id="chat-container"
           ref={chatContainerRef}
-          style={{
-            maxHeight: "400px",
-            minHeight: "400px",
-            overflowY: "scroll",
-            overflow:"auto",
-            WebkitOverflowScrolling: "touch",
-            scrollbarWidth: "thin",
-            msOverflowStyle: "none",
-            "&::-webkit-scrollbar": {
-              display: "none",
-              width:0
-            },
-          }}
+          className="min-h-[400px] max-h-[400px] overflow-y-scroll no-scrollbar"
+          // style={{
+          //   maxHeight: "400px",
+          //   minHeight: "400px",
+          //   // overflowY: "scroll",
+          //   // overflow: "auto",
+          //   WebkitOverflowScrolling: "touch",
+          //   // -ms-overflow-style: none;
+          //   scrollbarWidth: "thin",
+          //   msOverflowStyle: "none",
+          //   "&::-webkit-scrollbar": {
+          //     display: "none",
+          //     width:0
+          //   },
+          // }}
         >
           <div className="flex-1 flex flex-col gap-y-5 justify-end py-4">
             {/* Message Bubble */}
