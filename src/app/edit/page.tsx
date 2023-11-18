@@ -24,7 +24,8 @@ import {
 import Stepper from "@/components/ui/stepper";
 import { Skeleton } from "@/components/ui/skeleton";
 import FileUpload from "@/components/selling/FileUpload";
-import PriceLocation from "@/components/selling/Price&Location";
+import Price from "@/components/selling/Price";
+import Location from "@/components/selling/Location";
 
 import { Images, Item } from "@/types/types";
 
@@ -499,14 +500,17 @@ const EditItem = () => {
       <div className="grid w-full max-w-lg items-center gap-1.5">
         <Stepper tabs={tabs} activeTab={currentTab} />
       </div>
-      {currentTab === 1 && (
+      {/* {currentTab === 1 && (
         <ItemDetail item={itemData!} setItemData={setItemData} />
       )}
       {currentTab === 2 && (
         <CategoryDetail item={itemData!} setItemData={setItemData} />
       )}
-      {currentTab === 3 && <PriceLocation isUpdate={true} />}
-
+      {currentTab === 3 && <PriceLocation isUpdate={true} />} */}
+  {currentTab === 1 && <ItemDetail item={itemData!} setItemData={setItemData}/>} 
+       {currentTab === 2 && <CategoryDetail item={itemData!} setItemData={setItemData}/>}
+{currentTab === 3 && <Price isUpdate={true}/>}
+{currentTab === 4 && <Location isUpdate={true}/>}
       {currentTab === 3 ? (
         <div className="grid w-full max-w-md gap-1.5">
           <Button type="button" onClick={onMutateHandler}>
