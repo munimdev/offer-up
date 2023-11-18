@@ -218,22 +218,55 @@ const forgetPasswordHandler = async () => {
             open={isImageDialogOpen}
           >
         <DialogTrigger>
-  <div className="relative flex flex-col items-center gap-y-2">
-    <div className="relative rounded-full overflow-hidden">
-      <Image
-        width={100}
-        height={100}
-        src={`${user?.imagePath ? user.imagePath : '/images/placeholder.png'}`}
-        alt="account-image"
-        className="rounded-full relative z-0"
-      />
-    </div>
-    <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2  z-10">
+        {/* <div className="relative flex flex-col items-center gap-y-2">
+  <div className="relative group rounded-full overflow-hidden">
+    <Image
+      width={100}
+      height={100}
+      src={`${user?.imagePath ? user.imagePath : '/images/placeholder.png'}`}
+      alt="account-image"
+      className="rounded-full relative z-0"
+    />
+    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
       <div className="rounded-full bg-slate-200 p-1">
         <Camera strokeWidth={1.5} />
       </div>
     </div>
   </div>
+</div> */}
+{user?.imagePath ?     <div className="relative flex flex-col items-center gap-y-2">
+  <div className="relative group rounded-full overflow-hidden">
+    <Image
+      width={100}
+      height={100}
+      src={`${user?.imagePath ? user.imagePath : '/images/placeholder.png'}`}
+      alt="account-image"
+      className="rounded-full relative z-0 group-hover:opacity-75 transition-opacity duration-300"
+    />
+    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <Camera strokeWidth={1.5} />
+    </div>
+  </div>
+</div>:<div className="relative flex flex-col items-center gap-y-2">
+  <div className="relative group rounded-full overflow-hidden">
+    <Image
+      width={100}
+      height={100}
+      src={`${user?.imagePath ? user.imagePath : '/images/blank-profile-picture.png'}`}
+      alt="account-image"
+      className="rounded-full relative z-0"
+    />
+    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
+      <div className="rounded-full  p-1">
+        <Camera strokeWidth={1.5} />
+      </div>
+    </div>
+  </div>
+</div>}
+
+
+ 
+
 </DialogTrigger>
 
             <DialogContent>
