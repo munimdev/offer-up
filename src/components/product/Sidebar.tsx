@@ -236,21 +236,21 @@ const Sidebar: React.FC<Props> = ({ data }) => {
         <Phone fill="#fff" size={18} className="mr-2" /> Call for Details
       </Button> */}
         {user && user.id && (
-          <>
+          <div className="z-10 md:w-full w-screen bg-white flex justify-around md:h-auto h-16 md:justify-between items-center md:flex-col fixed md:relative left-0 bottom-0">
             {" "}
             <Button
-              className="rounded-full bg-primary hover:bg-primary"
+              className="border border-primary rounded-full bg-primary md:mb-2  hover:bg-primary w-2/5 md:w-full md:text-base sm:text-sm text-xs sm:font-normal font-bold md:h-auto sm:h-12 h-10"
               onClick={handleOpenOfferModal}
             >
-              <DollarSign fill="#fff" size={18} className="mr-2" /> Make a Offer
+              <DollarSign fill="#fff" size={16} className="mr-2" /> Make a Offer
             </Button>
             <Button
-              className="bg-white border rounded-full text-primary border-primary hover:bg-white"
+              className="bg-white border rounded-full text-primary border-primary hover:bg-white w-2/5 md:w-full md:text-base sm:text-sm text-xs sm:font-normal font-bold md:h-auto sm:h-12 h-10"
               onClick={handleOpenChatModal}
             >
               <Message className="mr-2" /> Chat
             </Button>
-          </>
+          </div>
         )}
         <div className="flex items-center justify-center gap-x-5 text-primary">
           <SelectFavouriteProducts isLoggedIn={isLoggedIn} data={data} isButton={false}/>

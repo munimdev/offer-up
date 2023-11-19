@@ -146,8 +146,8 @@ const [isReported,setIsReportedAdded] =useState(false)
   };
   return (
     <div onClick={handleClickOutside}>
-      <div className="flex flex-col mb-2 border-b md:flex-row" >
-        <div className="w-full md:w-8/12 lg:w-9/12">
+        <div className="flex flex-col mb-2 border-b md:flex-row relative" >
+        <div className="w-full md:w-8/12 lg:w-9/12 ">
           <div>
             <Slider
               imagesMain={currentItem?.images.map(

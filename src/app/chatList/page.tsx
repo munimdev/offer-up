@@ -156,7 +156,7 @@ const Page = () => {
   return (
     <>
       <div className="flex flex-col w-full sm:w-3/4 lg:w-4/5 xl:w-4/5 mx-auto mb-2">
-        <div className="flex w-full text-sm gap-x-2 ml-2">
+        <div className="flex w-4/5 text-sm gap-x-2 ml-2">
           <Link href="/">Home</Link>
           {">"}
           <Link href="/chatList">Inbox </Link>
