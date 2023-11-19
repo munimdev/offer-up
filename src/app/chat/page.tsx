@@ -46,6 +46,7 @@ const Page = () => {
   const [isEditId, setIsEditId] = useState<string>();
   const [messages, setMessages] = useState<any[]>([]);
   const modalRef = useRef(null);
+  const [rows, setRows] = useState(1);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [isOptionModaOpen, setIsOptionModalOpen] = useState<string>();
   const handleInputChange = (event: any) => {
@@ -56,6 +57,23 @@ const Page = () => {
     if (e.key === "Enter" && inputValue.trim() !== "") {
       handleSendMessage();
     }
+  };
+  useEffect(() => {
+    const textarea = document.getElementById('inputTextArea');
+    if (textarea) {
+      textarea.style.height = 'auto'; // Reset height to auto to recalculate
+      textarea.style.height = `${textarea.scrollHeight}px`;
+      setRows(Math.ceil(textarea.scrollHeight / 20)); // Adjust 20 based on your line height
+    }
+  }, [inputValue]);
+
+  const calculateRows = (element) => {
+    const lineHeight = parseInt(window.getComputedStyle(element).lineHeight);
+    const paddingTop = parseInt(window.getComputedStyle(element).paddingTop);
+    const paddingBottom = parseInt(window.getComputedStyle(element).paddingBottom);
+    const contentHeight = element.scrollHeight - paddingTop - paddingBottom;
+    const calculatedRows = Math.floor(contentHeight / lineHeight);
+    return calculatedRows > 1 ? calculatedRows : 1;
   };
   const handleIconClick = () => {
     // fileInputRef.current.click();
@@ -608,8 +626,10 @@ const Page = () => {
             id="inputTextArea"
             onChange={handleInputChange}
             value={inputValue}
-            style={{ height: `${textareaHeight}px` }}
-            className="flex-1 border-none outline-none h-7 w-100 break-all scrollbar-none whitespace-pre-wrap"
+            // style={{backgroundColor:"red"}}
+            // style={{ height: `${textareaHeight}px` }}
+            style={{ height: `${rows * 20}px` }} 
+            className="flex-1 border-none outline-none  w-100 break-all whitespace-pre-wrap"
             placeholder="Message..."
             onKeyDown={handleKeyDown}
           />
