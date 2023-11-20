@@ -43,7 +43,6 @@ const Setting = () => {
   const { user } = useSession();
   const { toast } = useToast();
   const router = useRouter();
-console.log(user,'setting')
   // States
   const [error, setError] = useState<string>();
   const [image, setImage] = useState<File>();
@@ -173,21 +172,26 @@ console.log(user,'setting')
   const emailVerificationHandler = async () => {
     try {
       setApplyEmailVerify(true);
+      console.log("called")
       const response = await resendEmail();
       if (response.statusCode === "111") {
+        console.log(response,'response')
         toast({
           title: "Email Verification",
           description: "Please check you email for verification!",
         });
       } else {
+        console.log(response,'error')
         setError(response.message);
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error,'catch error')
+    }
   };
 const forgetPasswordHandler = async () => {
   try {
     setForgetPasswordState(true)
-    const response = await forgetPassword('abuzarzaidi947@gmail.com')
+    const response = await forgetPassword(user?.email)
     if (response.statusCode === "111") {
       toast({
         title: "Forget Password",

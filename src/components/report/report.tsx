@@ -76,6 +76,7 @@ const Report: React.FC<Props> = ({ isLoggedIn, formSchema, lookupId, onSubmit, s
       enabled: !!lookupId,
     }
   );
+  console.log(lookupList,'lookupList')
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={(e) => {
