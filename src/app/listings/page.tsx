@@ -168,7 +168,7 @@ const Listings = () => {
           )}
 
           {/* <div className="grid grid-cols-2 gap-4 p-4 md:grid-cols-3 lg:grid-cols-4"> */}
-          <div className="flex flex-col items-center p-4">
+          <div className="w-full md:w-4/5 mx-auto flex flex-col items-center p-4">
             {sellerItems?.dataObject?.map((item: Item) => {
               {
                 /* {myItems.map((item: any) => { */
@@ -176,10 +176,10 @@ const Listings = () => {
               return (
                 <div
                   key={item.id}
-                  className="flex flex-row transition-colors duration-300 ease-in-out gap-x-4 group hover:bg-gray-100"
+                  className=" w-full flex flex-row transition-colors duration-300 ease-in-out gap-x-4 group hover:bg-gray-100"
                 >
-                  <div className="flex flex-row justify-between p-4 border-b rounded-b-md">
-                    <div className="flex items-center w-[800px] justify-between">
+                  <div className="w-full flex flex-row justify-between p-4 border-b rounded-b-md">
+                    <div className="flex items-center w-3/4 justify-between">
                       <div className="flex items-center gap-4">
                         <div className="relative w-20 h-20 overflow-hidden">
                           <Image
@@ -194,7 +194,7 @@ const Listings = () => {
                         </div>
                         <div className="flex flex-col">
                           <p className="space-x-2">
-                            <span className="text-lg font-bold text-ellipsis">
+                            <span className="text-base md:text-lg font-bold text-ellipsis">
                               {item.name}
                             </span>
                             <span className="text-sm font-medium">{`$${item.price}`}</span>
@@ -205,10 +205,12 @@ const Listings = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="flex flex-col items-end justify-between" onClick={()=>{fetchChatsForItem(item.id,user.id)}}>
+                    <div className="sm:w-2/5 md:w-2/5 lg:w-2/6 xl:w-1/4 2xl:w-1/5 flex flex-col items-end justify-between" onClick={()=>{fetchChatsForItem(item.id,user.id)}}>
+                    <div className={`w-full flex flex-row ${item.isSold ? 'justify-between' : 'justify-end'} items-center`}>
+                    {item.isSold && <p className="bg-primary tracking-wider text-white md:text-sm px-2 py-1 rounded-2xl">Sold</p>}    
                       <p className="text-sm font-medium text-right">{`Posted 02/08/2023`}</p>
+                    </div>
                       <ItemDetails item={item} refetchItems={refetchItems} chats={chatData} isLoading={isLoading} userId={user.id}/>
-                      
                     </div>
                   </div>
                 </div>
@@ -272,7 +274,7 @@ const redirectHandler=(chatId)=>{
     <Sheet>
       <SheetTrigger>
         {" "}
-        <button
+        <button title=''
           type="button"
           className="items-center justify-center invisible w-8 h-8 text-gray-400 rounded-full group-hover:visible"
         >
@@ -396,8 +398,7 @@ const redirectHandler=(chatId)=>{
               <AlertDialogHeader>
                 <AlertDialogTitle>Mark Item as Sold?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete
-                  your account and remove your data from our servers.
+                  This action cannot be undone.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
