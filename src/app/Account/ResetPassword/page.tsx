@@ -11,6 +11,7 @@ import * as Queries from "@/utils/queries";
 const ResetPassword = () => {
     const { toast } = useToast();
     const searchParams = useSearchParams();
+    const[isResetButtonClicked,setIsResetButtonClicked] = useState(false)
     const p = searchParams.get("p")||''
     const [password,setPassword] = useState<string>('');
     const [cnPassword,setCnPassword]=useState<string>();
@@ -28,6 +29,9 @@ const ResetPassword = () => {
     console.log(p,'key')
         try {
             if(password===cnPassword){
+              setIsResetButtonClicked(true)
+              console.log(p,'p')
+              console.log(password,'password')
                 const data = await resetPassword({key:p,password:password});
                 if (data.statusCode === "111") {
                     toast({
@@ -69,7 +73,7 @@ const ResetPassword = () => {
     <Input onClick={()=>setError(false)} id="cnPassword" name="cnPassword" type="password" required onChange={(e) => setCnPassword(e.target.value)} />
   </div>
   <div>
-    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-4 rounded w-[350px]" style={{ backgroundColor: sendRequest?'#DDDDDD':'#63C3FE', marginTop: '10px' }} onClick={useResetPassoword}>
+    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-4 rounded w-[350px]" style={{ backgroundColor: sendRequest?'#DDDDDD':'#63C3FE', marginTop: '10px' }} onClick={useResetPassoword} disabled={isResetButtonClicked}>
       Reset Password
     </button>
   </div>

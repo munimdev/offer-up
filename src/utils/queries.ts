@@ -35,7 +35,7 @@ export const signupUser = (data: SignupData): Promise<Result<User>> =>
 export const resetPassword = (data: {
   key: string;
   password: string;
-}): Promise<Result<any>> => instance.post("/auth/changePassword", data);
+}): Promise<Result<any>> => instance.post("/auth/resetPassword", data);
  export const resendEmailVerificationEmail = (): Promise<Result<any>> =>
    instance.post("/Auth/resendEmailVerificationEmail",{})
    export const deleteaccount = (): Promise<Result<any>> =>
