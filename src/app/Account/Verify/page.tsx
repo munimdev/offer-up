@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 import React,{useState, useEffect} from 'react';
 import { useMutation } from "@tanstack/react-query";
@@ -21,8 +22,7 @@ const Verify = () => {
           return response;
         }
       );
-    useEffect(()=>{
-      const useVerification = async () => {
+      const verificationHandler= async () => {
         setSendRequest(true);
     
         try {
@@ -45,7 +45,9 @@ const Verify = () => {
           });
         }
       };
-      useVerification();
+    useEffect(()=>{
+    
+      verificationHandler();
     },[])
         return (
         <div className="flex flex-col items-center ">

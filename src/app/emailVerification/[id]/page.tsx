@@ -18,7 +18,7 @@ const EmailVerification = ({ params }: { params: { p: string } }) => {
         }
       );
     useEffect(()=>{
-      const useVerification = async () => {
+      const verification = async () => {
         setSendRequest(true);
     
         try {
@@ -41,7 +41,7 @@ const EmailVerification = ({ params }: { params: { p: string } }) => {
           });
         }
       };
-      useVerification();
+      verification();
     },[])
     
     return (
