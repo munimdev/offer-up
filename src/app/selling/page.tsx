@@ -84,7 +84,7 @@ const Selling = () => {
       });
       return false;
     }
-    if (currentTab === 1 && itemData.description.length>500) {
+    if (currentTab === 1 && itemData?.description?.length>500) {
       toast({
         title: "Max characters limit reached",
         description: "Max limit of characters for name is 500",
