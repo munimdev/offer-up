@@ -41,7 +41,7 @@ const Selling = () => {
     const response = await mutateAsync({
       name: itemData.name,
       description: itemData.description,
-      price: itemData.price,
+      price: parseInt(itemData.price),
       isPriceFixed: itemData.isPriceFixed,
       images: itemData.images,
       categoryId: itemData.category.parentCategoryId,
@@ -164,7 +164,7 @@ const Selling = () => {
         setItemData({
           name: '',
           description: '',
-          price: 0,
+          price: '0',
           isPriceFixed: false,
           images: [],
           category: {

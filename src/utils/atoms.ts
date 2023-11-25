@@ -40,7 +40,7 @@ export const itemFormDataAtom = atom<ItemAtom>({
     isDeleted: false,
   },
   conditionLookUpId: 0,
-  price: 0,
+  price: "0",
   isPriceFixed: true,
   validUpto: "2023-07-27",
   fullAddress: "",

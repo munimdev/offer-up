@@ -97,7 +97,7 @@ export type Attribute = {
 export type Item = {
   id: string;
   name: string;
-  price: number;
+  price: string;
   description: string;
   images: ItemImages[];
   totalMessages: number;

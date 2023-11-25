@@ -148,7 +148,7 @@ export type ItemAtom = {
     selectedValue: string;
   }[];
   conditionLookUpId: number;
-  price: number;
+  price: string;
   isPriceFixed: boolean;
   validUpto: string;
   fullAddress: string;
