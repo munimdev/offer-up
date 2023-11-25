@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,11 +27,15 @@ const OptionsDropdown: React.FC<TOptionsDropdown> = ({
   onChange,
   value = "",
 }) => {
+  const[parentCategory,setParentCategory] = useState("")
+  console.log(value,'value')
+  console.log(options,'options')
   return (
     <div className="border rounded ">
       <DropdownMenu>
         <DropdownMenuTrigger className="w-full overflow-hidden" asChild>
-          <p className="flex items-center w-full h-10 px-2 text-sm hover:cursor-pointer">{value || title}</p>
+          <p className="flex items-center w-full h-10 px-2 text-sm hover:cursor-pointer">
+            {value&&`${parentCategory}>${value}`||title}</p>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-64">
           <DropdownMenuSeparator />
@@ -47,7 +51,7 @@ const OptionsDropdown: React.FC<TOptionsDropdown> = ({
                       {option.children.map((child: any) => (
                         <DropdownMenuItem
                           key={child.id}
-                          onClick={() => onChange(child)}
+                          onClick={() => {setParentCategory(option.name);onChange(child)}}
                         >
                           {child.name}
                         </DropdownMenuItem>
