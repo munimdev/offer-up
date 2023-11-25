@@ -52,6 +52,7 @@ const Location: React.FC<Props> = ({ isUpdate = false }) => {
         setLocation({ ...DefaultLocation });
         setZoom(DefaultZoom);
       }
+      const [zipCodeError, setZipCodeError] = useState<string | null>(null);
     
       async function fetchAddressFromZip(zip: string) {
         try {
@@ -60,6 +61,7 @@ const Location: React.FC<Props> = ({ isUpdate = false }) => {
             `https://maps.googleapis.com/maps/api/geocode/json?address=${zip}&key=AIzaSyAC1zTJy_NTO4dbq253Pv1VOSz_MB8YRTI`
           );
           const data = response.data;
+          
           if (data.status === "OK") {
             const shortAddress = `${
               data.results[0].address_components[2].short_name
@@ -89,9 +91,20 @@ const Location: React.FC<Props> = ({ isUpdate = false }) => {
                 });
             setLocationFetched(true);
             setIsZipcodeFetching(false)
+            setZipCodeError(null);
+            // console.log("successfully loaded")
+          } else {
+            // Handle incorrect zip code
+            setZipCodeError("Invalid zip code. Please enter a valid one.");
+            setIsZipcodeFetching(false);
+            setLocationFetched(false);
+            // console.log("successfully denied access")
+
           }
         } catch (error) {
-            setIsZipcodeFetching(false)
+          // Handle errors during the API call
+          setZipCodeError("Error fetching address from ZIP. Please try again.");
+          setIsZipcodeFetching(false);
           console.error("Error fetching address from ZIP:", error);
         }
       }
@@ -225,6 +238,7 @@ const Location: React.FC<Props> = ({ isUpdate = false }) => {
                     ...updateItemData!,
                     zipCode: e.target.value,
                   })
+                  
                 : setItemData({
                     ...itemData,
                     zipcode: e.target.value,
@@ -232,7 +246,7 @@ const Location: React.FC<Props> = ({ isUpdate = false }) => {
             }
           />
           <div className="px-4 inline-flex items-center justify-center">
-{itemData.zipcode.length === 5 && (
+{itemData.zipcode.length >= 1 && (
   <>
     {isZipcodeFetching ? (
       <RotatingLines
@@ -259,7 +273,10 @@ const Location: React.FC<Props> = ({ isUpdate = false }) => {
 
 
         </div>
+        
       </div>
+      <p className="text-sm text-red-500 mt-2">{zipCodeError}</p>
+
       <p className="text-xl text-center text-gray-200">OR</p>
       <div className="flex w-full max-w-md gap-1.5">
         <Button
