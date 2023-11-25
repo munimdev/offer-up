@@ -7,55 +7,58 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import axios from "axios";
 type Props = {
-    isUpdate?: boolean;
-  };
+  isUpdate?: boolean;
+};
 const Price: React.FC<Props> = ({ isUpdate = false }) => {
   const [isFocused, setIsFocused] = useState(false);
-    const [itemData, setItemData] = useAtom(itemFormDataAtom);
-    const [updateItemData, setUpdateItemData] = useAtom(updateItemFormDataAtom);
-    const [isFirstFocus, setFirstFocus] = useState(true);
-    
-const handleFocus = () => {
-  setIsFocused(true);
-};
+  const [itemData, setItemData] = useAtom(itemFormDataAtom);
+  const [updateItemData, setUpdateItemData] = useAtom(updateItemFormDataAtom);
+  const [isFirstFocus, setFirstFocus] = useState(true);
 
-const handleBlur = () => {
-  setIsFocused(false);
-};
+  const handleFocus = () => {
+    setIsFocused(true);
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+  };
   return (
     <>
-<div className={`flex items-center w-full max-w-md font-medium border-2 rounded-lg px-1 ${isFocused ? 'border-primary' : ''}`} onClick={handleFocus}>
-          <div className="$">
-              $
-          </div>
-          <Input
-      type="text"
-      id="price"
-      placeholder="0"
-      className="w-full font-bold  text-center border-none placeholder:text-gray placeholder:font-medium"
-      min={'0'}
-      value={isUpdate ? updateItemData!.price : itemData.price}
-      onChange={(e) =>
-        isUpdate
-          ? setUpdateItemData({
-              ...updateItemData!,
-              price:e.target.value,
-            })
-          : setItemData({ ...itemData, price: e.target.value})
-      }
-      onFocus={() => {
-        if (isFirstFocus) {
-          setFirstFocus(false); // Set isFirstFocus to false after the first focus
-          isUpdate
-            ? setUpdateItemData({
-                ...updateItemData!,
-                price: '', // Reset to empty string when focused for the first time
-              })
-            : setItemData({ ...itemData, price: '' }); // Reset to empty string when focused for the first time
-        }
-      }}
-    onBlur={handleBlur}
-    />
+      <div
+        className={`flex items-center w-full max-w-md font-medium border-2 rounded-lg px-1 ${
+          isFocused ? "border-primary" : ""
+        }`}
+        onClick={handleFocus}
+      >
+        <div className="$">$</div>
+        <Input
+          type="text"
+          id="price"
+          placeholder="0"
+          className="w-full font-bold  text-center border-none placeholder:text-gray placeholder:font-medium"
+          min={"0"}
+          value={isUpdate ? updateItemData!.price : itemData.price}
+          onChange={(e) =>
+            isUpdate
+              ? setUpdateItemData({
+                  ...updateItemData!,
+                  price: e.target.value,
+                })
+              : setItemData({ ...itemData, price: e.target.value })
+          }
+          onFocus={() => {
+            if (isFirstFocus) {
+              setFirstFocus(false); // Set isFirstFocus to false after the first focus
+              isUpdate
+                ? setUpdateItemData({
+                    ...updateItemData!,
+                    price: "", // Reset to empty string when focused for the first time
+                  })
+                : setItemData({ ...itemData, price: "" }); // Reset to empty string when focused for the first time
+            }
+          }}
+          onBlur={handleBlur}
+        />
       </div>
       <div className="flex items-center w-full max-w-md gap-1.5">
         <Label htmlFor="fix-price">Is Price Fixed</Label>
@@ -74,7 +77,7 @@ const handleBlur = () => {
         />
       </div>
     </>
-  )
-}
+  );
+};
 
-export default Price
+export default Price;
