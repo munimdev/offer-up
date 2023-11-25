@@ -15,6 +15,8 @@ import Price from "@/components/selling/Price";
 import Location from "@/components/selling/Location";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
+import Success from "@/components/misc/Success";
+
 import Link from "next/link";
 
 const tabs = ["Item", "Category", "Price","Location"];
@@ -23,6 +25,8 @@ const Selling = () => {
   const [itemData, setItemData] = useAtom(itemFormDataAtom);
   const [currentTab, setCurrentTab] = React.useState(1);
   const { toast } = useToast();
+  const [showSuccessModal, setShowSuccessModal] = React.useState(false);
+
   const { mutateAsync } = useItemMutation();
   const router = useRouter();
   const onFormSubmitHandler = async () => {
@@ -127,7 +131,7 @@ const Selling = () => {
         const loadingToast = toast({
           title: "Item listing in progress",
           description: "Please wait while we are listing your item",
-          duration: 5000,
+          duration: 2000,
         });
 
         try {
@@ -142,7 +146,7 @@ const Selling = () => {
               id: loadingToast.id,
               title: "Item listing failed.",
               description: message,
-              duration: 5000,
+              duration: 2000,
               action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
             });
 
@@ -153,7 +157,7 @@ const Selling = () => {
             id: loadingToast.id,
             title: "Item listing failed",
             description: "Please try again later",
-            duration: 5000,
+            duration: 2000,
             action: <ToastAction altText="Try again">Try again</ToastAction>,
           });
         }
@@ -181,23 +185,34 @@ const Selling = () => {
           conditionLookUpId: 10001,
           attributes: [],
         });
-        loadingToast.update({
-          id: loadingToast.id,
-          title: "Item listed successfully",
-          description: "Your item has been listed successfully",
-          duration: 2000,
-          // action: (
-            // <Link href={`/listings`}>
-            //   <ToastAction altText="View listings">View</ToastAction>
-            // </Link>
-          // ),
-        });
-        setTimeout(() => {
-          router.push('/listings'); // Redirect to the "/listings" page
-        }, 2000);
+        loadingToast.dismiss();
+
+        setShowSuccessModal(true);
+        // loadingToast.update({
+        //   id: loadingToast.id,
+        //   title: "Item listed successfully",
+        //   description: "Your item has been listed successfully",
+        //   duration: 2000,
+        //   action: (
+        //     <Link href={`/listings`}>
+        //       <ToastAction altText="View listings">View</ToastAction>
+        //     </Link>
+        //   ),
+        // });
+        // setTimeout(() => {
+        //   router.push('/listings'); // Redirect to the "/listings" page
+        // }, 2000);
       }
     }
    
+  };
+
+  const handleModalClose = () => {
+    // Close the success modal
+    setShowSuccessModal(false);
+
+    // Redirect to the listings page
+    router.push('/listings');
   };
 
   return (
@@ -250,6 +265,15 @@ const Selling = () => {
           >
             Next
           </Button>
+        </div>
+      )}
+      {showSuccessModal && (
+        <div className="w-screen h-screen flex items-center justify-center bg-gray-200 bg-opacity-40 fixed top-0 left-0">
+          <div className="w-[420px] h-[380px] flex items-center flex-col justify-around rounded-lg bg-white p-5 shadow-md">
+          <Success/>
+          <p className="text-base py-2 mx-auto w-fit">Your item has been listed successfully!</p>
+          <Button className="mx-auto " onClick={handleModalClose}>View Listings</Button>
+        </div>
         </div>
       )}
     </div>
