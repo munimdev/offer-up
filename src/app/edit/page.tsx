@@ -457,7 +457,7 @@ const EditItem = () => {
           id: itemData.id,
           name: itemData.name,
           description: itemData.description,
-          price: itemData.price,
+          price: parseInt(itemData.price),
           isPriceFixed: itemData.isPriceFixed,
           images: itemData.images,
           categoryId: itemData.categoryId,
