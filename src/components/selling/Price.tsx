@@ -32,7 +32,7 @@ const handleBlur = () => {
       type="text"
       id="price"
       placeholder="0"
-      className="w-full  text-center border-none placeholder:text-gray placeholder:font-medium"
+      className="w-full font-bold  text-center border-none placeholder:text-gray placeholder:font-medium"
       min={'0'}
       value={isUpdate ? updateItemData!.price : itemData.price}
       onChange={(e) =>
