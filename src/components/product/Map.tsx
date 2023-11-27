@@ -29,11 +29,11 @@ const WrappedMap = withGoogleMap(GoogleMapComponent);
 function GoogleMapWrapper(props:any) {
   const mapStyles = {
     width: '100%',
-    height: '300px',
+    height: '250px',
   };
 
   return (
-    <div style={{ width: '100%', height: '400px' }}>
+    <div style={{ width: '100%', height: '250px' }}>
       <WrappedMap
         containerElement={<div style={mapStyles} />}
         mapElement={<div style={mapStyles} />}

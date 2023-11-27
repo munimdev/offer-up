@@ -25,7 +25,7 @@ import Description from "@/components/product/Description";
 
 import { db, storage } from "../../firebase/firebase";
 import { useSession } from "@/hooks";
-import Map from "./Map";
+// import Map from "./Map";
 import { FavoriteList, Item, ReportItemDto } from "@/types/types";
 import { Result } from "@/utils/types";
 import * as z from "zod";
@@ -244,7 +244,7 @@ const Sidebar: React.FC<Props> = ({ data }) => {
                   className="border border-primary rounded-full bg-primary md:mb-2  hover:bg-primary w-2/5 md:w-full md:text-base sm:text-sm text-xs sm:font-normal font-bold md:h-auto sm:h-12 h-10"
                   onClick={handleOpenOfferModal}
                 >
-                  <DollarSign fill="#fff" size={16} className="mr-2" /> Make a
+                  <DollarSign fill="#fff" size={14} className="mr-1 sm:mr-2" /> Make a
                   Offer
                 </Button>
                 <Button
@@ -305,7 +305,7 @@ const Sidebar: React.FC<Props> = ({ data }) => {
         <div className="p-4 my-4 border-b lg:hidden">
           <Description data={data?.description || ""} />
         </div>
-        <div>
+        {/* <div>
           {data.fullAddress && (
             <p className="text-primary my-4">
               <MapPin className="inline" size={24} />
@@ -313,7 +313,7 @@ const Sidebar: React.FC<Props> = ({ data }) => {
             </p>
           )}
 
-          <Map lat={data.locationLat} lng={data.locationLng} />
+          <Map lat={data.locationLat} lng={data.locationLng} /> */}
           {/* <p className="mt-2 text-primary">
           <Globe className="inline" size={24} /> https://www.uniqueautomall.com/
         </p> */}
@@ -329,7 +329,7 @@ const Sidebar: React.FC<Props> = ({ data }) => {
             <p className="font-semibold text-primary">See hours of operation</p>
           </span>
         </div> */}
-        </div>
+        {/* </div> */}
       </div>
     </>
   );

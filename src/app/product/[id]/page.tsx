@@ -5,6 +5,7 @@ import React, {useEffect, useState} from "react";
 import Slider from "@/components/product/Slider";
 import Sidebar from "@/components/product/Sidebar";
 import Description from "@/components/product/Description";
+import Map from "@/components/product/Map";
 import { Badge } from "@/components/ui/badge";
 import SelectFavouriteProducts from "@/components/product/SelectFavouriteProducts";
 import { useToast } from "@/components/ui/use-toast";
@@ -190,6 +191,9 @@ const [isReported,setIsReportedAdded] =useState(false)
         </div>
           <div className="p-4 my-4 border-b lg:flex hidden">
             <Description data={currentItem?.description || ""} />
+          </div>
+          <div className="p-4 my-4 border-b">
+            <Map lat={currentItem?.locationLat} lng={currentItem?.locationLng} />
           </div>
           <div className="p-4 my-4 border-b">
             <div className="flex flex-wrap gap-3">
