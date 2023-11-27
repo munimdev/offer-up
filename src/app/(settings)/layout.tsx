@@ -8,7 +8,7 @@ export default function SettingLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-row px-20 py-10">
+    <div className="flex flex-row justify-between px-1 xs:px-6 lg:px-10 py-4 sm:py-10">
       <Sidebar />
       {children}
     </div>

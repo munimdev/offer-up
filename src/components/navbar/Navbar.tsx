@@ -2,10 +2,10 @@
 
 import "./Modal.css";
 
-import React, {useState} from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter,usePathname  } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   signUpWithFacebook,
@@ -15,7 +15,7 @@ import {
   signUpWithMicrosoft,
 } from "@/firebase/auth";
 import * as z from "zod";
-import {LoginDialog} from './AuthForm'
+import { LoginDialog } from "./AuthForm";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -59,7 +59,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import SubNav from "@/components/navbar/SubNav";
 import { Searchbar } from "@/components/searchbar/Searchbar";
 import placholder from "@/components/item/placeholder.png";
-import HamburgerMenu from './HamburgerMenu'
+import HamburgerMenu from "./HamburgerMenu";
 // Icons
 import Logo from "@/components/icons/Logo";
 import { MapPin, Menu, Mail, MessageSquare, PlusSquare } from "lucide-react";
@@ -126,7 +126,7 @@ export const Navbar = ({}: NavbarProps) => {
   const [isLocationModalOpen, setIsLocationModalOpen] = React.useState(false);
   const [zipCode, setZipCode] = useAtom(zipCodeAtom);
   const [location, setLocation] = useAtom(locationAtom);
-  const [zipError,setZipError] = useState(false)
+  const [zipError, setZipError] = useState(false);
   const [locationName, setLocationName] = useAtom(locationNameAtom);
   const [preferredDistance, setPreferredDistance] = useAtom(
     preferredDistanceAtom
@@ -137,23 +137,26 @@ export const Navbar = ({}: NavbarProps) => {
       const response = await axios.get(
         `https://maps.googleapis.com/maps/api/geocode/json?address=${code}&key=AIzaSyAC1zTJy_NTO4dbq253Pv1VOSz_MB8YRTI`
       );
-      console.log(response,'response')
-      if(response.data.status==='OK'){
+      console.log(response, "response");
+      if (response.data.status === "OK") {
         const data = response.data;
         const lat = data.results[0].geometry.location.lat;
         const lng = data.results[0].geometry.location.lng;
         const formatted_address = data.results[0].formatted_address;
-        const modifiedAddress = formatted_address.slice(0, formatted_address.lastIndexOf(','));
+        const modifiedAddress = formatted_address.slice(
+          0,
+          formatted_address.lastIndexOf(",")
+        );
         const locationName = data.results[0].address_components[3].long_name;
         // setLocationName(locationName);
         setLocationName(modifiedAddress);
         // localStorage.setItem("formatted_address", modifiedAddress as string);
         setLocation({ lat, lng });
-      }else{
-        console.log(response,'response')
-        console.log(zipCode.length,'inside handleLocationByZipCode')
-        setZipError(true)
-        setZipCode("")
+      } else {
+        console.log(response, "response");
+        console.log(zipCode.length, "inside handleLocationByZipCode");
+        setZipError(true);
+        setZipCode("");
       }
     } catch (error) {
       console.log(error);
@@ -175,7 +178,7 @@ export const Navbar = ({}: NavbarProps) => {
           setLocationName(locationName);
           // setZipCode(zipCode);
           setLocation({ lat, lng });
-          setZipCode("")
+          setZipCode("");
         } catch (error) {
           console.log(error);
         }
@@ -188,40 +191,40 @@ export const Navbar = ({}: NavbarProps) => {
 
   const router = useRouter();
   const setUser = useSetAtom(userAtom);
-  const [isLoginDialog, setIsLoginDialog] = useAtom(isLoginDialogOpenAtom)
-  const [loginDialogCurrentScreen,setLoginDialogCurrentScreen] =useAtom(loginDialogCurrentScreenAtom)
+  const [isLoginDialog, setIsLoginDialog] = useAtom(isLoginDialogOpenAtom);
+  const [loginDialogCurrentScreen, setLoginDialogCurrentScreen] = useAtom(
+    loginDialogCurrentScreenAtom
+  );
   const { isLoggedIn, user } = useSession();
-  const pathname = usePathname()
+  const pathname = usePathname();
   const isChatListOrSellingScreen =
-  pathname === '/chatList' || pathname === '/selling';
+    pathname === "/chatList" || pathname === "/selling";
   const onLogoutHandler = () => {
-   
-    router.push("/"); 
+    router.push("/");
     localStorage.removeItem("accessToken");
     setUser(null);
   };
 
   return (
     <>
-      <div className="flex items-center gap-4 p-4 mt-2">
-      <HamburgerMenu/>
-      <Link href="/" className="flex items-center">
-  <Logo/> 
-  <span className="text-xl lg:text-2xl font-bold text-[#1BC3FF] hidden xl:block">Bargain Ex</span>
-
-
-</Link>
-<div className="hidden lg:block flex justify-center" >
-      <Searchbar />
-      </div>
+      <div className="flex items-center gap-4 p-1 sm:p-4 mt-2">
+        <HamburgerMenu />
+        <Link href="/" className="flex items-center">
+          <Logo />
+          <span className="text-xl lg:text-2xl font-bold text-[#1BC3FF] hidden xl:block">
+            Bargain Ex
+          </span>
+        </Link>
+        <div className="hidden lg:block flex justify-center">
+          <Searchbar />
+        </div>
         <Dialog
           onOpenChange={(e) => setIsLocationModalOpen(e)}
           open={isLocationModalOpen}
-        
         >
           <DialogTrigger asChild>
             <span className="flex font-bold text-[#1BC3FF] items-center gap-2 cursor-pointer  ">
-              <MapPin  className="hidden lg:block"/>{" "}
+              <MapPin className="hidden lg:block" />{" "}
               <span className=" gap-2 lg:flex hidden lg:block">
                 <p>
                   {locationName
@@ -248,9 +251,15 @@ export const Navbar = ({}: NavbarProps) => {
                   "No Location Set"
                 )}
               </h3>
-             
+
               <Separator className="my-2" />
-              {zipError&&<h4 className="text-center"><span className="font-semibold text-red-500">Please enter correct Zip code</span></h4>} 
+              {zipError && (
+                <h4 className="text-center">
+                  <span className="font-semibold text-red-500">
+                    Please enter correct Zip code
+                  </span>
+                </h4>
+              )}
               <div className="">
                 <p className="text-base font-bold text-black">ZIP Code</p>
                 <button
@@ -263,7 +272,9 @@ export const Navbar = ({}: NavbarProps) => {
                 <p className="my-2 font-bold text-center text-black">Or</p>
                 <Input
                   value={zipCode}
-                  onClick={()=>{zipError&&setZipError(false)}}
+                  onClick={() => {
+                    zipError && setZipError(false);
+                  }}
                   onChange={(e) => {
                     setZipCode(e.target.value);
                   }}
@@ -275,12 +286,12 @@ export const Navbar = ({}: NavbarProps) => {
                   type="button"
                   onClick={() => {
                     if (zipCode.length === 5) {
-                      console.log(zipCode.length,'if')
+                      console.log(zipCode.length, "if");
                       handleLocationByZipCode(zipCode);
-                    }else{
-                      console.log(zipCode.length,'else')
+                    } else {
+                      console.log(zipCode.length, "else");
                       setZipError(true);
-                      setZipCode("")
+                      setZipCode("");
                     }
                   }}
                 >
@@ -310,61 +321,70 @@ export const Navbar = ({}: NavbarProps) => {
         <div className="ml-auto">
           <NavigationMenu className=" z-20">
             <NavigationMenuList>
-            <NavigationMenuItem >
-            <Link href={isLoggedIn===true?'/chatList':'/'}  passHref>
-                      <NavigationMenuLink
-                        className={navigationMenuTriggerStyle()}
-                        onClick={(e) => 
-                          {
-                            console.log(isChatListOrSellingScreen,'isChatListOrSellingScreen')
-                          if (!isLoggedIn&&!isChatListOrSellingScreen) {
-                            e.preventDefault();
-                            setIsLoginDialog(true);
-                            setLoginDialogCurrentScreen('home')
-                          }
-                        }}
-                      >
-                  
-      <span className="hidden lg:block">Chat Inbox</span>
-      
-   
-      <span className="lg:hidden">
-        <MessageSquare />
-      </span>
-                      </NavigationMenuLink>
-                    </Link>
-            </NavigationMenuItem>
-            <NavigationMenuItem >
-            <Link href={isLoggedIn===true?'/selling':'/'}  passHref>
-            <NavigationMenuLink
-                        className={navigationMenuTriggerStyle()}
-                        onClick={(e) => 
-                          {
-                            console.log(isChatListOrSellingScreen,'isChatListOrSellingScreen')
-                          if (!isLoggedIn&&!isChatListOrSellingScreen) {
-                            console.log('isChatListOrSellingScreen')
-                            console.log(isLoggedIn,'isLoggedIn')
-                            console.log(isChatListOrSellingScreen,'isChatListOrSellingScreen')
-                            e.preventDefault();
-                            setIsLoginDialog(true);
-                            setLoginDialogCurrentScreen('home')
-                          }
-                        }}
-                      >
-                           <span className="hidden lg:block">Post Item</span>
-      
-   
-      <span className="lg:hidden">
-      <PlusSquare />
-      </span>
-                        
-                      </NavigationMenuLink>
-                    </Link>
-            </NavigationMenuItem>
-              
+              <NavigationMenuItem>
+                <Link href={isLoggedIn === true ? "/chatList" : "/"} passHref>
+                  <NavigationMenuLink
+                    className={navigationMenuTriggerStyle()}
+                    onClick={(e) => {
+                      console.log(
+                        isChatListOrSellingScreen,
+                        "isChatListOrSellingScreen"
+                      );
+                      if (!isLoggedIn && !isChatListOrSellingScreen) {
+                        e.preventDefault();
+                        setIsLoginDialog(true);
+                        setLoginDialogCurrentScreen("home");
+                      }
+                    }}
+                  >
+                    <span className="hidden lg:block">Chat Inbox</span>
+
+                    <span className="lg:hidden">
+                      <MessageSquare />
+                    </span>
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Link href={isLoggedIn === true ? "/selling" : "/"} passHref>
+                  <NavigationMenuLink
+                    className={navigationMenuTriggerStyle()}
+                    onClick={(e) => {
+                      console.log(
+                        isChatListOrSellingScreen,
+                        "isChatListOrSellingScreen"
+                      );
+                      if (!isLoggedIn && !isChatListOrSellingScreen) {
+                        console.log("isChatListOrSellingScreen");
+                        console.log(isLoggedIn, "isLoggedIn");
+                        console.log(
+                          isChatListOrSellingScreen,
+                          "isChatListOrSellingScreen"
+                        );
+                        e.preventDefault();
+                        setIsLoginDialog(true);
+                        setLoginDialogCurrentScreen("home");
+                      }
+                    }}
+                  >
+                    <span className="hidden lg:block">Post Item</span>
+
+                    <span className="lg:hidden">
+                      <PlusSquare />
+                    </span>
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+
               <NavigationMenuItem>
                 {!isLoggedIn ? (
-                  <Dialog onOpenChange={(e) => {setIsLoginDialog(e); setLoginDialogCurrentScreen('home')}} open={isLoginDialog}>
+                  <Dialog
+                    onOpenChange={(e) => {
+                      setIsLoginDialog(e);
+                      setLoginDialogCurrentScreen("home");
+                    }}
+                    open={isLoginDialog}
+                  >
                     <DialogTrigger asChild>
                       <Button variant="outline">Login</Button>
                     </DialogTrigger>
@@ -374,8 +394,12 @@ export const Navbar = ({}: NavbarProps) => {
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Avatar className="cursor-pointer">
-                        <AvatarImage 
-                        src={user?.imagePath!==''?user?.imagePath:"/images/profileImg.png" }
+                        <AvatarImage
+                          src={
+                            user?.imagePath !== ""
+                              ? user?.imagePath
+                              : "/images/profileImg.png"
+                          }
                         />
                         <AvatarFallback>CN</AvatarFallback>
                       </Avatar>
@@ -391,7 +415,6 @@ export const Navbar = ({}: NavbarProps) => {
                               width={80}
                               height={80}
                               src={"/images/profileImg.png"}
-
                               alt="User Image"
                               className="rounded-full"
                             />
@@ -404,12 +427,15 @@ export const Navbar = ({}: NavbarProps) => {
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild className="cursor-pointer">
-                          <Link href="/listings" >My Listings</Link>
+                          <Link href="/listings">My Listings</Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild className="cursor-pointer">
-                          <Link href="/account/setting" >
+                          <Link href="/account/setting">
                             Account & Settings
                           </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild className="cursor-pointer">
+                          <Link href="/saved-list">Saved Items</Link>
                         </DropdownMenuItem>
                       </DropdownMenuGroup>
                       <DropdownMenuSeparator />
@@ -430,7 +456,7 @@ export const Navbar = ({}: NavbarProps) => {
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
-      
+
           {/* <div className="block md:hidden">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -447,108 +473,110 @@ export const Navbar = ({}: NavbarProps) => {
               </DropdownMenuContent>
             </DropdownMenu>
           </div> */}
-          
-         
         </div>
       </div>
-     
-     
-        
+
       <div className="block lg:hidden flex justify-center mb-2">
-      <Searchbar />
+        <Searchbar />
       </div>
       <Dialog
-          onOpenChange={(e) => setIsLocationModalOpen(e)}
-          open={isLocationModalOpen}
-        >
-          <DialogTrigger asChild>
-            <span className="flex font-bold text-[#1BC3FF] items-center gap-2 cursor-pointer  ml-3 mb-3">
-              <MapPin  className="block lg:hidden"/>{" "}
-              <span className=" gap-2 lg:flex block lg:hidden">
-                <p>
-                  {locationName
-                    ? `${locationName}: ${preferredDistance[0]} Miles`
-                    : "Set Location"}
-                </p>
-              </span>
+        onOpenChange={(e) => setIsLocationModalOpen(e)}
+        open={isLocationModalOpen}
+      >
+        <DialogTrigger asChild>
+          <span className="flex font-bold text-[#1BC3FF] items-center gap-2 cursor-pointer  ml-3 mb-3">
+            <MapPin className="block lg:hidden" />{" "}
+            <span className=" gap-2 lg:flex block lg:hidden">
+              <p>
+                {locationName
+                  ? `${locationName}: ${preferredDistance[0]} Miles`
+                  : "Set Location"}
+              </p>
             </span>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]" >
-            <div className="flex flex-col p-4" >
-              <h2 className="text-2xl font-bold text-center text-black -translate-y-4">
-                Location
-              </h2>
-              <h3 className="text-center">
-                {locationName ? (
-                  <span>
-                    <span className="font-semibold text-primary">
-                      Current Location:{" "}
-                    </span>
-                    {locationName}
+          </span>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px]">
+          <div className="flex flex-col p-4">
+            <h2 className="text-2xl font-bold text-center text-black -translate-y-4">
+              Location
+            </h2>
+            <h3 className="text-center">
+              {locationName ? (
+                <span>
+                  <span className="font-semibold text-primary">
+                    Current Location:{" "}
                   </span>
-                ) : (
-                  "No Location Set"
-                )}
-              </h3>
-             
-              <Separator className="my-2" />
-              {zipError&&<h4 className="text-center"><span className="font-semibold text-red-500">Please enter correct Zip code</span></h4>} 
-              <div className="">
-                <p className="text-base font-bold text-black">ZIP Code</p>
-                <button
-                  onClick={handleGetLocation}
-                  className="flex px-2 py-2 mx-auto my-2 border rounded-full border-primary text-primary gap-x-2"
-                >
-                  <MapPin />
-                  <span className="flex-1 text-center">Get my location</span>
-                </button>
-                <p className="my-2 font-bold text-center text-black">Or</p>
-                <Input
-                  value={zipCode}
-                  onClick={()=>{zipError&&setZipError(false)}}
-                  onChange={(e) => {
-                    setZipCode(e.target.value);
-                  }}
-                  className="mx-auto border border-gray-100 w-44"
-                  placeholder="Enter ZIP Code"
-                />
-                <Button
-                  className="block mx-auto mt-3"
-                  type="button"
-                  onClick={() => {
-                    if (zipCode.length === 5) {
-                     
-                      handleLocationByZipCode(zipCode);
-                    }else{
-                     
-                      setZipError(true);
-                      setZipCode("")
-                    }
-                  }}
-                >
-                  Fetch Location
-                </Button>
-              </div>
-              <Separator className="my-4" />
-              <div className="flex flex-row justify-between">
-                <p className="mb-3">Distance</p>
-                <p className="mb-3">{preferredDistance[0]}</p>
-              </div>
-              <Slider
-                onValueChange={(e) => {
-                  setPreferredDistance(e);
+                  {locationName}
+                </span>
+              ) : (
+                "No Location Set"
+              )}
+            </h3>
+
+            <Separator className="my-2" />
+            {zipError && (
+              <h4 className="text-center">
+                <span className="font-semibold text-red-500">
+                  Please enter correct Zip code
+                </span>
+              </h4>
+            )}
+            <div className="">
+              <p className="text-base font-bold text-black">ZIP Code</p>
+              <button
+                onClick={handleGetLocation}
+                className="flex px-2 py-2 mx-auto my-2 border rounded-full border-primary text-primary gap-x-2"
+              >
+                <MapPin />
+                <span className="flex-1 text-center">Get my location</span>
+              </button>
+              <p className="my-2 font-bold text-center text-black">Or</p>
+              <Input
+                value={zipCode}
+                onClick={() => {
+                  zipError && setZipError(false);
                 }}
-                defaultValue={preferredDistance}
-                max={50}
-                step={1}
-                min={1}
+                onChange={(e) => {
+                  setZipCode(e.target.value);
+                }}
+                className="mx-auto border border-gray-100 w-44"
+                placeholder="Enter ZIP Code"
               />
+              <Button
+                className="block mx-auto mt-3"
+                type="button"
+                onClick={() => {
+                  if (zipCode.length === 5) {
+                    handleLocationByZipCode(zipCode);
+                  } else {
+                    setZipError(true);
+                    setZipCode("");
+                  }
+                }}
+              >
+                Fetch Location
+              </Button>
             </div>
-            <Button type="button" onClick={() => setIsLocationModalOpen(false)}>
-              See listings
-            </Button>
-          </DialogContent>
-        </Dialog>
+            <Separator className="my-4" />
+            <div className="flex flex-row justify-between">
+              <p className="mb-3">Distance</p>
+              <p className="mb-3">{preferredDistance[0]}</p>
+            </div>
+            <Slider
+              onValueChange={(e) => {
+                setPreferredDistance(e);
+              }}
+              defaultValue={preferredDistance}
+              max={50}
+              step={1}
+              min={1}
+            />
+          </div>
+          <Button type="button" onClick={() => setIsLocationModalOpen(false)}>
+            See listings
+          </Button>
+        </DialogContent>
+      </Dialog>
 
       <SubNav />
     </>

@@ -58,10 +58,10 @@ const refetchhandler =async()=> {
   }, 300);
 }
   return (
-    <div className="w-8/12 py-4 mx-auto">
-      <h1 className="mb-4 text-3xl font-bold">Saved Items</h1>
+    <div className="w-full md:w-8/12 sm:py-4 sm:px-2 py-1 px-1  mx-auto">
+      <h1 className="mb-4 ml-2 sm:ml-0 text-2xl sm:text-3xl md:text-4xl font-bold">Saved Items</h1>
       <CreateList refetchhandler={refetchhandler}/>
-      <div className="px-4">
+      <div className="px-1 sm:px-4">
         {isLoading&&<Loader/>}
         {!isLoading&&data?.dataObject.map((item: FavoriteList, idx: number) => (
           <List data={item} key={item.id} />

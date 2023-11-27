@@ -26,6 +26,7 @@ import AvatarEditor from "react-avatar-editor";
 
 import {
   Camera,
+  UserCircle2,
   Mail,
   Phone,
   ShieldCheck,
@@ -49,7 +50,8 @@ const Setting = () => {
   const [zoomLevel, setZoomLevel] = useState<number>(1.2);
   const [currentTab, setCurrentTab] = useState<"phone" | "otp">("phone");
   const [applyEmailVerify, setApplyEmailVerify] = useState<boolean>(false);
-  const [forgetPasswordState,setForgetPasswordState] = useState<boolean>(false)
+  const [forgetPasswordState, setForgetPasswordState] =
+    useState<boolean>(false);
   const [phoneNumber, setPhoneNumber] = useState<string>();
   const [otp, setOtp] = useState<string>();
 
@@ -71,7 +73,7 @@ const Setting = () => {
   });
   const { mutateAsync: forgetPassword } = useMutation({
     mutationKey: ["mutation-forgetPassword"],
-    mutationFn: (email:string) => Queries.forgetPassword(email),
+    mutationFn: (email: string) => Queries.forgetPassword(email),
   });
   const { mutateAsync: resendEmail } = useMutation({
     mutationKey: ["mutation-resendEmailVerificationEmail"],
@@ -172,43 +174,40 @@ const Setting = () => {
   const emailVerificationHandler = async () => {
     try {
       setApplyEmailVerify(true);
-      console.log("called")
+      console.log("called");
       const response = await resendEmail();
       if (response.statusCode === "111") {
-        console.log(response,'response')
+        console.log(response, "response");
         toast({
           title: "Email Verification",
           description: "Please check you email for verification!",
         });
       } else {
-        console.log(response,'error')
+        console.log(response, "error");
         setError(response.message);
       }
     } catch (error) {
-      console.log(error,'catch error')
+      console.log(error, "catch error");
     }
   };
-const forgetPasswordHandler = async () => {
-  try {
-    setForgetPasswordState(true)
-    const response = await forgetPassword(user?.email)
-    if (response.statusCode === "111") {
-      toast({
-        title: "Forget Password",
-        description: "Please check you email for reset password!",
-      });
-    } else {
-      setError(response.message);
-    }
-  } catch (error) {
-    
-  }
-
-}
+  const forgetPasswordHandler = async () => {
+    try {
+      setForgetPasswordState(true);
+      const response = await forgetPassword(user?.email);
+      if (response.statusCode === "111") {
+        toast({
+          title: "Forget Password",
+          description: "Please check you email for reset password!",
+        });
+      } else {
+        setError(response.message);
+      }
+    } catch (error) {}
+  };
   return (
-    <div className="w-8/12 py-4 mx-auto">
-      <div className="flex flex-row items-center gap-x-5">
-        <div className="flex flex-col items-center gap-y-2">
+    <div className="w-full md:w-8/12 sm:py-4 sm:px-2 py-1 px-1  mx-auto">
+      <div className="flex flex-row items-center md:gap-x-5 gap-x-8 px-2 md:p-0">
+        <div className="flex flex-col items-center gap-y-2  sm:pr-6 sm:py-2">
           {/* <Image
             width={100}
             height={100}
@@ -221,8 +220,8 @@ const forgetPasswordHandler = async () => {
             onOpenChange={(e) => setIsImageDialogOpen(e)}
             open={isImageDialogOpen}
           >
-        <DialogTrigger>
-        {/* <div className="relative flex flex-col items-center gap-y-2">
+            <DialogTrigger>
+              {/* <div className="relative flex flex-col items-center gap-y-2">
   <div className="relative group rounded-full overflow-hidden">
     <Image
       width={100}
@@ -238,40 +237,48 @@ const forgetPasswordHandler = async () => {
     </div>
   </div>
 </div> */}
-{user?.imagePath ?     <div className="relative flex flex-col items-center gap-y-2">
-  <div className="relative group rounded-full overflow-hidden">
-    <Image
-      width={100}
-      height={100}
-      src={`${user?.imagePath ? user.imagePath : '/images/placeholder.png'}`}
-      alt="account-image"
-      className="rounded-full relative z-0 group-hover:opacity-75 transition-opacity duration-300"
-    />
-    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-        <Camera strokeWidth={1.5} />
-    </div>
-  </div>
-</div>:<div className="relative flex flex-col items-center gap-y-2">
-  <div className="relative group rounded-full overflow-hidden">
-    <Image
-      width={100}
-      height={100}
-      src={`${user?.imagePath ? user.imagePath : '/images/blank-profile-picture.png'}`}
-      alt="account-image"
-      className="rounded-full relative z-0"
-    />
-    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
-      <div className="rounded-full  p-1">
-        <Camera strokeWidth={1.5} />
-      </div>
-    </div>
-  </div>
-</div>}
-
-
- 
-
-</DialogTrigger>
+              {user?.imagePath ? (
+                <div className="relative flex flex-col items-center gap-y-2">
+                  <div className="relative group rounded-full overflow-hidden">
+                    <Image
+                      width={100}
+                      height={100}
+                      src={`${
+                        user?.imagePath
+                          ? user.imagePath
+                          : "/images/placeholder.png"
+                      }`}
+                      alt="account-image"
+                      className="rounded-full relative z-0 group-hover:opacity-75 transition-opacity duration-300"
+                    />
+                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <Camera strokeWidth={1.5} />
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="relative flex flex-col items-center gap-y-2">
+                  <div className="relative group rounded-full overflow-hidden">
+                    <Image
+                      width={100}
+                      height={100}
+                      src={`${
+                        user?.imagePath
+                          ? user.imagePath
+                          : "/images/profileImg.png"
+                      }`}
+                      alt="account-image"
+                      className="rounded-full relative z-0"
+                    />
+                    <div className="bg-gray-800 bg-opacity-40 w-full h-full flex items-center justify-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
+                      <div className="rounded-full  p-1">
+                        <Camera strokeWidth={2} style={{color:'#fff'}}/>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </DialogTrigger>
 
             <DialogContent>
               {/* Dropzone */}
@@ -320,56 +327,84 @@ const forgetPasswordHandler = async () => {
           </Dialog>
         </div>
         <div>
-          <span className="text-lg font-bold">
+          <span className="text-base sm:text-lg font-bold">
             {data?.dataObject?.name.toUpperCase()}
           </span>
-          <div className="flex flex-row mt-2 gap-x-5">
-            <Mail strokeWidth={1.2} />
-            <Phone strokeWidth={1.2} />
-          </div>
         </div>
       </div>
-      <div className="flex flex-col w-8/12 mt-10 gap-y-5">
-        <span className="text-4xl font-bold">Account</span>
+      <div className=" mt-4 hidden sm:flex flex-col w-fit justify-center items-center">
+          <p className="text-sx sm:text-lg font-bold tracking-wide">Improve your reputation on Bargainex</p>
+          <div className="flex flex-row items-center mt-4 gap-x-10">
+          <div className="w-min flex flex-col items-center justify-center" >
+            <div className="w-fit border border-black p-2 rounded-full">  
+            {data?.dataObject?.isEmailVerified ? <ShieldCheck style={{color:'#1BC3FF'}}/> : <ShieldAlert style={{color:'red'}} />}
+            </div>
+            {data?.dataObject?.isEmailVerified ? <p className="text-center text-sm">Email Verified</p> : <p className="text-center text-sm">Verify Email</p>}
+            </div>
+            <div className="w-min flex flex-col items-center justify-center" >
+            <div className="w-fit border border-black p-2 rounded-full">  
+            <Phone style={{color:'#1BC3FF'}} />
+            </div>
+            <p className="text-center text-sm">Phone Verified</p>
+            </div>
+          </div>
+          </div>
+      <div className="flex flex-col w-full mt-8 md:mt-10 gap-y-5">
+        <span className="text-2xl sm:text-3xl md:text-4xl font-bold">
+          Account
+        </span>
         {/* Name */}
-        <div className="flex flex-row justify-between p-3 font-semibold border-b border-gray-300 cursor-pointer">
-          <span>Name: {data?.dataObject?.name.toUpperCase()}</span>
+        <div className="flex flex-row justify-between items-center sm:p-3 font-semibold border-b border-gray-300 cursor-pointer">
+          <span className="text-sm sm:text-base flex py-1 items-center sm:gap-x-0 gap-x-1">
+            <span className="sm:hidden">
+              <UserCircle2 strokeWidth={1} />
+            </span>
+            <div className="hidden sm:block">Name:</div>{" "}
+            {data?.dataObject?.name.toUpperCase()}
+          </span>{" "}
           <span className="text-primary">Edit</span>
         </div>
         {/* Email */}
-        <div className="flex flex-row justify-between p-3 font-semibold border-b border-gray-300">
-          <span>Email: {user?.email} </span>{" "}
+        <div className="flex flex-row justify-between items-center py-1 sm:p-3 font-semibold border-b border-gray-300">
+          <span className="text-sm sm:text-base flex items-centersm:gap-x-0 gap-x-1">
+            <span className="sm:hidden">
+              <Mail strokeWidth={1} />
+            </span>
+            <div className="hidden sm:block">Email:</div> {user?.email}{" "}
+          </span>{" "}
           {data?.dataObject?.isEmailVerified ? (
             <span>
               <ShieldCheck strokeWidth={1.2} />
             </span>
           ) : (
             <button
-              className="bg-blue-300 hover:bg-blue-700 text-white text-primary py-1 px-1 rounded w-[140px] flex items-center justify-center"
+              className="bg-blue-300 hover:bg-blue-700 text-white text-primary py-1 px-1 rounded w-fit sm:w-[140px] flex items-center justify-center"
               style={{
                 backgroundColor: applyEmailVerify ? "#DDDDDD" : "#63C3FE",
               }}
               onClick={emailVerificationHandler}
               disabled={applyEmailVerify} // Disable the button if applyEmailVerify is true
             >
-              <div className="mr-2">
+              <div className="sm:mr-2">
                 <ShieldAlert strokeWidth={1.2} />
               </div>
-              Verify Now
+              <span className="hidden sm:block sm:text-sm md:text-base">
+                Verify Now
+              </span>
             </button>
           )}
         </div>
 
         {/* Location */}
-        <div className="flex flex-row justify-between p-3 font-semibold border-b border-gray-300 cursor-pointer">
-          <span>Location</span>
+        <div className="flex flex-row justify-between p-1 sm:p-3 font-semibold border-b border-gray-300 cursor-pointer">
+          <span className="text-sm sm:text-base">Location</span>
           <span className="cursor-pointer text-primary">Edit</span>
         </div>
         {/* Phone */}
         <Dialog>
           <DialogTrigger>
-            <div className="flex flex-row justify-between p-3 font-semibold border-b border-gray-300 cursor-pointer">
-              <span>Add Phone Number</span>
+            <div className="flex flex-row justify-between p-1 sm:p-3 font-semibold border-b border-gray-300 cursor-pointer">
+              <span className="text-sm sm:text-base">Add Phone Number</span>
               <span className="cursor-pointer text-primary">Edit</span>
             </div>
           </DialogTrigger>
@@ -420,8 +455,8 @@ const forgetPasswordHandler = async () => {
           open={isPasswordDialogOpen}
         >
           <DialogTrigger>
-            <div className="flex flex-row justify-between p-3 font-semibold border-b border-gray-300 cursor-pointer">
-              <span>Password</span>
+            <div className="flex flex-row justify-between p-1 sm:p-3 font-semibold border-b border-gray-300 cursor-pointer">
+              <span className="text-sm sm:text-base">Password</span>
               <span className="cursor-pointer text-primary">Edit</span>
             </div>
           </DialogTrigger>
@@ -456,37 +491,38 @@ const forgetPasswordHandler = async () => {
           </DialogContent>
         </Dialog>
         {/* Forget Password */}
-        <div className="flex flex-row justify-between p-3 font-semibold border-b border-gray-300">
-          <span>Forget Passoword </span>{" "}
-          
-            <button
-              className="bg-blue-300 hover:bg-blue-700 text-white text-primary py-1 px-1 rounded w-[140px] flex items-center justify-center"
-              style={{
-                backgroundColor: forgetPasswordState ? "#DDDDDD" : "#63C3FE",
-              }}
-              onClick={forgetPasswordHandler}
-              disabled={forgetPasswordState} // Disable the button if applyEmailVerify is true
-            >
-              <div className="mr-2">
-                <ShieldQuestion strokeWidth={1.2} />
-              </div>
+        <div className="flex flex-row justify-between p-1 sm:p-3 font-semibold border-b border-gray-300">
+          <span className="text-sm sm:text-base">Forget Password </span>{" "}
+          <button
+            className="bg-blue-300 hover:bg-blue-700 text-white text-primary py-1 px-1 rounded w-fit sm:w-[140px] flex items-center justify-center"
+            style={{
+              backgroundColor: forgetPasswordState ? "#DDDDDD" : "#63C3FE",
+            }}
+            onClick={forgetPasswordHandler}
+            disabled={forgetPasswordState} // Disable the button if applyEmailVerify is true
+          >
+            <div className="sm:mr-2">
+              <ShieldQuestion strokeWidth={1.2} />
+            </div>
+            <span className="hidden sm:block sm:text-sm md:text-base">
               Forget
-            </button>
-          
+            </span>
+          </button>
         </div>
         {/* Delete Account */}
-        <Dialog
-        >
-          <div className="flex flex-row justify-between p-3 font-semibold border-b border-gray-300 cursor-pointer">
-            <span>Delete Account</span>
+        <Dialog>
+          <div className="flex flex-row justify-between p-1 sm:p-3 font-semibold border-b border-gray-300 cursor-pointer">
+            <span className="text-sm sm:text-base">Delete Account</span>
             <button
-              className="bg-red-500 hover:bg-red-700 text-white  py-1 px-1 rounded w-[140px] flex items-center justify-center"
+              className="bg-red-500 hover:bg-red-700  text-white text-primary py-1 px-1 rounded w-fit sm:w-[140px] flex items-center justify-center"
               onClick={() => router.push("/account/deleteAccount")}
             >
-              <div className="mr-2">
+              <div className="sm:mr-2">
                 <Trash2 strokeWidth={1.2} />
               </div>
-              Delete
+              <span className="hidden sm:block sm:text-sm md:text-base">
+                Delete
+              </span>
             </button>
           </div>
         </Dialog>

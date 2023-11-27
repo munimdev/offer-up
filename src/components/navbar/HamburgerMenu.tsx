@@ -23,7 +23,7 @@ const HamburgerMenu = () => {
   const router = useRouter();
   const pathname = usePathname()
   const isChatListOrSellingScreen =
-  pathname === '/chatList' || pathname === '/selling' || pathname === '/listings' || pathname === '/account/setting';
+  pathname === '/chatList' || pathname === '/selling' || pathname === '/listings' || pathname === '/account/setting' || pathname === '/account/saved-list';
   const handleShowSubCategories = (id: number) => {
     setShowSubCategory(id === showSubCategory ? 0 : id);
   };
