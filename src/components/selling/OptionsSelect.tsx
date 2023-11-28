@@ -11,17 +11,19 @@ type TOptionsSelect = {
   title: string;
   options: any;
   onChange: (e: any) => void;
+  value: any;
 };
 
 const OptionsSelect: React.FC<TOptionsSelect> = ({
   title,
   options,
   onChange,
+  value = "",
 }) => {
   return (
     <Select>
       <SelectTrigger className="w-full">
-        <SelectValue placeholder={title} />
+        <SelectValue placeholder={value&&value||title} />
       </SelectTrigger>
       <SelectContent>
         {options.map((option: any,index:number) => (

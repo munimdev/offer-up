@@ -73,6 +73,7 @@ const CategoryDetail = () => {
           title="Select Sub Category"
           options={subCategories?.dataObject || []}
           onChange={(subCategory) => setItemData({ ...itemData, subCategory })}
+          value={itemData.subCategory.name}
         />
       </div>
 
