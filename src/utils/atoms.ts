@@ -66,6 +66,9 @@ export const subCategoryAtom = atom<{ id: number; name: string }>({
   id: 0,
   name: "",
 });
+export const parentCategoryAtom = atom<{ name: string }>({
+  name: "",
+});
 export const conditionAtom = atom<{ id: number; name: string }>({
   id: 0,
   name: "",

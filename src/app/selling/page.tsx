@@ -4,6 +4,7 @@
 import React from "react";
 import { useAtom } from "jotai";
 import { itemFormDataAtom } from "@/utils/atoms";
+import { parentCategoryAtom } from "@/utils/atoms";
 import { useRouter } from "next/navigation";
 import { useItemMutation } from "@/hooks/useItemMutation";
 import Stepper from "@/components/ui/stepper";
@@ -23,6 +24,7 @@ const tabs = ["Item", "Category", "Price","Location"];
 
 const Selling = () => {
   const [itemData, setItemData] = useAtom(itemFormDataAtom);
+  const [parentCategoryData, setParentCategoryData] = useAtom(parentCategoryAtom);
   const [currentTab, setCurrentTab] = React.useState(1);
   const { toast } = useToast();
   const [showSuccessModal, setShowSuccessModal] = React.useState(false);
@@ -161,6 +163,7 @@ const Selling = () => {
             action: <ToastAction altText="Try again">Try again</ToastAction>,
           });
         }
+        setParentCategoryData('')
         setItemData({
           name: '',
           description: '',

@@ -1,4 +1,6 @@
 import React, {useState} from "react";
+import { useAtom } from "jotai";
+import { parentCategoryAtom } from "@/utils/atoms";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,7 +29,7 @@ const OptionsDropdown: React.FC<TOptionsDropdown> = ({
   onChange,
   value = "",
 }) => {
-  const[parentCategory,setParentCategory] = useState("")
+  const [parentCategoryData, setParentCategoryData] = useAtom(parentCategoryAtom);
   console.log(value,'value')
   console.log(options,'options')
   return (
@@ -35,7 +37,7 @@ const OptionsDropdown: React.FC<TOptionsDropdown> = ({
       <DropdownMenu>
         <DropdownMenuTrigger className="w-full overflow-hidden" asChild>
           <p className="flex items-center w-full h-10 px-2 text-sm hover:cursor-pointer">
-            {value&&`${parentCategory}>${value}`||title}</p>
+            {value&&`${parentCategoryData}>${value}`||title}</p>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-64">
           <DropdownMenuSeparator />
@@ -51,7 +53,7 @@ const OptionsDropdown: React.FC<TOptionsDropdown> = ({
                       {option.children.map((child: any) => (
                         <DropdownMenuItem
                           key={child.id}
-                          onClick={() => {setParentCategory(option.name);onChange(child)}}
+                          onClick={() => {setParentCategoryData(option.name);onChange(child)}}
                         >
                           {child.name}
                         </DropdownMenuItem>
