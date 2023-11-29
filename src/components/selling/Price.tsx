@@ -24,8 +24,9 @@ const Price: React.FC<Props> = ({ isUpdate = false }) => {
   };
   return (
     <>
+    <div className="w-full p-2 sm:p-0" >
       <div
-        className={`flex items-center w-full max-w-md font-medium border-2 rounded-lg px-1 ${
+        className={`flex m-auto items-center w-full max-w-md font-medium border-2 rounded-lg px-1 ${
           isFocused ? "border-primary" : ""
         }`}
         onClick={handleFocus}
@@ -60,7 +61,7 @@ const Price: React.FC<Props> = ({ isUpdate = false }) => {
           onBlur={handleBlur}
         />
       </div>
-      <div className="flex items-center w-full max-w-md gap-1.5">
+      <div className="flex m-auto items-center w-full max-w-md mt-4 sm:mt-2 gap-1.5">
         <Label htmlFor="fix-price">Is Price Fixed</Label>
         <Switch
           checked={
@@ -75,6 +76,7 @@ const Price: React.FC<Props> = ({ isUpdate = false }) => {
               : setItemData({ ...itemData, isPriceFixed: e })
           }
         />
+      </div>
       </div>
     </>
   );
