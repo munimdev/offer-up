@@ -37,12 +37,40 @@
   height: 500px;
   width: 100%;
 }
+@media (max-width: 610px) {
+  .mySwiper2 {
+    height: 80%;
+    width: 100%;
+  }
+  .mySwiper img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+  }
+  .mySwiper .swiper-wrapper{
+    display: flex;
+    align-items: center;
+    /* justify-content: center; */
+    gap: 4px;
+    overflow: scroll;
+  }
+  .mySwiper .swiper-wrapper::-webkit-scrollbar {
+    width: 12px;
+  }
+  .mySwiper .swiper-wrapper .swiper-slide {
+    width: 18% !important;
+    height: 100%;
+    opacity: 0.4;
+    margin: 0 2px;
+  }
+}
 
 .mySwiper {
   height: 20%;
   box-sizing: border-box;
-  padding: 10px 0;
+  padding: 10px;
 }
+
 
 .mySwiper .swiper-slide {
   width: 25%;

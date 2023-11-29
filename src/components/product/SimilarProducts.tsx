@@ -13,7 +13,7 @@ const SimilarProducts = ({ categoryId }: { categoryId: string}) => {
       });
   return (
     <div className="p-4 my-4 border-b">
-           <h3 className="text-3xl font-bold text-black">Similar Items</h3>
+           <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-black">Similar Items</h3>
       {similarProducts&&<ItemList itemsList={similarProducts.dataObject} />} 
             </div>
   )

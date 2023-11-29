@@ -34,9 +34,16 @@ const Slider: React.FC<Props> = ({ imagesMain, imagesSub }) => {
         className="mySwiper2"
       >
         {imagesMain?.map((image) => (
-            <SwiperSlide key={image} className="border border-gray-300 rounded-md  "
-            style={{'background':'#f2f2f2',}}>
-            <img src={image} alt={`Main Slide ${image}`} />
+          <SwiperSlide
+            key={image}
+            className="border border-gray-300 rounded-md  "
+            style={{ background: "#f2f2f2" }}
+          >
+            <img
+              src={image}
+              alt={`Main Slide ${image}`}
+              className="h-full sm:h-auto"
+            />
           </SwiperSlide>
         ))}
       </Swiper>
@@ -49,16 +56,16 @@ const Slider: React.FC<Props> = ({ imagesMain, imagesSub }) => {
         freeMode={true}
         watchSlidesProgress={true}
         modules={[FreeMode, Navigation, Thumbs]}
-        className="mySwiper md:h-12"
-        style={{'padding':'8px 4px 0px 8px',}}
+        className="mySwiper"
+        style={{ padding: "8px 4px 0px 8px" }}
       >
         {imagesSub?.map((image, index) => (
-          <SwiperSlide key={image}
-          >
+          <SwiperSlide key={image}>
             <img
               src={image}
               alt={`Thumb ${index}`}
               onClick={() => handleThumbClick(index)}
+              className=""
             />
           </SwiperSlide>
         ))}

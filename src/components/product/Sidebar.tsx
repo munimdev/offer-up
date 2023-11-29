@@ -215,15 +215,15 @@ const Sidebar: React.FC<Props> = ({ data }) => {
         <StartChat onClose={handleCloseChatModal} onSubmit={handleChatSubmit} />
       )}
 
-      <div className="flex flex-col gap-2 p-5">
+      <div className="flex flex-col gap-2 p-2 sm:p-5">
         <h3
-          className="text-3xl font-bold text-black"
+          className="text-xl md:text-2xl lg:text-3xl font-bold text-black"
           style={{ overflowWrap: "break-word" }}
         >
           {data?.name}
         </h3>
 
-        <h3 className="text-3xl font-bold text-black">${data?.price}</h3>
+        <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-black">${data?.price}</h3>
         {/* <p>
         <span className="font-semibold">VIN</span> {data?.id}
       </p>
@@ -241,14 +241,14 @@ const Sidebar: React.FC<Props> = ({ data }) => {
               <div className="z-10 md:w-full w-screen bg-white flex justify-around md:h-auto h-16 md:justify-between items-center md:flex-col fixed md:relative left-0 bottom-0">
                 {" "}
                 <Button
-                  className="border border-primary rounded-full bg-primary md:mb-2  hover:bg-primary w-2/5 md:w-full md:text-base sm:text-sm text-xs sm:font-normal font-bold md:h-auto sm:h-12 h-10"
+                  className="border border-primary rounded-full bg-primary md:mb-2  hover:bg-primary w-[45%] sm:w-2/5 md:w-full md:text-base sm:text-sm text-xs sm:font-normal font-bold md:h-auto sm:h-12 h-10"
                   onClick={handleOpenOfferModal}
                 >
-                  <DollarSign fill="#fff" size={14} className="mr-1 sm:mr-2" /> Make a
+                  <DollarSign fill="#fff" size={15} className="mr-1 sm:mr-2" /> Make a
                   Offer
                 </Button>
                 <Button
-                  className="bg-white border rounded-full text-primary border-primary hover:bg-white w-2/5 md:w-full md:text-base sm:text-sm text-xs sm:font-normal font-bold md:h-auto sm:h-12 h-10"
+                  className="bg-white border rounded-full text-primary border-primary hover:bg-white w-[45%] sm:w-2/5 md:w-full md:text-base sm:text-sm text-xs sm:font-normal font-bold md:h-auto sm:h-12 h-10"
                   onClick={handleOpenChatModal}
                 >
                   <Message className="mr-2" /> Chat
@@ -275,7 +275,7 @@ const Sidebar: React.FC<Props> = ({ data }) => {
         </div>
         {/* {data.customer && data.customer.imagePath && data.customer.name &&data.customer.name.trim() !== ''&& ( */}
 
-        <div className="flex gap-4 py-4 my-4 border-y cursor-pointer items-center">
+        <div className="flex gap-4 py-1 my-2 sm:py-4 sm:my-4 border-y cursor-pointer items-center">
           <div onClick={() => sellerPageHandler(data.customer.id)}>
             <Image
               src={
@@ -285,13 +285,13 @@ const Sidebar: React.FC<Props> = ({ data }) => {
               }
               className="rounded-full"
               alt=""
-              width={70}
-              height={70}
+              width={60}
+              height={60}
             />
           </div>
           <div>
             <p
-              className="font-bold text-black cursor-pointer"
+              className="text-base sm:text-lg font-bold text-black cursor-pointer"
               onClick={() => sellerPageHandler(data.customer.id)}
             >
               {data.customer.name.toUpperCase()}
@@ -302,7 +302,7 @@ const Sidebar: React.FC<Props> = ({ data }) => {
 
         {/* )} */}
 
-        <div className="p-4 my-4 border-b lg:hidden">
+        <div className="p-2 my-1 sm:p-4 sm:my-4 border-b lg:hidden">
           <Description data={data?.description || ""} />
         </div>
         {/* <div>

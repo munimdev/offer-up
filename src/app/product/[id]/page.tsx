@@ -149,7 +149,7 @@ const [isReported,setIsReportedAdded] =useState(false)
     <div onClick={handleClickOutside}>
         <div className="flex flex-col mb-2 border-b md:flex-row relative" >
         <div className="w-full md:w-8/12 lg:w-9/12 ">
-          <div>
+          <div className="h-[50vh] sm:h-auto">
             <Slider
               imagesMain={currentItem?.images.map(
                 (image: ItemImages) => image.imagePath
@@ -159,8 +159,8 @@ const [isReported,setIsReportedAdded] =useState(false)
               )}
             />
           </div>
-          <div className="p-4 my-4 border-b">
-            <h3 className="text-3xl font-bold text-black">Typical Features</h3>
+          <div className="p-2 my-1 sm:p-4 sm:my-4 border-b">
+            <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-black">Typical Features</h3>
             {/* <p className="my-5">
               Contact the seller to confirm vehicle details
             </p> */}
@@ -189,13 +189,14 @@ const [isReported,setIsReportedAdded] =useState(false)
             <Skeleton className="w-full h-5/6" />
           )} 
         </div>
-          <div className="p-4 my-4 border-b lg:flex hidden">
+        {/* commenting it as it is hidden */}
+          {/* <div className="p-4 my-4 border-b lg:flex hidden"> 
             <Description data={currentItem?.description || ""} />
-          </div>
-          <div className="p-4 my-4 border-b">
+          </div> */}
+          <div className="p-2 my-1 sm:p-4 sm:my-4 border-b">
             <Map lat={currentItem?.locationLat} lng={currentItem?.locationLng} />
           </div>
-          <div className="p-4 my-4 border-b">
+          <div className="p-2 my-1 sm:p-4 sm:my-4 border-b">
             <div className="flex flex-wrap gap-3">
               <Badge className="mx-1 text-black bg-gray-300 cursor-pointer hover:text-white">
               <SelectFavouriteProducts isLoggedIn={isLoggedIn} data={currentItem} isButton={true}/>
