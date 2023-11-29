@@ -22,7 +22,7 @@ const OptionsSelect: React.FC<TOptionsSelect> = ({
 }) => {
   return (
     <Select>
-      <SelectTrigger className="w-full  p-2 sm:p-0">
+      <SelectTrigger className="w-full  p-2 ">
         <SelectValue placeholder={value&&value||title} />
       </SelectTrigger>
       <SelectContent>
