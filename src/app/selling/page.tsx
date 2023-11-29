@@ -220,7 +220,7 @@ const Selling = () => {
 
   return (
     <div className="flex flex-col items-center flex-1 gap-5 my-5 text-2xl font-bold">
-      <div className="grid w-full max-w-lg items-center gap-1.5">
+      <div className=" w-full max-w-lg items-center gap-1.5">
         <Stepper tabs={tabs} activeTab={currentTab} />
       </div>
       {currentTab === 1 && <ItemDetail />} 

@@ -1,0 +1,31 @@
+/* Add this to your existing stepper.css */
+
+.stepper::after {
+    content: '';
+    width: 0; /* Start with no width */
+    height: 2px;
+    position: absolute;
+    background-color: hsl(var(--primary));
+    top: 50%;
+    left: 100%;
+    transition: width 0.3s ease; /* Add a transition effect for smooth width changes */
+  }
+  
+.active-step::after {
+    width: 94px; /* Set the width for the active step */
+  }
+  
+.previous-step::after {
+    width: 94px; /* Set the width for previous steps */
+    background-color: hsl(var(--primary));
+}
+@media (max-width: 640px) {
+    .active-step::after {
+        width: 58px; /* Set the width for the active step */
+      }
+      
+    .previous-step::after {
+        width: 58px; /* Set the width for previous steps */
+        background-color: hsl(var(--primary));
+    }
+}
