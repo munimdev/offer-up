@@ -228,7 +228,7 @@ const Selling = () => {
 {currentTab === 3 && <Price/>}
 {currentTab === 4 && <Location />}
       {currentTab === 4 ? (
-        <div className="flex w-full max-w-md gap-1.5">
+        <div className="flex w-full max-w-md p-2 sm:p-0 gap-1.5">
           <Button
             className="w-1/2 transition-colors duration-300 ease-in-out bg-white border border-primary text-primary hover:bg-gray-50"
             type="button"
@@ -247,7 +247,7 @@ const Selling = () => {
           </Button>
         </div>
       ) : (
-        <div className="flex w-full max-w-md gap-1.5">
+        <div className="flex w-full max-w-md p-2 sm:p-0 gap-1.5">
           {currentTab !== 1 && (
             <Button
               className="w-1/2 transition-colors duration-300 ease-in-out bg-white border border-primary text-primary hover:bg-gray-50"
@@ -271,10 +271,10 @@ const Selling = () => {
         </div>
       )}
       {showSuccessModal && (
-        <div className="w-screen h-screen flex items-center justify-center bg-gray-200 bg-opacity-40 fixed top-0 left-0">
-          <div className="w-[420px] h-[380px] flex items-center flex-col justify-around rounded-lg bg-white p-5 shadow-md">
+         <div className="z-50 w-screen h-screen flex items-center justify-center bg-gray-900 bg-opacity-50 fixed top-0 left-0">
+         <div className="w-[290px] h-[300px] mx-2 sm:mx-0 sm:w-[420px] sm:h-[380px] flex items-center flex-col justify-around rounded-lg bg-white px-2 py-3 sm:p-5 shadow-md">
           <Success/>
-          <p className="text-base py-2 mx-auto w-fit">Your item has been listed successfully!</p>
+          <p className="text-sm sm:text-base font-medium py-2 mx-auto w-fit">Your item has been listed successfully!</p>
           <Button className="mx-auto " onClick={handleModalClose}>View Listings</Button>
         </div>
         </div>
