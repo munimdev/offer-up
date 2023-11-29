@@ -35,7 +35,7 @@ const OptionsDropdown: React.FC<TOptionsDropdown> = ({
   return (
     <div className="border rounded ">
       <DropdownMenu>
-        <DropdownMenuTrigger className="z-10 w-full overflow-hidden" asChild>
+        <DropdownMenuTrigger className="w-full overflow-hidden" asChild>
           <p className="flex items-center w-full h-10 px-2 text-sm hover:cursor-pointer">
             {value&&`${parentCategoryData}>${value}`||title}</p>
         </DropdownMenuTrigger>

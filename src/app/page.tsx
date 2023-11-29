@@ -198,7 +198,7 @@ const [downloadAppModal,setDownloadAppModal] = React.useState(false);
         </Dialog>
     <main className="flex flex-col items-center justify-center p-4">
 
-    <div className="flex flex-col items-center justify-center gap-4 text-[#1BC3FF] container mx-auto px-4">
+    <div className="flex flex-col items-center justify-center gap-4 text-[#1BC3FF] container container mx-auto px-4">
   <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-center">
   <div className="hidden sm:block">
     <ShoppingCart color="#1BC3FF" strokeWidth={3} className="w-8 h-8" />

@@ -54,7 +54,7 @@ const CategoryDetail = () => {
 
   return (
     <>
-      <div className="w-full max-w-md font-medium">
+      <div className="w-full p-2 sm:p-0  max-w-md font-medium">
         <Label htmlFor="description">Category</Label>
         {isLoading ? (
           <Skeleton className="w-full h-10" />
@@ -67,7 +67,7 @@ const CategoryDetail = () => {
           />
         )}
       </div>
-      <div className="w-full max-w-md font-medium">
+      <div className="w-full p-2 sm:p-0  max-w-md font-medium">
         <Label htmlFor="description">Sub Category</Label>
         <OptionsSelect
           title="Select Sub Category"
@@ -78,12 +78,12 @@ const CategoryDetail = () => {
       </div>
 
       {!subCategoryAttributes && categoryAttributes && (
-        <div className="w-full max-w-md font-medium">
+        <div className="w-full p-2 sm:p-0  max-w-md font-medium">
           <AttributeSelect data={categoryAttributes.dataObject} />
         </div>
       )}
       { (!!itemData.category.name && !categoryAttributes) || (!!itemData.subCategory.name && !subCategoryAttributes) && (
-        <div className="w-full max-w-md">
+        <div className="w-full p-2 sm:p-0  max-w-md">
           <div className="flex flex-col gap-4">
           {
             Array.from({ length: 3 }).map((_, index) => (
@@ -97,7 +97,7 @@ const CategoryDetail = () => {
         </div>
       )}
       {subCategoryAttributes && (
-        <div className="w-full max-w-md font-medium">
+        <div className="w-full max-w-md p-2 sm:p-0  font-medium">
           <AttributeSelect data={subCategoryAttributes.dataObject} />
         </div>
       )}
