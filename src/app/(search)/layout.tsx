@@ -282,7 +282,7 @@ export default function SettingLayout({
   children,
 }: {
   children: React.ReactNode;
-  changePosition: () => void;
+  // changePosition: () => void;
 }) {
   const [barVisibility, setBarVisibility] = useState<string>("hidden md:block");
   let changePosition = () => {
