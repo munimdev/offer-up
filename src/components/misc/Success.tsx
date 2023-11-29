@@ -15,8 +15,8 @@ const Success = ({ size, absolute = true }: { size?: string, absolute?: boolean 
     <div className="h-1/2 z-9999 overflow-hidden flex flex-col items-center justify-center">
         <Lottie 
     options={defaultOptions}
-      height={140}
-      width={140}
+      height={130}
+      width={130}
     /></div>
   
   );

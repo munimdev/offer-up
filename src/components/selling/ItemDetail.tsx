@@ -59,7 +59,7 @@ const ItemDetail = () => {
           }
         />
       </div>
-      <div className="grid w-full max-w-md gap-1.5">
+      <div className="grid w-full p-2 sm:p-0 max-w-md gap-1.5">
         <Label htmlFor="name">Name</Label>
         <Input
           type="text"
@@ -75,7 +75,7 @@ const ItemDetail = () => {
           }
         />
       </div>
-      <div className="grid w-full max-w-md items-center gap-1.5">
+      <div className="grid w-full p-2 sm:p-0 max-w-md items-center gap-1.5">
         <Label htmlFor="description">Description</Label>
         <Textarea
           id="description"
@@ -90,7 +90,7 @@ const ItemDetail = () => {
           }
         />
       </div>
-      <div className="w-full max-w-md font-medium">
+      <div className="w-full p-2 sm:p-0 max-w-md font-medium">
         <Label htmlFor="description">Condition</Label>
         <OptionsSelect
           title="Used"

@@ -131,8 +131,8 @@ const FileUpload: React.FC<Props> = ({
   };
 
   return (
-    <div className="">
-      <div className="relative border border-dashed border-primary w-full h-[300px] my-4">
+    <div className="w-11/12 sm:w-full h-[60vh] sm:h-full m-auto ">
+      <div className="relative border border-dashed border-primary w-full h-2/3  sm:h-[300px] my-4">
         {cover && (
           <Image
             src={cover}
