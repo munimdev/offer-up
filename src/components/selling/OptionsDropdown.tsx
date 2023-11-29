@@ -30,8 +30,8 @@ const OptionsDropdown: React.FC<TOptionsDropdown> = ({
   value = "",
 }) => {
   const [parentCategoryData, setParentCategoryData] = useAtom(parentCategoryAtom);
-  console.log(value,'value')
-  console.log(options,'options')
+  // console.log(value,'value')
+  // console.log(options,'options')
   return (
     <div className="border rounded ">
       <DropdownMenu>

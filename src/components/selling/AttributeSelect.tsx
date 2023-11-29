@@ -44,6 +44,14 @@ const AttributeSelect: React.FC<Props> = ({ data }) => {
             }),
     });
   };
+  const getPlaceholder = (attrId:any) => {
+    const matchingAttribute = itemFormData.attributes.find((attr) => attr.categoryAttributeId === attrId);
+    return matchingAttribute ? matchingAttribute.selectedValue : "Select an option";
+  };
+  const getInputPlaceholder = (attrId:any) => {
+    const matchingAttribute = itemFormData.attributes.find((attr) => attr.categoryAttributeId === attrId);
+    return matchingAttribute ? matchingAttribute.selectedValue : "";
+  };
   return data.map((attr) => (
     <>
       <Label htmlFor="Attributes">
@@ -52,7 +60,8 @@ const AttributeSelect: React.FC<Props> = ({ data }) => {
       {attr.attributeType === "selectList" ? (
         <Select onValueChange={(e) => onValueChange(attr, e)}>
           <SelectTrigger className="w-full">
-            <SelectValue placeholder={attr.name} />
+            {/* <SelectValue placeholder={attr.name} /> */}
+            <SelectValue placeholder={getPlaceholder(attr.id)} />
           </SelectTrigger>
           <SelectContent>
             {attr.options.split(",").map((option: string) => (
@@ -67,6 +76,7 @@ const AttributeSelect: React.FC<Props> = ({ data }) => {
           type="text"
           id="name"
           placeholder={attr.name}
+          value={getInputPlaceholder(attr.id)}
           className="font-medium border-gray placeholder:text-gray placeholder:font-medium"
           onChange={(e) => onValueChange(attr, e.target.value)}
         />
@@ -74,6 +84,7 @@ const AttributeSelect: React.FC<Props> = ({ data }) => {
         <Input
           type="number"
           id="name"
+          value={getInputPlaceholder(attr.id)}
           placeholder={attr.name}
           className="font-medium border-gray placeholder:text-gray placeholder:font-medium"
           onChange={(e) => onValueChange(attr, e.target.value)}
