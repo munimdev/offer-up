@@ -99,7 +99,7 @@ console.log(data,'data')
   }
   if (!paginatedItems || paginatedItems.data.length === 0) {
     return (
-      <div className="h-full flex-1">
+      <div className="h-full flex-1 ">
    <div className="text-center flex justify-center align-center">
         <p>No More Items</p>
       </div>
@@ -109,7 +109,7 @@ console.log(data,'data')
   }
   console.log(paginatedItems,'paginatedItems')
   return (
-    <div className="h-full flex-1">
+    <div className="h-full flex-1 w-full md:w-auto">
       <InfiniteScroll
         dataLength={paginatedItems?.data?.length || 0}
         next={() => loadMoreData.mutate(paginatedItems.pageNumber + 1)}

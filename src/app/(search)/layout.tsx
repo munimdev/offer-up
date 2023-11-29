@@ -10,8 +10,13 @@ import { Separator } from "@/components/ui/separator";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { SlidersHorizontal } from "lucide-react";
+interface SidebarProps {
+  barVisibility: string;
+  changePosition: () => void;
+}
 
-const Sidebar = () => {
+const Sidebar = ({ barVisibility,changePosition }: SidebarProps) => {
   const router = useRouter();
   const searchParam = useSearchParams();
   const pathname = usePathname();
@@ -47,9 +52,15 @@ const Sidebar = () => {
   const conditions = searchOptions?.[0]?.data?.dataObject;
   const subCategories = searchOptions?.[1]?.data?.dataObject;
   const childCategories = searchOptions?.[2]?.data?.dataObject;
-
+  const handleSidebarClick = (event:any) => {
+    // Prevent the click inside the Sidebar from propagating to the parent div
+    event.stopPropagation();
+  };
   return (
-    <div className="h-fit border border-gray-300 overflow-y-auto overflow-x-hidden p-4 text-sm w-[300px]">
+    <div
+      className={`h-[65vh] md:h-fit border border-gray-300 overflow-y-auto overflow-x-hidden p-4 text-sm w-full md:w-[240px] lg:w-[300px] rounded-lg fixed md:static ${barVisibility} ease-in left-0 bottom-0  bg-white`}
+      onClick={handleSidebarClick}
+    >
       <p className="font-semibold text-lg">Filter</p>
       <Separator className="my-4" />
       <div className="flex flex-col gap-y-3">
@@ -93,7 +104,7 @@ const Sidebar = () => {
               </div>
             ))}
         <Button
-          onClick={() => {
+          onClick={() => { changePosition()
             let queryString = "?";
             searchParam.forEach((value, key) => {
               if (key != "sub" && key != "child") {
@@ -118,7 +129,7 @@ const Sidebar = () => {
           <p className="font-semibold my-2">Price range</p>
           <p
             className="underline my-2 cursor-pointer text-sm"
-            onClick={() => {
+            onClick={() => { changePosition()
               setMinPrice(0);
               setMaxPrice(0);
               let queryString = "?";
@@ -147,8 +158,7 @@ const Sidebar = () => {
                 const newMinPrice = parseInt(e.target.value);
                 setMinPrice(newMinPrice);
                 setMaxPrice(Math.max(maxPrice, newMinPrice + 1));
-              }
-              }
+              }}
             />
           </span>
           <span>to</span>
@@ -157,13 +167,13 @@ const Sidebar = () => {
             <input
               placeholder="Max"
               type="number"
-              min={minPrice + 1} 
+              min={minPrice + 1}
               max={999999}
               className="w-16 border-none outline-none"
               value={maxPrice}
               onChange={(e) => {
                 const newMaxPrice = parseInt(e.target.value);
-                setMaxPrice(Math.max(newMaxPrice, minPrice + 1));  // Validate max value
+                setMaxPrice(Math.max(newMaxPrice, minPrice + 1)); // Validate max value
               }}
             />
           </span>
@@ -171,6 +181,7 @@ const Sidebar = () => {
         <Button
           className="mt-2 w-full"
           onClick={() => {
+            changePosition()
             let queryString = "?";
             searchParam.forEach((value, key) => {
               if (key != "priceFrom" && key != "priceTo") {
@@ -195,7 +206,15 @@ const Sidebar = () => {
         <span
           className="underline my-2 cursor-pointer text-sm"
           onClick={() => {
-            setSelectedCondition(["10001","10002","10003","10004","10005","10006"]);
+            changePosition()
+            setSelectedCondition([
+              "10001",
+              "10002",
+              "10003",
+              "10004",
+              "10005",
+              "10006",
+            ]);
             let queryString = "?";
             searchParam.forEach((value, key) => {
               if (key != "condition") {
@@ -240,7 +259,8 @@ const Sidebar = () => {
           </div>
         ))}
         <Button
-          onClick={() => {
+          onClick={() => { 
+            changePosition()
             let queryString = "?";
             searchParam.forEach((value, key) => {
               if (key != "condition") {
@@ -262,11 +282,30 @@ export default function SettingLayout({
   children,
 }: {
   children: React.ReactNode;
+  changePosition: () => void;
 }) {
+  const [barVisibility, setBarVisibility] = useState<string>("hidden md:block");
+  let changePosition = () => {
+    barVisibility === "hidden md:block"
+      ? setBarVisibility("block")
+      : setBarVisibility("hidden md:block");
+  };
   return (
-    <div className="h-full flex flex-row gap-x-10 px-20 py-10">
-      <Sidebar />
-      {children}
-    </div>
+    <>
+      <div className="block md:hidden w-full h-8 px-4">
+        <button
+          type="button"
+          onClick={changePosition}
+          className="flex items-center font-bold tracking-wide justify-center gap-1 bg-primary text-white px-5 py-1 rounded-full text-md"
+        >
+          <SlidersHorizontal size={16} strokeWidth={3} />
+          <span> Filter</span>
+        </button>
+      </div>
+      <div className="h-full flex flex-row gap-x-10 px-7 py-5  lg:px-20 lg:py-10" onClick={barVisibility === "block" ? changePosition : undefined}>
+        <Sidebar barVisibility={barVisibility} changePosition={changePosition} />
+        {children}
+      </div>
+    </>
   );
 }
