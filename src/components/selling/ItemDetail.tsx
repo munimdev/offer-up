@@ -98,6 +98,7 @@ const ItemDetail = () => {
           onChange={(conditon) =>
             setItemData({ ...itemData, conditionLookUpId: conditon.id })
           }
+          value={'Used'}
         />
       </div>
     </>
