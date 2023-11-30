@@ -6,6 +6,7 @@ import * as Queries from "@/utils/queries";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import OptionsDropdown from "./OptionsDropdown";
+import CategoriesDropDown from "./CategoriesDropDown";
 import OptionsSelect from "./OptionsSelect";
 import AttributeSelect from "./AttributeSelect";
 
@@ -59,12 +60,18 @@ const CategoryDetail = () => {
         {isLoading ? (
           <Skeleton className="w-full h-10" />
         ) : (
-          <OptionsDropdown
+          <CategoriesDropDown
             title="Select Category"
             options={categories}
             onChange={(category) => setItemData({ ...itemData, category })}
             value={itemData.category.name}
           />
+          // <OptionsDropdown
+          //   title="Select Category"
+          //   options={categories}
+          //   onChange={(category) => setItemData({ ...itemData, category })}
+          //   value={itemData.category.name}
+          // />
         )}
       </div>
       <div className="w-full p-2 sm:p-0  max-w-md font-medium">
