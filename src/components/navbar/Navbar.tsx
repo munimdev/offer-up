@@ -125,6 +125,7 @@ const navList = [
 export const Navbar = ({}: NavbarProps) => {
   const [isLocationModalOpen, setIsLocationModalOpen] = React.useState(false);
   const [zipCode, setZipCode] = useAtom(zipCodeAtom);
+  const [tempZipCode, setTempZipCode]= useState('')
   const [location, setLocation] = useAtom(locationAtom);
   const [zipError, setZipError] = useState(false);
   const [locationName, setLocationName] = useAtom(locationNameAtom);
@@ -149,6 +150,7 @@ export const Navbar = ({}: NavbarProps) => {
         );
         const locationName = data.results[0].address_components[3].long_name;
         // setLocationName(locationName);
+        setZipCode(code);
         setLocationName(modifiedAddress);
         // localStorage.setItem("formatted_address", modifiedAddress as string);
         setLocation({ lat, lng });
@@ -219,7 +221,13 @@ export const Navbar = ({}: NavbarProps) => {
           <Searchbar />
         </div>
         <Dialog
-          onOpenChange={(e) => setIsLocationModalOpen(e)}
+          onOpenChange={(e) => {
+            console.log(e)
+            if (!e) {
+              // Dialog is closing
+              setTempZipCode("");
+            }
+            setIsLocationModalOpen(e);}}
           open={isLocationModalOpen}
         >
           <DialogTrigger asChild>
@@ -271,12 +279,15 @@ export const Navbar = ({}: NavbarProps) => {
                 </button>
                 <p className="my-2 font-bold text-center text-black">Or</p>
                 <Input
-                  value={zipCode}
+                  value={zipCode&&zipCode||tempZipCode}
                   onClick={() => {
                     zipError && setZipError(false);
                   }}
                   onChange={(e) => {
-                    setZipCode(e.target.value);
+                    if(zipCode){
+                      setZipCode("")
+                    }
+                    setTempZipCode(e.target.value);
                   }}
                   className="mx-auto border border-gray-100 w-44"
                   placeholder="Enter ZIP Code"
@@ -285,13 +296,13 @@ export const Navbar = ({}: NavbarProps) => {
                   className="block mx-auto mt-3"
                   type="button"
                   onClick={() => {
-                    if (zipCode.length === 5) {
-                      console.log(zipCode.length, "if");
-                      handleLocationByZipCode(zipCode);
+                    if (tempZipCode.length === 5) {
+                      console.log(tempZipCode.length, "if");
+                      handleLocationByZipCode(tempZipCode);
                     } else {
-                      console.log(zipCode.length, "else");
+                      console.log(tempZipCode.length, "else");
                       setZipError(true);
-                      setZipCode("");
+                      setTempZipCode("");
                     }
                   }}
                 >
@@ -480,7 +491,14 @@ export const Navbar = ({}: NavbarProps) => {
         <Searchbar />
       </div>
       <Dialog
-        onOpenChange={(e) => setIsLocationModalOpen(e)}
+        // onOpenChange={(e) => setIsLocationModalOpen(e)}
+        onOpenChange={(e) => {
+          console.log(e)
+          if (!e) {
+            // Dialog is closing
+            setTempZipCode("");
+          }
+          setIsLocationModalOpen(e);}}
         open={isLocationModalOpen}
       >
         <DialogTrigger asChild>
@@ -532,12 +550,16 @@ export const Navbar = ({}: NavbarProps) => {
               </button>
               <p className="my-2 font-bold text-center text-black">Or</p>
               <Input
-                value={zipCode}
+                // value={tempZipCode}
+                value={zipCode&&zipCode||tempZipCode}
                 onClick={() => {
                   zipError && setZipError(false);
                 }}
                 onChange={(e) => {
-                  setZipCode(e.target.value);
+                  if(zipCode){
+                    setZipCode("")
+                  }
+                  setTempZipCode(e.target.value);
                 }}
                 className="mx-auto border border-gray-100 w-44"
                 placeholder="Enter ZIP Code"
@@ -546,11 +568,11 @@ export const Navbar = ({}: NavbarProps) => {
                 className="block mx-auto mt-3"
                 type="button"
                 onClick={() => {
-                  if (zipCode.length === 5) {
-                    handleLocationByZipCode(zipCode);
+                  if (tempZipCode.length === 5) {
+                    handleLocationByZipCode(tempZipCode);
                   } else {
                     setZipError(true);
-                    setZipCode("");
+                    setTempZipCode("");
                   }
                 }}
               >
