@@ -3,10 +3,17 @@ import React from 'react';
 import { withGoogleMap, GoogleMap, Circle  } from 'react-google-maps';
 
 function GoogleMapComponent(props:any) {
+  const mapOptions = {
+    zoomControl: true, // Enable zoom control
+    mapTypeControl: false, // Disable map type control
+    streetViewControl: false, // Disable street view control
+    fullscreenControl: false, // Disable fullscreen control
+  };
   return (
     <GoogleMap
       defaultZoom={14}
       defaultCenter={{ lat: props.lat, lng: props.lng }} // Use the passed props for latitude and longitude
+      defaultOptions={mapOptions}
     >
       {/* <Marker position={{ lat: props.lat, lng: props.lng }} /> */}
       <Circle
