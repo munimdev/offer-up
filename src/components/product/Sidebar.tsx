@@ -235,7 +235,7 @@ const Sidebar: React.FC<Props> = ({ data }) => {
         {/* <Button className="rounded-full bg-primary hover:bg-primary">
         <Phone fill="#fff" size={18} className="mr-2" /> Call for Details
       </Button> */}
-        {data?.customer.id !== user.id
+        {user&&data?.customer.id !== user.id
           ? user &&
             user.id && (
               <div className="z-10 md:w-full w-screen bg-white flex justify-around md:h-auto h-16 md:justify-between items-center md:flex-col fixed md:relative left-0 bottom-0">
