@@ -226,8 +226,8 @@ const Sidebar: React.FC<Props> = ({ data }) => {
         <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-black">${data?.price}</h3>
         {/* <p>
         <span className="font-semibold">VIN</span> {data?.id}
-      </p>
-      <p>Posted 24 days ago in Islamabd, PK</p> */}
+      </p>*/}
+      <p>Posted {data?.shortAddress} in {data?.shortAddress}</p> 
         <p>Condition: {data?.conditionLookUpName}</p>
         <p>
           {data.categoryName} - {data.subCategoryName}

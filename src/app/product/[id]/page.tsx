@@ -146,6 +146,7 @@ const [isReported,setIsReportedAdded] =useState(false)
       setShareTooltipOpen(false);
     }
   };
+  console.log(currentItem,'currentItem')
   return (
     <> <Head>
     <title>{currentItem.name}</title>
