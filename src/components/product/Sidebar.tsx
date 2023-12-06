@@ -296,6 +296,7 @@ const Sidebar: React.FC<Props> = ({ data }) => {
             >
               {data.customer.name.toUpperCase()}
             </p>
+            <p>Joined {data.customer.memberSince}</p>
             {/* Other content */}
           </div>
         </div>
