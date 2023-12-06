@@ -1,4 +1,5 @@
 "use client";
+import Head from 'next/head';
 import CustomerOtherProducts from "@/components/product/CustomerOtherProducts";
 import SimilarProducts from "@/components/product/SimilarProducts";
 import React, {useEffect, useState} from "react";
@@ -146,6 +147,13 @@ const [isReported,setIsReportedAdded] =useState(false)
     }
   };
   return (
+    <> <Head>
+    <title>{currentItem.name}</title>
+    <meta property="og:title" content={currentItem.name} />
+    <meta property="og:description" content={currentItem.description} />
+    <meta property="og:image" content={currentItem.images[0].imagePath} />
+    <meta property="og:url" content={`https://bargainex.com/product/${currentItem.id}`} />
+  </Head>
     <div onClick={handleClickOutside}>
         <div className="flex flex-col mb-2 border-b md:flex-row relative" >
         <div className="w-full md:w-8/12 lg:w-9/12 ">
@@ -246,6 +254,7 @@ const [isReported,setIsReportedAdded] =useState(false)
         </div>
       </div>
     </div>
+    </>
   );
 };
 
