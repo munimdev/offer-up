@@ -61,13 +61,13 @@ const SelectFavouriteProducts = (props: any) => {
     props.data.lstAddedToFavoriteListIds?.length > 0 ||favouriteAdded? "fill-primary" : ""
   }`}
 />  {props.data.lstAddedToFavoriteListIds?.length > 0||favouriteAdded ?"Saved":"Save"} 
-            </button>:    <button className="">
+            </button>:    <button className="flex items-center">
             <Heart
   size={20}
   className={`inline-block mr-2 ${
     props.data.lstAddedToFavoriteListIds?.length > 0|| favouriteAdded ? "fill-primary" : ""
   }`}
-/>
+/> <span>Save</span>
             </button>}
       </DialogTrigger>
       <DialogContent className="max-w-[425px]">

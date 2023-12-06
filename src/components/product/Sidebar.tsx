@@ -256,13 +256,13 @@ const Sidebar: React.FC<Props> = ({ data }) => {
               </div>
             )
           : ""}
-        <div className="flex items-center justify-center gap-x-5 text-primary">
+        <div className="flex items-center justify-around gap-x-5 pt-3 text-primary">
           <SelectFavouriteProducts
             isLoggedIn={isLoggedIn}
             data={data}
             isButton={false}
           />
-          <Report
+          {/* <Report
             isLoggedIn={isLoggedIn}
             lookupId={10004}
             formSchema={formSchema}
@@ -270,7 +270,7 @@ const Sidebar: React.FC<Props> = ({ data }) => {
             size={20}
             text={""}
             isReported={isReported}
-          />
+          /> */}
           <SocialShare isButton={false} />
         </div>
         {/* {data.customer && data.customer.imagePath && data.customer.name &&data.customer.name.trim() !== ''&& ( */}

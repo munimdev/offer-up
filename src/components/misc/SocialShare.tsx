@@ -56,10 +56,14 @@ const SocialShare = ({ isButton }) => {
           <Share2 className="inline mr-2" size={16} /> Share
         </Badge>
       ) : (
-        <Share2
-          className="inline-block mr-2 cursor-pointer hover"
-          onClick={handleModalToggle}
-        />
+        // div created
+        <div
+        className='cursor-pointer hover flex items-center'
+         onClick={handleModalToggle}><Share2 size={20}
+        className="inline-block mr-2 "
+        
+      />
+      <span>Share</span></div>
       )}
 
       {isModalOpen && (
