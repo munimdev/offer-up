@@ -62,7 +62,7 @@ import placholder from "@/components/item/placeholder.png";
 import HamburgerMenu from "./HamburgerMenu";
 // Icons
 import Logo from "@/components/icons/Logo";
-import { MapPin, Menu, Mail, MessageSquare, PlusSquare } from "lucide-react";
+import { MapPin, Menu, Mail, MessageSquare, PlusSquare, Heart } from "lucide-react";
 import Facebook from "@/components/icons/Facebook";
 import Google from "@/components/icons/Google";
 import Apple from "@/components/icons/Apple";
@@ -200,7 +200,7 @@ export const Navbar = ({}: NavbarProps) => {
   const { isLoggedIn, user } = useSession();
   const pathname = usePathname();
   const isChatListOrSellingScreen =
-    pathname === "/chatList" || pathname === "/selling";
+  pathname === "/saved-list" || pathname === "/chatList" || pathname === "/selling";
   const onLogoutHandler = () => {
     router.push("/");
     localStorage.removeItem("accessToken");
@@ -209,7 +209,7 @@ export const Navbar = ({}: NavbarProps) => {
 
   return (
     <>
-      <div className="flex items-center gap-4 p-1 sm:p-4 mt-2">
+      <div className="flex items-center gap-1 sm:gap-4 p-1 sm:p-4 mt-2">
         <HamburgerMenu />
         <Link href="/" className="flex items-center">
           <Logo />
@@ -332,6 +332,32 @@ export const Navbar = ({}: NavbarProps) => {
         <div className="ml-auto">
           <NavigationMenu className=" z-20">
             <NavigationMenuList>
+              {/* only Added this for saved button */}
+              <NavigationMenuItem>
+                <Link href={isLoggedIn === true ? "/saved-list" : "/"} passHref>
+                  <NavigationMenuLink
+                    className={navigationMenuTriggerStyle()}
+                    onClick={(e) => {
+                      console.log(
+                        isChatListOrSellingScreen,
+                        "isChatListOrSellingScreen"
+                      );
+                      if (!isLoggedIn && !isChatListOrSellingScreen) {
+                        e.preventDefault();
+                        setIsLoginDialog(true);
+                        setLoginDialogCurrentScreen("home");
+                      }
+                    }}
+                  >
+                    <span className="hidden lg:block">Saved Items</span>
+
+                    <span className="">
+                      <Heart />
+                    </span>
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+
               <NavigationMenuItem>
                 <Link href={isLoggedIn === true ? "/chatList" : "/"} passHref>
                   <NavigationMenuLink
@@ -350,7 +376,7 @@ export const Navbar = ({}: NavbarProps) => {
                   >
                     <span className="hidden lg:block">Chat Inbox</span>
 
-                    <span className="lg:hidden">
+                    <span className="">
                       <MessageSquare />
                     </span>
                   </NavigationMenuLink>
@@ -380,7 +406,7 @@ export const Navbar = ({}: NavbarProps) => {
                   >
                     <span className="hidden lg:block">Post Item</span>
 
-                    <span className="lg:hidden">
+                    <span className="">
                       <PlusSquare />
                     </span>
                   </NavigationMenuLink>

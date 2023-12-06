@@ -204,7 +204,7 @@ const IndividualSeller = ({
             <div className="flex flex-col items-start gap-1 text-sm">
               <div className="flex items-center font-bold">
                 <span className="mr-1">{profile?.name.toUpperCase()}</span>
-                <TooltipProvider>
+                {/* <TooltipProvider>
                   <div >
                   <Tooltip>
                     <TooltipTrigger>
@@ -229,11 +229,11 @@ const IndividualSeller = ({
                     </TooltipContent>
                   </Tooltip>
                   </div>
-                </TooltipProvider>
-                <span className="ml-2 text-xs text-gray-500">
+                </TooltipProvider> */}
+                {/* <span className="ml-2 text-xs text-gray-500">
                   {" "}
                   ({lastActivity})
-                </span>
+                </span> */}
               </div>
               <p className="font-medium">
                 Joined {joinDate.toLocaleString("default", { month: "short" })}{" "}
