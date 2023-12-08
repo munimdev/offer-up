@@ -134,6 +134,9 @@ const HamburgerMenu = () => {
             <Link  href={isLoggedIn===true?'/selling':'/'} className="flex justify-between">  Post Item <PlusCircle /> </Link>
            
             </div>
+            <div className="px-2 py-2 text-gray-600 font-bold flex justify-between" onClick={()=>{setIsVisible(false)}}>
+             <Link href='/productMap'>Find Near Product</Link>
+            </div>
             {/* <li className="mb-2"   onClick={(e) => 
                           {
                             console.log(isChatListOrSellingScreen,'isChatListOrSellingScreen')

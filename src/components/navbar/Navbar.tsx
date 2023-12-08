@@ -474,6 +474,9 @@ export const Navbar = ({}: NavbarProps) => {
                         <DropdownMenuItem asChild className="cursor-pointer">
                           <Link href="/saved-list">Saved Items</Link>
                         </DropdownMenuItem>
+                        <DropdownMenuItem asChild className="cursor-pointer">
+                          <Link href="/productMap">Find Near Products</Link>
+                        </DropdownMenuItem>
                       </DropdownMenuGroup>
                       <DropdownMenuSeparator />
                       {/* <DropdownMenuGroup>
