@@ -240,7 +240,7 @@ const [isLoginDialog, setIsLoginDialog] = useAtom(isLoginDialogOpenAtom);
         {/* <p>
         <span className="font-semibold">VIN</span> {data?.id}
       </p>*/}
-      <p>Posted {data?.shortAddress} in {data?.shortAddress}</p> 
+      <p><span>Posted: </span> {data?.shortAddress} in {data?.shortAddress}</p> 
         <p>Condition: {data?.conditionLookUpName}</p>
         <p>
           {data.categoryName} - {data.subCategoryName}
