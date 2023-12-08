@@ -73,6 +73,7 @@ const [downloadAppModal,setDownloadAppModal] = React.useState(false);
     if (data?.dataObject) {
       setPaginatedItems(data.dataObject)
     }
+    console.log(data,'data')
   }, [
     data
   ])
