@@ -8,7 +8,7 @@ import { useSearchParams } from "next/navigation";
 
 import { useFetch } from "@/hooks";
 import * as Queries from "@/utils/queries";
-
+import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
 import { RotatingLines } from  'react-loader-spinner'
 import { useAtom, useAtomValue } from "jotai/react";
@@ -30,7 +30,8 @@ const MapComponent = withGoogleMap(props => (
         {props.activeMarker === marker.id && (
          <InfoWindow onCloseClick={() => props.onMarkerHover(null)} onMouseOut={() => {console.log("working");props.onMarkerHover(null)}} options={{ pixelOffset: new window.google.maps.Size(0, -10) }}>
          <div style={{ width: '250px', height: '150px' }}  >
-           <div style={{ height: '100px' }}>
+         <Link href={`/product/${marker.id}`}>
+           <div style={{ height: '100px',textDecoration: 'none', border: 'none' }}>
              <img src={marker.images[0].imagePath} alt="" style={{ width: '250px', maxHeight: '100px' }} onMouseOut={(e) => e.stopPropagation()} />
            </div>
        
@@ -38,6 +39,7 @@ const MapComponent = withGoogleMap(props => (
              <h3>{marker.name}</h3>
              <p>${marker.price}</p>
            </div>
+           </Link>
          </div>
        </InfoWindow>
 
