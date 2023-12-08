@@ -9,6 +9,9 @@ const Avatar = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root>
 >(({ className, ...props }, ref) => (
+
+  // width,height increased in full screen 
+
   <AvatarPrimitive.Root
     ref={ref}
     className={cn(

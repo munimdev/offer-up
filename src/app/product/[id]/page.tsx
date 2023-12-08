@@ -2,7 +2,7 @@
 import Head from 'next/head';
 import CustomerOtherProducts from "@/components/product/CustomerOtherProducts";
 import SimilarProducts from "@/components/product/SimilarProducts";
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import Slider from "@/components/product/Slider";
 import Sidebar from "@/components/product/Sidebar";
 import Description from "@/components/product/Description";
@@ -43,7 +43,7 @@ import {
   LinkedinIcon,
   TwitterIcon,
   WhatsappIcon,
-  EmailIcon
+  EmailIcon,
 } from "react-share";
 import { Check, Heart, Flag, Share2 } from "lucide-react";
 import { Result } from "@/utils/types";
@@ -57,9 +57,9 @@ import { useSession } from "@/hooks";
 import { Item, ItemImages } from "@/types/types";
 import SocialShare from "@/components/misc/SocialShare";
 import { useSetAtom } from "jotai";
-import { isLoginDialogOpenAtom} from "@/utils/atoms";
+import { isLoginDialogOpenAtom } from "@/utils/atoms";
 import { Skeleton } from "@/components/ui/skeleton";
-import { RotatingLines } from  'react-loader-spinner'
+import { RotatingLines } from "react-loader-spinner";
 type Props = {
   data: Item;
 };
@@ -68,8 +68,8 @@ const Product = ({ params }: { params: { id: string } }) => {
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
   const { user, isLoggedIn } = useSession();
   const setIsLoginDialogOpen = useSetAtom(isLoginDialogOpenAtom);
-const [favouriteAdded,setFavouriteAdded] =useState(false)
-const [isReported,setIsReportedAdded] =useState(false)
+  const [favouriteAdded, setFavouriteAdded] = useState(false);
+  const [isReported, setIsReportedAdded] = useState(false);
   const [isShareTooltipOpen, setShareTooltipOpen] = useState(false);
   const { toast } = useToast();
   const { data, isLoading } = useFetch({
@@ -99,13 +99,17 @@ const [isReported,setIsReportedAdded] =useState(false)
     setShareTooltipOpen(!isShareTooltipOpen);
   };
   if (isLoading) {
-    return <div className="flex justify-center">
-    <RotatingLines strokeColor="#62C3FE"
-       strokeWidth="5"
-       animationDuration="0.75"
-       width="56"
-       visible={true}/>
-       </div>
+    return (
+      <div className="flex justify-center">
+        <RotatingLines
+          strokeColor="#62C3FE"
+          strokeWidth="5"
+          animationDuration="0.75"
+          width="56"
+          visible={true}
+        />
+      </div>
+    );
   }
   const formSchema = z.object({
     reason: z.string().nonempty({
@@ -115,8 +119,6 @@ const [isReported,setIsReportedAdded] =useState(false)
       message: "Please enter a description with at least 10 characters",
     }),
   });
-  
-
 
   const onReportHandler = async (dto: z.infer<typeof formSchema>) => {
     try {
@@ -127,7 +129,7 @@ const [isReported,setIsReportedAdded] =useState(false)
         reportReasonLookupId: parseInt(reason),
         note: description,
       });
-      setIsReportedAdded(true)
+      setIsReportedAdded(true);
       toast({
         title: "Reported",
         description: `We appreciate your feedback, and will look into this issue.`,
@@ -137,12 +139,12 @@ const [isReported,setIsReportedAdded] =useState(false)
       console.log(error);
     }
   };
-  const handleClickOutside = (event:any) => {
-    console.log('click')
-    const isOutsideTooltip = !event.target.closest('.tooltip'); 
-  console.log(isOutsideTooltip,'isOutsideTooltip')
-  console.log(isShareTooltipOpen,'isShareTooltipOpen')
-    if (isOutsideTooltip&&isShareTooltipOpen) {
+  const handleClickOutside = (event: any) => {
+    console.log("click");
+    const isOutsideTooltip = !event.target.closest(".tooltip");
+    console.log(isOutsideTooltip, "isOutsideTooltip");
+    console.log(isShareTooltipOpen, "isShareTooltipOpen");
+    if (isOutsideTooltip && isShareTooltipOpen) {
       setShareTooltipOpen(false);
     }
   };
@@ -156,20 +158,29 @@ const [isReported,setIsReportedAdded] =useState(false)
     <meta property="og:url" content={`https://bargainex.com/product/${currentItem.id}`} />
   </Head>
     <div onClick={handleClickOutside}>
-        <div className="flex flex-col mb-2 border-b md:flex-row relative" >
-        <div className="w-full md:w-8/12 lg:w-9/12 ">
-          <div className="h-[50vh] sm:h-auto">
-            <Slider
-              imagesMain={currentItem?.images.map(
-                (image: ItemImages) => image.imagePath
+      <div className="flex flex-col mb-2 border-b md:flex-row relative">
+        <div className="w-full ">
+          <div className="w-full flex">
+            <div className="w-full md:w-8/12 lg:w-9/12 sm:h-auto">
+              <Slider
+                imagesMain={currentItem?.images.map(
+                  (image: ItemImages) => image.imagePath
+                )}
+                imagesSub={currentItem?.images.map(
+                  (image: ItemImages) => image.imagePath250
+                )}
+              />
+            </div>
+            <div className="w-full md:w-6/12 lg:w-3/12 hidden md:block">
+              {currentItem ? (
+                <Sidebar data={currentItem} />
+              ) : (
+                <Skeleton className="w-full h-5/6" />
               )}
-              imagesSub={currentItem?.images.map(
-                (image: ItemImages) => image.imagePath250
-              )}
-            />
+            </div>
           </div>
           <div className="p-2 my-1 sm:p-4 sm:my-4 border-b">
-            <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-black">Typical Features</h3>
+            
             {/* <p className="my-5">
               Contact the seller to confirm vehicle details
             </p> */}
@@ -179,6 +190,9 @@ const [isReported,setIsReportedAdded] =useState(false)
                   key={attr.id + attr.categoryAttributeName}
                   className="basis-full lg:basis-3/6"
                 >
+                  <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-black">
+              Typical Features
+            </h3>
                   <div className="flex flex-wrap">
                     <span className="basis-3/6">
                       {attr.categoryAttributeName}
@@ -192,45 +206,55 @@ const [isReported,setIsReportedAdded] =useState(false)
             </div>
           </div>
           <div className="w-full md:w-6/12 md:hidden">
-          {currentItem ? (
-            <Sidebar data={currentItem} />
-          ) : (
-            <Skeleton className="w-full h-5/6" />
-          )} 
-        </div>
-        {/* commenting it as it is hidden */}
+            {currentItem ? (
+              <Sidebar data={currentItem} />
+            ) : (
+              <Skeleton className="w-full h-5/6" />
+            )}
+          </div>
+          {/* commenting it as it is hidden */}
           {/* <div className="p-4 my-4 border-b lg:flex hidden"> 
             <Description data={currentItem?.description || ""} />
           </div> */}
           <div className="p-2 my-1 sm:p-4 sm:my-4 border-b">
-            <Map lat={currentItem?.locationLat} lng={currentItem?.locationLng} />
+            <Map
+              lat={currentItem?.locationLat}
+              lng={currentItem?.locationLng}
+            />
           </div>
           <div className="p-2 my-1 sm:p-4 sm:my-4 border-b">
             <div className="flex flex-wrap gap-3">
               <Badge className="mx-1 text-black bg-gray-300 cursor-pointer hover:text-white">
-              <SelectFavouriteProducts isLoggedIn={isLoggedIn} data={currentItem} isButton={true}/>
-
-             
+                <SelectFavouriteProducts
+                  isLoggedIn={isLoggedIn}
+                  data={currentItem}
+                  isButton={true}
+                />
               </Badge>
               <Badge className="mx-1 text-black bg-gray-300 cursor-pointer hover:text-white">
-           
-                <Report  onSubmit={onReportHandler}
-          isLoggedIn={isLoggedIn}
-          lookupId={10004}
-          formSchema={formSchema}
-          size={16}
-          text={"Report"}
-          isReported={isReported}
-        />
+                <Report
+                  onSubmit={onReportHandler}
+                  isLoggedIn={isLoggedIn}
+                  lookupId={10004}
+                  formSchema={formSchema}
+                  size={16}
+                  text={"Report"}
+                  isReported={isReported}
+                />
               </Badge>
-              
-           {/* Share Userr */}
-           <SocialShare isButton={true}/>
-      
+
+              {/* Share Userr */}
+              <SocialShare isButton={true} />
             </div>
           </div>
-         {!isLoading&& <CustomerOtherProducts customerId={currentItem?.customer?.id}/>}  
-            {!isLoading&& <SimilarProducts categoryId={JSON.stringify(currentItem?.categoryId)}/>}  
+          {!isLoading && (
+            <CustomerOtherProducts customerId={currentItem?.customer?.id} />
+          )}
+          {!isLoading && (
+            <SimilarProducts
+              categoryId={JSON.stringify(currentItem?.categoryId)}
+            />
+          )}
           <div className="px-4 py-2 my-4">
             <ScrollArea className="max-w-full py-2 overflow-y-hidden whitespace-nowrap">
               {currentItem?.attributes.map((attr, key) => (
@@ -244,14 +268,6 @@ const [isReported,setIsReportedAdded] =useState(false)
               <ScrollBar orientation="horizontal" />
             </ScrollArea>
           </div>
-         
-        </div>
-        <div className="w-full md:w-6/12 lg:w-3/12 hidden md:block">
-          {currentItem ? (
-            <Sidebar data={currentItem} />
-          ) : (
-            <Skeleton className="w-full h-5/6" />
-          )}
         </div>
       </div>
     </div>
