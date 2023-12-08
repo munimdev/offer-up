@@ -15,10 +15,18 @@ import { useAtom, useAtomValue } from "jotai/react";
 import { preferredDistanceAtom, locationAtom, zipCodeAtom,  locationNameAtom } from "@/utils/atoms";
 console.log(locationAtom,'locationAtom')
 // Define your map component
-const MapComponent = withGoogleMap(props => (
+const MapComponent = withGoogleMap(props => {
+  const mapOptions = {
+    zoomControl: true, // Enable zoom control
+    mapTypeControl: false, // Disable map type control
+    streetViewControl: false, // Disable street view control
+    fullscreenControl: false, // Disable fullscreen control
+  };
+  return(
   <GoogleMap
     defaultZoom={8}
     defaultCenter={{ lat: props.location.lat, lng: props.location.lng }}
+    defaultOptions={mapOptions}
   >
     {/* Add markers for each object in the markers array */}
     {props.markers.map(marker => (
@@ -29,8 +37,8 @@ const MapComponent = withGoogleMap(props => (
       >
         {props.activeMarker === marker.id && (
          <InfoWindow onCloseClick={() => props.onMarkerHover(null)} onMouseOut={() => {console.log("working");props.onMarkerHover(null)}} options={{ pixelOffset: new window.google.maps.Size(0, -10) }}>
-         <div style={{ width: '250px', height: '150px' }}  >
-         <Link href={`/product/${marker.id}`}>
+         <div style={{ width: '250px', height: '150px',textDecoration: 'none', border: 'none'  }}  >
+         <Link href={`/product/${marker.id}`} style={{textDecoration: 'none', border: 'none' }}>
            <div style={{ height: '100px',textDecoration: 'none', border: 'none' }}>
              <img src={marker.images[0].imagePath} alt="" style={{ width: '250px', maxHeight: '100px' }} onMouseOut={(e) => e.stopPropagation()} />
            </div>
@@ -47,14 +55,8 @@ const MapComponent = withGoogleMap(props => (
       </Marker>
     ))}
   </GoogleMap>
-));
-const Loader = () => (
-  <div className="grid grid-cols-2 mx-auto gap-x-6 gap-y-10 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-8 ">
-    {Array.from({ length: 16 }).map((_, index) => (
-      <Skeleton key={index} className="w-full h-[130px]" />
-    ))}
-  </div>
-);
+)});
+
 // Your main React component as a functional component
 const MyMap = () => {
   const [activeMarker, setActiveMarker] = useState(null);
@@ -103,15 +105,6 @@ const MyMap = () => {
     setActiveMarker(markerId);
   };
 
-  // const markers = [
-  //   { id: 1, lat: -34.397, lng: 150.644 },
-  //   { id: 2, lat: -31.0, lng: 151.0 },
-  //   { id: 3, lat: -32.0, lng: 152.0 },
-  //   { id: 4, lat: -33.0, lng: 153.0 },
-  //   { id: 5, lat: -30.0, lng: 154.0 },
-  //   // Add more markers as needed
-  // ];
-  console.log(isLoading,'isLoading')
 
   return (
     <>
@@ -124,7 +117,7 @@ const MyMap = () => {
           visible={true}
         />
       </div>:  <MapComponent
-    containerElement={<div style={{ height: '600px' }} />}
+    containerElement={<div style={{ height: '640px' }} />}
     mapElement={<div style={{ height: '100%' }} />}
     markers={data?.dataObject?.data} // Pass the markers array to the MapComponent
     activeMarker={activeMarker}
