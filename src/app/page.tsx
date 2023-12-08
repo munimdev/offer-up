@@ -139,17 +139,24 @@ const [downloadAppModal,setDownloadAppModal] = React.useState(false);
       },
     }
   );
+  // if (isLoading) {
+  //   return (
+  //     <div className="flex justify-center">
+  //       <RotatingLines
+  //         strokeColor="#62C3FE"
+  //         strokeWidth="5"
+  //         animationDuration="0.75"
+  //         width="56"
+  //         visible={true}
+  //       />
+  //     </div>
+  //   );
+  // }
   if (isLoading) {
     return (
-      <div className="flex justify-center">
-        <RotatingLines
-          strokeColor="#62C3FE"
-          strokeWidth="5"
-          animationDuration="0.75"
-          width="56"
-          visible={true}
-        />
-      </div>
+      <>
+      <Loader />
+      </>
     );
   }
   return (

@@ -58,8 +58,19 @@ import {
   DollarSign,
 } from "lucide-react";
 import HeartIcon from "@/components/icons/HeartIcon";
-import { useSetAtom } from "jotai";
-import { isLoginDialogOpenAtom } from "@/utils/atoms";
+import { useSetAtom, useAtom } from "jotai/react";
+
+
+import {
+  userAtom,
+  zipCodeAtom,
+  locationAtom,
+  locationNameAtom,
+  preferredDistanceAtom,
+  isLoginDialogOpenAtom,
+  loginDialogCurrentScreenAtom,
+} from "@/utils/atoms";
+
 
 type Props = {
   data: Item;
@@ -202,6 +213,8 @@ const Sidebar: React.FC<Props> = ({ data }) => {
   const sellerPageHandler = async (id) => {
     router.replace(`/seller/${id}`);
   };
+const [isLoginDialog, setIsLoginDialog] = useAtom(isLoginDialogOpenAtom);
+
   return (
     <>
       {isOfferDialogOpen && (
@@ -227,7 +240,7 @@ const Sidebar: React.FC<Props> = ({ data }) => {
         {/* <p>
         <span className="font-semibold">VIN</span> {data?.id}
       </p>*/}
-      <p>Posted {data?.shortAddress} in {data?.shortAddress}</p> 
+      <p><span>Posted: </span> {data?.shortAddress} in {data?.shortAddress}</p> 
         <p>Condition: {data?.conditionLookUpName}</p>
         <p>
           {data.categoryName} - {data.subCategoryName}
@@ -235,27 +248,34 @@ const Sidebar: React.FC<Props> = ({ data }) => {
         {/* <Button className="rounded-full bg-primary hover:bg-primary">
         <Phone fill="#fff" size={18} className="mr-2" /> Call for Details
       </Button> */}
-        {user&&data?.customer.id !== user.id
+ 
+ {isLoggedIn && user&&data?.customer.id === user.id
           ? user &&
-            user.id && (
+            user.id && "" : 
               <div className="z-10 md:w-full w-screen bg-white flex justify-around md:h-auto h-16 md:justify-between items-center md:flex-col fixed md:relative left-0 bottom-0">
                 {" "}
+
                 <Button
                   className="border border-primary rounded-full bg-primary md:mb-2  hover:bg-primary w-[45%] sm:w-2/5 md:w-full md:text-base sm:text-sm text-xs sm:font-normal font-bold md:h-auto sm:h-12 h-10"
-                  onClick={handleOpenOfferModal}
+                  onClick={isLoggedIn === true ? handleOpenOfferModal : (e) => {
+                    e.preventDefault();
+                    setIsLoginDialog(true);
+                  }}
                 >
                   <DollarSign fill="#fff" size={15} className="mr-1 sm:mr-2" /> Make a
                   Offer
                 </Button>
                 <Button
                   className="bg-white border rounded-full text-primary border-primary hover:bg-white w-[45%] sm:w-2/5 md:w-full md:text-base sm:text-sm text-xs sm:font-normal font-bold md:h-auto sm:h-12 h-10"
-                  onClick={handleOpenChatModal}
+                  onClick={isLoggedIn === true ? handleOpenChatModal : (e) => {
+                    e.preventDefault();
+                    setIsLoginDialog(true);
+                  }}
                 >
                   <Message className="mr-2" /> Chat
                 </Button>
-              </div>
-            )
-          : ""}
+              </div> }
+          
         <div className="flex items-center justify-around gap-x-5 pt-3 text-primary">
           <SelectFavouriteProducts
             isLoggedIn={isLoggedIn}
