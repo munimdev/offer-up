@@ -55,6 +55,7 @@ import {
   MapPin,
   CalendarDays,
   Check,
+  Clock1,
   DollarSign,
 } from "lucide-react";
 import HeartIcon from "@/components/icons/HeartIcon";
@@ -240,7 +241,7 @@ const [isLoginDialog, setIsLoginDialog] = useAtom(isLoginDialogOpenAtom);
         {/* <p>
         <span className="font-semibold">VIN</span> {data?.id}
       </p>*/}
-      <p><span>Posted: </span> {data?.shortAddress} in {data?.shortAddress}</p> 
+      <p className="font-bold text-black  flex"><Clock1 className="pr-1"/> Posted on {data?.postedOn}  in {data?.shortAddress}</p> 
         <p>Condition: {data?.conditionLookUpName}</p>
         <p>
           {data.categoryName} - {data.subCategoryName}
