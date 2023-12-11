@@ -66,7 +66,7 @@ const Item = ({ data, refetch }: Props) => {
   return (
     <div
       // href={`/product/${data.itemId}`}
-      className="flex flex-row items-center justify-between p-3 my-2 transition-all border border-gray-200 rounded"
+      className="flex  flex-row items-center justify-between p-3 my-2 transition-all border border-gray-200 rounded"
     >
       <div className="flex flex-row gap-x-4">
         <Image
@@ -77,7 +77,7 @@ const Item = ({ data, refetch }: Props) => {
           height={60}
         />
         <div className="flex flex-col">
-          <p className="text-lg font-semibold">{data.itemName}</p>
+          <p className="text-lg font-semibold">{data.itemName.substring(0,16)} {data.itemName.length>16?'...':''}</p>
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button variant="outline" className="my-auto w-fit">
