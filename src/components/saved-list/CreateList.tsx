@@ -102,11 +102,11 @@ const CreateList = ({ refetchhandler }: { refetchhandler: () => void }) => {
                   )}
                 />
                 <DialogFooter className="mt-6">
-                  <DialogCloseButton className="px-4 text-black transition-colors duration-300 ease-in-out bg-white border rounded-md hover:bg-gray-200 mt-2">
+                  <DialogCloseButton className="px-4 py-2 text-black transition-colors duration-300 ease-in-out bg-white border rounded-md hover:bg-gray-200 mb-2">
                     Cancel
                   </DialogCloseButton>
                   <Button
-                    className="hover:bg-[#30b6fe] transition-colors duration-300 ease-in-out"
+                    className="hover:bg-[#30b6fe] transition-colors duration-300 ease-in-out mb-2"
                     type="submit"
                   >
                     Save changes
