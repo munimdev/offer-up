@@ -207,7 +207,7 @@ const Listings = () => {
                         <div className="flex flex-col">
                           <p className="space-x-2">
                             <span className="text-base md:text-lg font-bold text-ellipsis">
-                              {item.name}
+                            {item.name.substring(0,20)}{item.name.length>20?'...':''}
                             </span>
                             <span className="text-sm font-medium">{`$${item.price}`}</span>
                           </p>
