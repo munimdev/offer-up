@@ -18,7 +18,7 @@ export const Searchbar: React.FC<SearchbarProps> = ({}) => {
   placeholder="Search"
   value={inputValue}
   onChange={(e) => setInputValue(e.target.value)}
-  className="py-6 rounded-full mx-auto lg:w-80 w-11/12"
+  className="py-6 pl-6 pr-3 rounded-full mx-auto lg:w-80 w-11/12"
 >
   <div className="flex gap-2">
     <div className="hidden h-6 mr-3 border-l border-gray-300 sm:block place-self-center"></div>
