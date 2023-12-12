@@ -137,45 +137,46 @@ const Listings = () => {
             </div>
           ) : (
             <div className="">
-              <div className="w-full px-2 flex h-7 sm:h-auto flex-row items-center justify-evenly md:justify-center gap-2 my-4 sm:my-6 text-primary">
-                <Input
-                  type="text"
-                  placeholder="Search"
-                  className="h-10 rounded-full sm:w-max w-48"
-                ></Input>
-                <Select>
-                  <SelectTrigger className="w-[150] sm:w-[180px] sm:text-sm text-xs">
-                    <SelectValue placeholder="For Sale" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectItem value="sale">For Sale</SelectItem>
-                      <SelectItem value="archived">Archived</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-                <Select>
-                  <SelectTrigger className="w-[150] sm:w-[180px] sm:text-sm text-xs">
-                    <SelectValue placeholder="Post Date" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectItem value="all">All</SelectItem>
-                      <SelectItem value="today">Today</SelectItem>
-                      <SelectItem value="week">This week</SelectItem>
-                      <SelectItem value="month">This month</SelectItem>
-                      <SelectItem value="prev-month">Previous month</SelectItem>
-                      <SelectItem value="prev-3-month">
-                        Previous 3 months
-                      </SelectItem>
-                      <SelectItem value="older">Older than 3 months</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-                <Button className="flex items-center justify-center w-[80px] sm:w-[100px]">
-                  Reset
-                </Button>
-              </div>
+            <div className="w-full px-2 flex flex-col md:flex-row items-center justify-center gap-2 my-4 sm:my-6 text-primary">
+  <Input
+    type="text"
+    placeholder="Search"
+    className="h-10 rounded-full md:w-max w-full md:w-48 pl-4"
+  ></Input>
+  <Select>
+    <SelectTrigger className="w-full md:w-[180px] sm:text-sm text-xs">
+      <SelectValue placeholder="For Sale" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectGroup>
+        <SelectItem value="sale">For Sale</SelectItem>
+        <SelectItem value="archived">Archived</SelectItem>
+      </SelectGroup>
+    </SelectContent>
+  </Select>
+  <Select>
+    <SelectTrigger className="w-full md:w-[180px] sm:text-sm text-xs">
+      <SelectValue placeholder="Post Date" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectGroup>
+        <SelectItem value="all">All</SelectItem>
+        <SelectItem value="today">Today</SelectItem>
+        <SelectItem value="week">This week</SelectItem>
+        <SelectItem value="month">This month</SelectItem>
+        <SelectItem value="prev-month">Previous month</SelectItem>
+        <SelectItem value="prev-3-month">
+          Previous 3 months
+        </SelectItem>
+        <SelectItem value="older">Older than 3 months</SelectItem>
+      </SelectGroup>
+    </SelectContent>
+  </Select>
+  <Button className="flex items-center justify-center w-full md:w-[100px]">
+    Reset
+  </Button>
+</div>
+
             </div>
           )}
 
