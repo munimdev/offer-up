@@ -143,8 +143,9 @@ const Listings = () => {
     placeholder="Search"
     className="h-10 rounded-full md:w-max w-full md:w-48 pl-4"
   ></Input>
+  <div className="w-full items-center justify-between md:w-auto flex gap-2">
   <Select>
-    <SelectTrigger className="w-full md:w-[180px] sm:text-sm text-xs">
+    <SelectTrigger className="w-[49%] md:w-[180px] sm:text-sm text-xs">
       <SelectValue placeholder="For Sale" />
     </SelectTrigger>
     <SelectContent>
@@ -155,7 +156,7 @@ const Listings = () => {
     </SelectContent>
   </Select>
   <Select>
-    <SelectTrigger className="w-full md:w-[180px] sm:text-sm text-xs">
+    <SelectTrigger className="w-[49%] md:w-[180px] sm:text-sm text-xs">
       <SelectValue placeholder="Post Date" />
     </SelectTrigger>
     <SelectContent>
@@ -172,6 +173,7 @@ const Listings = () => {
       </SelectGroup>
     </SelectContent>
   </Select>
+  </div>
   <Button className="flex items-center justify-center w-full md:w-[100px]">
     Reset
   </Button>
@@ -181,7 +183,7 @@ const Listings = () => {
           )}
 
           {/* <div className="grid grid-cols-2 gap-4 p-4 md:grid-cols-3 lg:grid-cols-4"> */}
-          <div className="w-full md:w-4/5 mx-auto flex flex-col items-center p-4">
+          <div className="w-full md:w-4/5 mx-auto flex flex-col items-center p-2 sm:p-4">
             {sellerItems?.dataObject?.map((item: Item) => {
               {
                 /* {myItems.map((item: any) => { */
@@ -191,10 +193,10 @@ const Listings = () => {
                   key={item.id}
                   className=" w-full flex flex-row transition-colors duration-300 ease-in-out gap-x-4 group hover:bg-gray-100"
                 >
-                  <div className="w-full flex flex-row justify-between p-4 border-b rounded-b-md">
-                    <div className="flex items-center w-3/4 justify-between">
-                      <div className="flex items-center gap-4">
-                        <div className="relative w-20 h-20 overflow-hidden">
+                  <div className="w-full flex flex-row justify-between px-0 py-2 sm:p-4 border-b rounded-b-md">
+                    <div className="h-full sm:h-auto flex items-center w-3/4 justify-between">
+                      <div className="flex sm:items-center gap-1 sm:gap-4">
+                        <div className="relative w-14 h-14 sm:w-20 sm:h-20 overflow-hidden">
                           <Image
                             className="object-cover object-center rounded-md"
                             // src={placeholder}
@@ -205,14 +207,14 @@ const Listings = () => {
                             quality={100}
                           />
                         </div>
-                        <div className="flex flex-col">
-                          <p className="space-x-2">
-                            <span className="text-base md:text-lg font-bold text-ellipsis">
-                            {item.name.substring(0,20)}{item.name.length>20?'...':''}
+                        <div className="sm:flex py-1 flex-col">
+                          <p className="flex flex-col sm:block sm:space-x-2 h-full justify-between">
+                            <span className="text-xs sm:text-base md:text-lg font-semibold sm:font-bold text-ellipsis">
+                            {item.name.substring(0,18)}{item.name.length > 18 ?'...':''}
                             </span>
                             <span className="text-sm font-medium">{`$${item.price}`}</span>
                           </p>
-                          <p className="text-sm font-medium">
+                          <p className=" hidden sm:block text-sm font-medium">
                             {`${
                               item.description.length > 50
                                 ? item.description.substring(0, 50) + "..."
@@ -223,22 +225,22 @@ const Listings = () => {
                       </div>
                     </div>
                     <div
-                      className="sm:w-2/5 md:w-2/5 lg:w-2/6 xl:w-1/4 2xl:w-1/5 flex flex-col items-end justify-between"
+                      className="sm:w-2/5 md:w-2/5 lg:w-2/6 xl:w-1/4 2xl:w-1/5 flex flex-row sm:flex-col items-center sm:items-end justify-between"
                       onClick={() => {
                         fetchChatsForItem(item.id, user.id);
                       }}
                     >
                       <div
-                        className={`w-full flex flex-row ${
-                          item.isSold ? "justify-between" : "justify-end"
-                        } items-center`}
+                        className={`w-[89%] md:w-fit sm:gap-6 h-full sm:h-auto flex sm:flex-row flex-col-reverse py-1 sm:p-auto items-center ${
+                          item.isSold ? "justify-between md:justify-center" : "justify-end"
+                        }`}
                       >
                         {item.isSold && (
-                          <p className="bg-primary tracking-wider text-white md:text-sm px-2 py-1 rounded-2xl">
+                          <p className="bg-primary tracking-wider text-white text-[10px] md:text-sm px-2 py-1 rounded-2xl">
                             Sold
                           </p>
                         )}
-                        <p className="text-sm font-medium text-right">{`Posted 02/08/2023`}</p>
+                        <p className="text-xs sm:text-sm font-medium text-right"><span className="hidden sm:inline">Posted </span>{`02/08/2023`}</p>
                       </div>
                       <ItemDetails
                         item={item}
@@ -319,11 +321,11 @@ const ItemDetails: React.FC<ItemDetailsProps> = ({
         <button
           title=""
           type="button"
-          className="items-center justify-center invisible w-8 h-8 text-gray-400 rounded-full group-hover:visible"
+          className="items-center justify-center visible md:invisible h-[30px] sm:w-8 sm:h-8 text-gray-400 rounded-full   md:group-hover:visible"
         >
           <ChevronRight
-            className="text-gray-400 rounded-full hover:bg-gray-200"
-            size={40}
+            className="w-5 h-5 md:w-10 md:h-10 text-gray-400 rounded-full md:hover:bg-gray-200"
+            // size={40}
           ></ChevronRight>
         </button>
       </SheetTrigger>
