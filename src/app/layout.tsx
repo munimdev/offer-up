@@ -28,7 +28,10 @@ export default function RootLayout({
       </head>
       <body className={`${inter.className} min-h-screen flex flex-col`}>
         <QueryProvider>
-          <Navbar />
+        <nav   style={{ position: "sticky", top: 0, zIndex: 100,backgroundColor:"#ffffff" }}>
+        <Navbar />
+    </nav>
+         
           <div className="flex-1" style={{ minHeight: "calc(100vh - 100px)" }}>{children}</div>
           <Toaster />
           <Footer />

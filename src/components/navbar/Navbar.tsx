@@ -351,7 +351,7 @@ export const Navbar = ({}: NavbarProps) => {
                   >
                     <span className="hidden lg:block">Saved Items</span>
 
-                    <span className="">
+                    <span>
                       <Heart />
                     </span>
                   </NavigationMenuLink>
@@ -376,7 +376,7 @@ export const Navbar = ({}: NavbarProps) => {
                   >
                     <span className="hidden lg:block">Chat Inbox</span>
 
-                    <span className="">
+                    <span >
                       <MessageSquare />
                     </span>
                   </NavigationMenuLink>
@@ -406,7 +406,7 @@ export const Navbar = ({}: NavbarProps) => {
                   >
                     <span className="hidden lg:block">Post Item</span>
 
-                    <span className="">
+                    <span >
                       <PlusSquare />
                     </span>
                   </NavigationMenuLink>
