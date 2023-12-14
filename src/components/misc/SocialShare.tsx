@@ -77,10 +77,10 @@ const handleCopyButtonClick = () => {
     <div>
       {isButton === true ? (
         <Badge
-          className="mx-1 px-3 py-2 bg-gray-300 cursor-pointer hover:text-white hover"
+          className="mx-1 px-3 py-2 bg-gray-300 text-black cursor-pointer hover:text-white hover"
           onClick={handleModalToggle}
         >
-          <Share2 className="inline mr-2" size={16} /> Share
+          <Share2 className="inline mr-2 " size={16} /> Share
         </Badge>
       ) : (
         // div created
@@ -89,7 +89,7 @@ const handleCopyButtonClick = () => {
           onClick={handleModalToggle}
         >
           <Share2 size={20} className="inline-block mr-2 " />
-          <span className="text-black" >Share</span>
+          <span className="font-semibold" >Share</span>
         </div>
       )}
 

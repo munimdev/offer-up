@@ -67,7 +67,7 @@ const SelectFavouriteProducts = (props: any) => {
   className={`inline-block mr-2 ${
     props.data.lstAddedToFavoriteListIds?.length > 0|| favouriteAdded ? "fill-primary" : ""
   }`}
-/> <span>Save</span>
+/> <span className="font-semibold">Save</span>
             </button>}
       </DialogTrigger>
       <DialogContent className="max-w-[425px]">
