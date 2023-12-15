@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -58,7 +59,10 @@ const CreateList = ({ refetchhandler }: { refetchhandler: () => void }) => {
   return (
     <Dialog open={isDialogOpen} onOpenChange={(e) => setDialogOpen(e)}>
       <DialogTrigger asChild>
-        <Button variant="outline">Create New Collection</Button>
+        <Button variant="outline" className="mt-1 border-gray-400 flex items-center justify-center gap-1">
+          <Plus size={20} />
+          <p className="text-sm">Create New Collection</p>
+          </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

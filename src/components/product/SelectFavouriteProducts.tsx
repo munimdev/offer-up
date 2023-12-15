@@ -73,60 +73,61 @@ const SelectFavouriteProducts = (props: any) => {
       <DialogContent className="max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Save Item To List</DialogTitle>
+          <hr/>
           <DialogDescription>
             {"You can save this item to a list to view it later."}
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col py-4">
-      
-          {savedList?.dataObject?.map((list) => (
-            <div
-              key={list.id}
-              className="flex flex-row items-center justify-between gap-3 py-1 transition-colors duration-300 ease-in-out border-b hover:bg-gray-200 bg-none mb-3"
-            >
-              <div className="flex flex-row items-center">
-                {/* <HeartIcon size={36} />
-                 */}
-                <HeartIcon size={36} />
-
-                <button
-                  className="w-full text-left"
+        {savedList && savedList.dataObject && savedList.dataObject.length > 0 ? (
+  savedList.dataObject.map((list) => (
+    <div
+      key={list.id}
+      className="flex flex-row items-center justify-between gap-3 py-1 transition-colors duration-300 ease-in-out border-b hover:bg-gray-200 bg-none mb-3"
+    >
+      <div className="flex flex-row items-center">
+        <button
+          className="w-full text-left flex items-center justify-center gap-1"
+          onClick={() => {
+            addItemToList({
+              favouriteListId: list.id,
+              itemId: props.data.id,
+            });
+            toast({
+              title: "Item Saved",
+              description: "Item has been saved to your list",
+              duration: 2000,
+              action: (
+                <ToastAction
+                  altText="View List"
                   onClick={() => {
-                    addItemToList({
-                      favouriteListId: list.id,
-                      itemId: props.data.id,
-                    });
-                    toast({
-                      title: "Item Saved",
-                      description: "Item has been saved to your list",
-                      duration: 2000,
-                      action: (
-                        <ToastAction
-                          altText="View List"
-                          onClick={() => {
-                            console.log("View List");
-                          }}
-                        >
-                          <Link href={`/saved-list/${list.id}`} passHref>
-                            View List
-                          </Link>
-                        </ToastAction>
-                      ),
-                    });
-                    setFavouriteAdded(true);
-                    setIsDialogOpen(false);
+                    console.log("View List");
                   }}
                 >
-                  {list.name}
-                </button>
-              </div>
-              {props.data.lstAddedToFavoriteListIds.find(
-                (x: any) => x === list.id
-              ) !== undefined ? (
-                <Check size={24} />
-              ) : null}
-            </div>
-          ))}
+                  <Link href={`/saved-list/${list.id}`} passHref>
+                    View List
+                  </Link>
+                </ToastAction>
+              ),
+            });
+            setFavouriteAdded(true);
+            setIsDialogOpen(false);
+          }}
+        >
+          <HeartIcon size={36} />
+          {list.name}
+        </button>
+      </div>
+    </div>
+  ))
+) : (
+  <>
+  <p className="mb-2 font-bold">No collection created yet</p>
+  <hr className="mb-3"/>
+  </>
+)}
+
+         
             <CreateList refetchhandler={refetchhandler}/>
         </div>
       </DialogContent>

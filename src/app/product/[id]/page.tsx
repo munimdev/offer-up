@@ -160,7 +160,7 @@ const Product = ({ params }: { params: { id: string } }) => {
     <div onClick={handleClickOutside}>
       <div className="flex flex-col mb-2 border-b md:flex-row relative">
         <div className="w-full ">
-          <div className="w-full flex">
+          <div className="w-full flex md:pl-4">
             <div className="w-full md:w-8/12 lg:w-9/12 sm:h-auto">
               <Slider
                 imagesMain={currentItem?.images.map(
