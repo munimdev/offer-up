@@ -28,7 +28,7 @@ export default function RootLayout({
       </head>
       <body className={`${inter.className} min-h-screen flex flex-col`}>
         <QueryProvider>
-        <nav   style={{ position: "sticky", top: 0, backgroundColor:"#ffffff" }}>
+        <nav   style={{ position: "sticky", top: 0, backgroundColor:"#ffffff",zIndex:100 }}>
         <Navbar />
     </nav>
          
