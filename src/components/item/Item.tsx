@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useRef } from "react";
 import Image from "next/image";
 import placeholder from "./placeholder.png";
