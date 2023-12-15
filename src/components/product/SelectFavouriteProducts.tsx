@@ -122,7 +122,10 @@ const SelectFavouriteProducts = (props: any) => {
   ))
 ) : (
   <>
-  <p className="mb-2 font-bold">No collection created yet</p>
+  <div className="flex justify-center">
+  <p className="mb-2 font-bold">No collection created yet!</p>
+  </div>
+  
   <hr className="mb-3"/>
   </>
 )}
