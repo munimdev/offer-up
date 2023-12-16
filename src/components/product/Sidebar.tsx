@@ -146,14 +146,14 @@ const Sidebar: React.FC<Props> = ({ data }) => {
 
   const handleOfferSubmit = (price) => {
     console.log("Offer Price:", price);
-    startChatHandler(price);
+    startChatHandler(price,'offer');
     setIsOfferDialogOpen(false);
   };
   const handleChatSubmit = (chat) => {
-    startChatHandler(chat);
+    startChatHandler(chat,'message');
     setIsChatDialogOpen(false);
   };
-  const startChatHandler = async (text) => {
+  const startChatHandler = async (text,type) => {
     try {
       // Check if a chat already exists for the same buyer, seller, and product
       const chatQuery = query(
@@ -162,7 +162,7 @@ const Sidebar: React.FC<Props> = ({ data }) => {
         where("sellerId", "==", data.customer.id),
         where("itemId", "==", data.id)
       );
-
+const message=type=='offer'?`Hello! I hope you're doing well. I wanted to reach out and express my strong interest in your product ${data?.name}, priced at $ ${text}.`:text
       const chatQuerySnapshot = await getDocs(chatQuery);
       let chatId = null;
 
@@ -185,7 +185,7 @@ const Sidebar: React.FC<Props> = ({ data }) => {
           itemId: data.id,
           itemName: data.name,
           itemImage: data.images[0].imagePath,
-          lastMessage: text,
+          lastMessage: message,
           lastMessageTime: serverTimestamp(),
           unreadBuyer: 0,
           unreadSeller: 1,
@@ -201,7 +201,7 @@ const Sidebar: React.FC<Props> = ({ data }) => {
       const messageRef = await addDoc(messagesCollectionRef, {
         imageUrl: "",
         isImage: false,
-        messages: text,
+        messages: message,
         senderId: user.id,
         time: serverTimestamp(),
       });
